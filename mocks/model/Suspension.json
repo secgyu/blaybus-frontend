@@ -1,0 +1,107 @@
+{
+  "model": {
+    "modelId": "suspension",
+    "title": "서스펜션",
+    "thumbnailUrl": "/thumbs/suspension.png",
+    "overview": "서스펜션 조립도/분해도를 통해 스프링-댐퍼 구조를 학습합니다.",
+    "theory": "스프링은 하중을 지지하고, 댐퍼(로드)는 진동을 감쇠합니다. 프리로드(너트) 조절 개념과 구성 요소의 역할을 3D로 확인합니다."
+  },
+  "parts": [
+    {
+      "partId": "BASE",
+      "displayNameKo": "베이스",
+      "glbUrl": "/glb/BASE.glb",
+      "summary": "하부 지지/마운트 역할"
+    },
+    {
+      "partId": "ROD",
+      "displayNameKo": "로드",
+      "glbUrl": "/glb/ROD.glb",
+      "summary": "중심 축(댐퍼 로드) 역할"
+    },
+    {
+      "partId": "SPRING",
+      "displayNameKo": "스프링",
+      "glbUrl": "/glb/SPRING.glb",
+      "summary": "하중을 지지하고 탄성력을 제공"
+    },
+    {
+      "partId": "NIT",
+      "displayNameKo": "상부 부품(NIT)",
+      "glbUrl": "/glb/NIT.glb",
+      "summary": "상부 시트/캡 역할(샘플 명칭 기준)"
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "suspension_root",
+      "partId": "suspension_root",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0, 0, 0],
+        "quat": [0, 0, 0, 1],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0, 0, 0],
+        "distance": 0
+      }
+    },
+    {
+      "nodeId": "BASE_1",
+      "partId": "BASE",
+      "parentNodeId": "suspension_root",
+      "assembled": {
+        "pos": [-0.00024093524552881718, 0.0008701677434146404, 0.11687705665826797],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0, 1],
+        "distance": 0.5
+      }
+    },
+    {
+      "nodeId": "ROD_1",
+      "partId": "ROD",
+      "parentNodeId": "suspension_root",
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0, 0],
+        "distance": 0
+      }
+    },
+    {
+      "nodeId": "SPRING_1",
+      "partId": "SPRING",
+      "parentNodeId": "suspension_root",
+      "assembled": {
+        "pos": [-0.002648221096023917, -0.0016347693745046854, 0.009484807960689068],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0, 1],
+        "distance": 0.25
+      }
+    },
+    {
+      "nodeId": "NIT_1",
+      "partId": "NIT",
+      "parentNodeId": "suspension_root",
+      "assembled": {
+        "pos": [0.0017083182465285063, -0.00015940581215545535, 0.007444897200912237],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0, -1],
+        "distance": 0.3
+      }
+    }
+  ]
+}

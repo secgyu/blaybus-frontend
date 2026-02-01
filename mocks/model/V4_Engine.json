@@ -1,0 +1,219 @@
+{
+  "model": {
+    "modelId": "v4_engine",
+    "title": "V4 Engine Assembly",
+    "thumbnailUrl": "/thumbs/v4_engine.png",
+    "overview": "V형 4기통 엔진의 조립/분해 과정을 시각화합니다.",
+    "theory": "크랭크샤프트의 회전 운동이 커넥팅 로드를 통해 피스톤의 왕복 운동으로 변환되는 과정을 3D로 확인합니다."
+  },
+  "parts": [
+    {
+      "partId": "CRANKSHAFT",
+      "displayNameKo": "크랭크샤프트",
+      "glbUrl": "/glb/Crankshaft.glb",
+      "summary": "엔진의 중심 축, 회전 동력을 전달"
+    },
+    {
+      "partId": "PISTON",
+      "displayNameKo": "피스톤",
+      "glbUrl": "/glb/Piston.glb",
+      "summary": "실린더 내부를 왕복하며 압력을 전달"
+    },
+    {
+      "partId": "CONNECTING_ROD",
+      "displayNameKo": "커넥팅 로드",
+      "glbUrl": "/glb/Connecting Rod.glb",
+      "summary": "피스톤과 크랭크샤프트를 연결"
+    },
+    {
+      "partId": "CONNECTING_ROD_CAP",
+      "displayNameKo": "로드 캡",
+      "glbUrl": "/glb/Connecting Rod Cap.glb",
+      "summary": "커넥팅 로드를 크랭크 핀에 고정"
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "CONNECTING_ROD_2",
+      "partId": "CONNECTING_ROD",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.2704494893550873, -0.05967249721288681, 0.24244803190231323],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.23899254398460776, 0.9710214024004649],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_CAP_1",
+      "partId": "CONNECTING_ROD_CAP",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.15428239107131958, -0.01706800051033497, -0.042702287435531616],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.0, 0.37114857000187446, 0.9285734968140992],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "CRANKSHAFT",
+      "partId": "CRANKSHAFT",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0, 0],
+        "distance": 0
+      }
+    },
+    {
+      "nodeId": "PISTON_1",
+      "partId": "PISTON",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.1575104296207428, -0.011322829872369766, 0.130268394947052],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.08659275324682392, 0.9962437929970428],
+        "distance": 0.5
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_1",
+      "partId": "CONNECTING_ROD",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.1518842726945877, -0.01656818576157093, 0.15777744352817535],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.1044356198304254, 0.9945316492252193],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_CAP_2",
+      "partId": "CONNECTING_ROD_CAP",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.2718200385570526, 0.003935730084776878, 0.060516923666000366],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.0, -0.06489809660518392, -0.997891896478283],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "PISTON_2",
+      "partId": "PISTON",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.2679401636123657, -0.06707632541656494, 0.21493884921073914],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.2979024647776457, 0.9545963133594239],
+        "distance": 0.5
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_3",
+      "partId": "CONNECTING_ROD",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.3783414959907532, -0.057798851281404495, 0.2426893562078476],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.2316799732103756, 0.9727920589793276],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "PISTON_3",
+      "partId": "PISTON",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.3723773956298828, -0.05177564546465874, 0.21803946793079376],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -0.23103556297679329, 0.9729453060886806],
+        "distance": 0.5
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_CAP_3",
+      "partId": "CONNECTING_ROD_CAP",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.37731677293777466, -0.0019557438790798187, 0.05894583463668823],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.0, 0.033160414380243156, -0.9994500422322922],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_4",
+      "partId": "CONNECTING_ROD",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.4912833571434021, 0.09896382689476013, 0.14454099535942078],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, 0.5649457901166086, 0.8251280229331208],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "CONNECTING_ROD_CAP_4",
+      "partId": "CONNECTING_ROD_CAP",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.4987097382545471, 0.011663500219583511, -0.02159024029970169],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.0, -0.4752994195313621, 0.8798241084405168],
+        "distance": 0.3
+      }
+    },
+    {
+      "nodeId": "PISTON_4",
+      "partId": "PISTON",
+      "parentNodeId": "CRANKSHAFT",
+      "assembled": {
+        "pos": [0.4920046627521515, 0.09824514389038086, 0.12919221818447113],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, 0.6053138913150958, 0.7959868673420286],
+        "distance": 0.5
+      }
+    }
+  ]
+}

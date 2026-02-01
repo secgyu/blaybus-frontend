@@ -5,6 +5,7 @@ export interface ModelPart {
   role: string;
   material: string;
   basePosition: [number, number, number];
+  baseRotation?: [number, number, number];
   explodeOffset: [number, number, number];
   glbPath: string;
 }

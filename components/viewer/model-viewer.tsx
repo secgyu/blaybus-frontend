@@ -75,6 +75,7 @@ export function ModelViewer({
             key={part.id}
             part={part}
             position={position}
+            rotation={part.baseRotation}
             color={partColors[part.id]}
             isSelected={selectedPartId === part.id}
             onClick={() => onPartClick(part.id)}

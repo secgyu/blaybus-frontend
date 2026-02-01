@@ -10,6 +10,7 @@ import type { ModelPart } from '@/lib/types';
 interface PartMeshProps {
   part: ModelPart;
   position: [number, number, number];
+  rotation?: [number, number, number];
   color: string;
   isSelected: boolean;
   onClick: () => void;
@@ -20,6 +21,7 @@ interface PartMeshProps {
 export function PartMesh({
   part,
   position,
+  rotation,
   color,
   isSelected,
   onClick,
@@ -67,12 +69,18 @@ export function PartMesh({
     }
   }, [clonedScene, color, isSelected, isHovered]);
 
-  // Animate position smoothly
+  // Animate position and rotation smoothly
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.position.x += (position[0] - groupRef.current.position.x) * delta * 5;
       groupRef.current.position.y += (position[1] - groupRef.current.position.y) * delta * 5;
       groupRef.current.position.z += (position[2] - groupRef.current.position.z) * delta * 5;
+
+      if (rotation) {
+        groupRef.current.rotation.x += (rotation[0] - groupRef.current.rotation.x) * delta * 5;
+        groupRef.current.rotation.y += (rotation[1] - groupRef.current.rotation.y) * delta * 5;
+        groupRef.current.rotation.z += (rotation[2] - groupRef.current.rotation.z) * delta * 5;
+      }
     }
   });
 

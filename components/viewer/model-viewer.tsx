@@ -64,34 +64,17 @@ export function ModelViewer({
     }, {} as Record<string, string>);
   }, [model.parts]);
 
-  // Generate geometry based on model type
-  const getPartGeometry = (partIndex: number, totalParts: number) => {
-    // Create varied geometries for visual interest
-    const geometries = [
-      { type: 'box', args: [0.8, 0.6, 0.8] },
-      { type: 'cylinder', args: [0.3, 0.3, 0.8, 32] },
-      { type: 'box', args: [0.5, 1, 0.5] },
-      { type: 'cylinder', args: [0.4, 0.2, 0.6, 32] },
-      { type: 'box', args: [1, 0.3, 0.6] },
-      { type: 'cylinder', args: [0.25, 0.25, 1.2, 32] },
-    ];
-    
-    return geometries[partIndex % geometries.length];
-  };
-
   return (
     <group ref={groupRef}>
-      {model.parts.map((part, index) => {
+      {model.parts.map((part) => {
         const positionData = partPositions.find((p) => p.id === part.id);
         const position = positionData?.position || [0, 0, 0];
-        const geometry = getPartGeometry(index, model.parts.length);
         
         return (
           <PartMesh
             key={part.id}
             part={part}
             position={position}
-            geometry={geometry}
             color={partColors[part.id]}
             isSelected={selectedPartId === part.id}
             onClick={() => onPartClick(part.id)}

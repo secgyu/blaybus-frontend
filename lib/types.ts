@@ -5,6 +5,7 @@ export interface ModelPart {
   role: string;
   material: string;
   explodeOffset: [number, number, number];
+  glbPath: string;
 }
 
 export interface Model {

@@ -30,16 +30,16 @@ export function ModelViewer({
     }
   });
 
-  // Calculate positions based on explode value
+  // Calculate positions based on base position and explode value
   const partPositions = useMemo(() => {
     return model.parts.map((part) => {
       const explodeFactor = explodeValue / 100;
       return {
         id: part.id,
         position: [
-          part.explodeOffset[0] * explodeFactor,
-          part.explodeOffset[1] * explodeFactor,
-          part.explodeOffset[2] * explodeFactor,
+          part.basePosition[0] + part.explodeOffset[0] * explodeFactor,
+          part.basePosition[1] + part.explodeOffset[1] * explodeFactor,
+          part.basePosition[2] + part.explodeOffset[2] * explodeFactor,
         ] as [number, number, number],
       };
     });

@@ -4,6 +4,7 @@ export interface ModelPart {
   nameKo: string;
   role: string;
   material: string;
+  basePosition: [number, number, number];
   explodeOffset: [number, number, number];
   glbPath: string;
 }

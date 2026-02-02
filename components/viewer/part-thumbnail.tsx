@@ -1,9 +1,12 @@
 'use client';
 
-import { Suspense, useMemo, useRef, useEffect } from 'react';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
+
+import { Center, useGLTF } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, Center } from '@react-three/drei';
+
 import * as THREE from 'three';
+
 import type { ModelPart } from '@/lib/types';
 
 interface ThumbnailModelProps {
@@ -14,13 +17,15 @@ interface ThumbnailModelProps {
 function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
   const { scene } = useGLTF(glbPath);
   const groupRef = useRef<THREE.Group>(null);
-  const materialsRef = useRef<Map<THREE.Mesh, THREE.MeshStandardMaterial>>(new Map());
+  const materialsRef = useRef<Map<THREE.Mesh, THREE.MeshStandardMaterial>>(
+    new Map()
+  );
   const { camera } = useThree();
 
   // Clone the scene and store original materials
   const clonedScene = useMemo(() => {
     const cloned = scene.clone();
-    
+
     // Clone materials once and store them
     cloned.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -35,7 +40,7 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
         }
       }
     });
-    
+
     return cloned;
   }, [scene]);
 
@@ -106,7 +111,11 @@ interface PartThumbnailProps {
   onClick: () => void;
 }
 
-export function PartThumbnail({ part, isSelected, onClick }: PartThumbnailProps) {
+export function PartThumbnail({
+  part,
+  isSelected,
+  onClick,
+}: PartThumbnailProps) {
   return (
     <button
       onClick={onClick}

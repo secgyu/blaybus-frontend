@@ -1,6 +1,8 @@
 import Link from 'next/link';
-import { Header } from '@/components/header';
+
 import { AlertCircle } from 'lucide-react';
+
+import { Header } from '@/components/header';
 
 export default function NotFound() {
   return (

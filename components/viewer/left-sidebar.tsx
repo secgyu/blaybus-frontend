@@ -1,10 +1,12 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { Box, Layers, Play, Wrench, X } from 'lucide-react';
+
 import type { Model, ModelPart } from '@/lib/types';
+import { cn } from '@/lib/utils';
+
 import { ExplodeSlider } from './explode-slider';
 import { PartThumbnail } from './part-thumbnail';
-import { X, Layers, Wrench, Play, Box } from 'lucide-react';
 
 interface LeftSidebarProps {
   model: Model;

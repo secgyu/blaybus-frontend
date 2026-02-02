@@ -1,0 +1,8 @@
+node_modules
+.next
+public
+pnpm-lock.yaml
+package-lock.json
+*.glb
+*.png
+*.jpg

@@ -1,11 +1,12 @@
 'use client';
 
-import React from "react"
+import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { useState, useRef, useEffect } from 'react';
+import { Bot, Loader2, Send, StickyNote, Trash2 } from 'lucide-react';
+
+import type { ChatMessage, Model, ModelPart } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import type { Model, ModelPart, ChatMessage } from '@/lib/types';
-import { Bot, StickyNote, Send, Loader2, Trash2 } from 'lucide-react';
 
 interface RightSidebarProps {
   model: Model;
@@ -58,12 +59,14 @@ export function RightSidebar({
             Copilot
           </span>
         </div>
-        
+
         {/* Context info */}
         {selectedPart && (
           <div className="mt-3 p-2 rounded-lg bg-secondary/50 text-xs">
             <span className="text-muted-foreground">선택된 부품: </span>
-            <span className="text-primary font-medium">{selectedPart.nameKo}</span>
+            <span className="text-primary font-medium">
+              {selectedPart.nameKo}
+            </span>
           </div>
         )}
       </div>
@@ -111,15 +114,23 @@ export function RightSidebar({
                   <div className="mt-4 space-y-2">
                     <SuggestionChip
                       text="이 부품의 작동 원리는?"
-                      onClick={() => onSendMessage('이 부품의 작동 원리는 무엇인가요?')}
+                      onClick={() =>
+                        onSendMessage('이 부품의 작동 원리는 무엇인가요?')
+                      }
                     />
                     <SuggestionChip
                       text="어떤 재료로 만들어지나요?"
-                      onClick={() => onSendMessage('이 부품은 어떤 재료로 만들어지나요?')}
+                      onClick={() =>
+                        onSendMessage('이 부품은 어떤 재료로 만들어지나요?')
+                      }
                     />
                     <SuggestionChip
                       text="다른 부품과의 관계는?"
-                      onClick={() => onSendMessage('이 부품과 다른 부품과의 관계를 설명해주세요')}
+                      onClick={() =>
+                        onSendMessage(
+                          '이 부품과 다른 부품과의 관계를 설명해주세요'
+                        )
+                      }
                     />
                   </div>
                 </div>
@@ -140,7 +151,10 @@ export function RightSidebar({
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-border">
+            <form
+              onSubmit={handleSubmit}
+              className="p-4 border-t border-border"
+            >
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -182,10 +196,13 @@ export function RightSidebar({
             <p className="mt-2 text-xs text-muted-foreground">
               메모는 자동으로 저장됩니다
             </p>
-            
+
             {/* Study cards */}
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <StudyCard title="공학물리학" items={['뉴턴 법칙', '에너지 보존']} />
+              <StudyCard
+                title="공학물리학"
+                items={['뉴턴 법칙', '에너지 보존']}
+              />
               <StudyCard title="열공학" items={['열역학 법칙', '열전달']} />
               <StudyCard title="재료역학" items={['응력-변형률', '내열재료']} />
             </div>

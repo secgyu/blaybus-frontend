@@ -30,11 +30,11 @@ export interface SaveNodesResponse {
  */
 export async function fetchModels(): Promise<ModelSummary[]> {
   const response = await fetch('/api/models');
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch models: ${response.status}`);
   }
-  
+
   return response.json();
 }
 
@@ -43,14 +43,14 @@ export async function fetchModels(): Promise<ModelSummary[]> {
  */
 export async function fetchViewerData(modelId: string): Promise<ModelData> {
   const response = await fetch(`/api/models/${modelId}/viewer`);
-  
+
   if (!response.ok) {
     if (response.status === 404) {
       throw new Error(`Model not found: ${modelId}`);
     }
     throw new Error(`Failed to fetch viewer data: ${response.status}`);
   }
-  
+
   return response.json();
 }
 

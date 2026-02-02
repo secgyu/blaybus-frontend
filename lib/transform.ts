@@ -1,10 +1,13 @@
-import type { ModelData, Part, Node } from '@/types/model';
 import type { Model, ModelPart, PartInstance } from '@/lib/types';
+import type { ModelData, Node, Part } from '@/types/model';
 
 /**
  * API에서 받은 ModelData를 기존 컴포넌트에서 사용하는 Model 형식으로 변환
  */
-export function toViewerModel(data: ModelData, systemPrompt: string = ''): Model {
+export function toViewerModel(
+  data: ModelData,
+  systemPrompt: string = ''
+): Model {
   // parts를 ModelPart 형식으로 변환
   const partsMap = new Map<string, Part>();
   for (const part of data.parts) {
@@ -45,18 +48,20 @@ export function toViewerModel(data: ModelData, systemPrompt: string = ''): Model
       // 단일 인스턴스용 기본값
       basePosition: instances[0]?.position,
       explodeOffset: instances[0]
-        ? [
-          instances[0].explodeDir[0] * instances[0].explodeDistance,
-          instances[0].explodeDir[1] * instances[0].explodeDistance,
-          instances[0].explodeDir[2] * instances[0].explodeDistance,
-        ] as [number, number, number]
+        ? ([
+            instances[0].explodeDir[0] * instances[0].explodeDistance,
+            instances[0].explodeDir[1] * instances[0].explodeDistance,
+            instances[0].explodeDir[2] * instances[0].explodeDistance,
+          ] as [number, number, number])
         : [0, 0, 0],
     };
   });
 
   return {
     id: data.model.modelId,
-    name: data.model.modelId.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    name: data.model.modelId
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
     nameKo: data.model.title,
     description: data.model.overview,
     parts,

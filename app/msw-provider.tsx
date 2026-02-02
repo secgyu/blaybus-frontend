@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 interface MSWProviderProps {
   children: ReactNode;
@@ -11,7 +11,10 @@ export function MSWProvider({ children }: MSWProviderProps) {
 
   useEffect(() => {
     async function initMSW() {
-      if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      if (
+        typeof window !== 'undefined' &&
+        process.env.NODE_ENV === 'development'
+      ) {
         try {
           const { worker } = await import('@/mocks/browser');
           await worker.start({

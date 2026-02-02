@@ -1,9 +1,13 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+
 import { useFrame } from '@react-three/fiber';
+
 import type * as THREE from 'three';
-import type { Model, PartInstance, Vector3, Quaternion } from '@/lib/types';
+
+import type { Model, PartInstance, Quaternion, Vector3 } from '@/lib/types';
+
 import { PartMesh } from './part-mesh';
 
 interface InstancedPart {
@@ -49,9 +53,12 @@ export function ModelViewer({
       if (part.instances && part.instances.length > 0) {
         for (const inst of part.instances) {
           const position: Vector3 = [
-            inst.position[0] + inst.explodeDir[0] * inst.explodeDistance * explodeFactor,
-            inst.position[1] + inst.explodeDir[1] * inst.explodeDistance * explodeFactor,
-            inst.position[2] + inst.explodeDir[2] * inst.explodeDistance * explodeFactor,
+            inst.position[0] +
+              inst.explodeDir[0] * inst.explodeDistance * explodeFactor,
+            inst.position[1] +
+              inst.explodeDir[1] * inst.explodeDistance * explodeFactor,
+            inst.position[2] +
+              inst.explodeDir[2] * inst.explodeDistance * explodeFactor,
           ];
           result.push({
             key: inst.nodeId,
@@ -94,18 +101,21 @@ export function ModelViewer({
       '#f97316', // Orange
       '#ef4444', // Red
     ];
-    
-    return model.parts.reduce((acc, part, index) => {
-      acc[part.id] = colors[index % colors.length];
-      return acc;
-    }, {} as Record<string, string>);
+
+    return model.parts.reduce(
+      (acc, part, index) => {
+        acc[part.id] = colors[index % colors.length];
+        return acc;
+      },
+      {} as Record<string, string>
+    );
   }, [model.parts]);
 
   return (
     <group ref={groupRef}>
       {instancedParts.map((inst) => {
         const part = model.parts.find((p) => p.id === inst.partId)!;
-        
+
         return (
           <PartMesh
             key={inst.key}

@@ -1,17 +1,20 @@
 'use client';
 
-import { use, useState, useCallback, useEffect } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
+
 import { notFound } from 'next/navigation';
+
+import { Loader2 } from 'lucide-react';
+
 import { Header } from '@/components/header';
-import { Scene } from '@/components/viewer/scene';
 import { LeftSidebar } from '@/components/viewer/left-sidebar';
 import { RightSidebar } from '@/components/viewer/right-sidebar';
+import { Scene } from '@/components/viewer/scene';
 import { SearchBar } from '@/components/viewer/search-bar';
 import { useViewerState } from '@/hooks/use-viewer-state';
 import { fetchViewerData, sendChatMessage } from '@/lib/api';
 import { toViewerModel } from '@/lib/transform';
 import type { Model } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
 
 // System prompts for AI chat
 const systemPrompts: Record<string, string> = {
@@ -97,7 +100,9 @@ export default function StudyPage({ params }: PageProps) {
     async function loadModel() {
       try {
         const data = await fetchViewerData(modelId);
-        const systemPrompt = systemPrompts[modelId] || '당신은 SIMVEX의 공학 교육 어시스턴트입니다. 한국어로 친절하게 답변해주세요.';
+        const systemPrompt =
+          systemPrompts[modelId] ||
+          '당신은 SIMVEX의 공학 교육 어시스턴트입니다. 한국어로 친절하게 답변해주세요.';
         const viewerModel = toViewerModel(data, systemPrompt);
         setModel(viewerModel);
       } catch (error) {
@@ -159,7 +164,8 @@ export default function StudyPage({ params }: PageProps) {
         console.error('Chat error:', error);
         addChatMessage({
           role: 'assistant',
-          content: '죄송합니다. 응답을 생성하는 중 오류가 발생했습니다. 다시 시도해주세요.',
+          content:
+            '죄송합니다. 응답을 생성하는 중 오류가 발생했습니다. 다시 시도해주세요.',
         });
       } finally {
         setIsAiLoading(false);
@@ -230,7 +236,9 @@ export default function StudyPage({ params }: PageProps) {
 
           {/* Part Info Tooltip */}
           {hoveredPartId && !state.selectedPartId && (
-            <PartTooltip part={model.parts.find((p) => p.id === hoveredPartId)!} />
+            <PartTooltip
+              part={model.parts.find((p) => p.id === hoveredPartId)!}
+            />
           )}
         </main>
 
@@ -256,7 +264,9 @@ function PartTooltip({ part }: { part: { nameKo: string; role: string } }) {
   return (
     <div className="absolute top-4 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 pointer-events-none">
       <p className="text-sm font-medium text-primary">{part.nameKo}</p>
-      <p className="text-xs text-muted-foreground max-w-xs truncate">{part.role}</p>
+      <p className="text-xs text-muted-foreground max-w-xs truncate">
+        {part.role}
+      </p>
     </div>
   );
 }

@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@/lib/utils';
+
 import { Bot } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Home' },
@@ -26,13 +28,16 @@ export function Header({ onCopilotClick, showCopilot = false }: HeaderProps) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-primary glow-cyan" />
-          <span className="font-semibold text-lg tracking-tight text-foreground">SIMVEX</span>
+          <span className="font-semibold text-lg tracking-tight text-foreground">
+            SIMVEX
+          </span>
         </Link>
 
         {/* Navigation */}
         <nav className="flex items-center gap-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || 
+            const isActive =
+              pathname === item.href ||
               (item.href === '/study' && pathname.startsWith('/study'));
             return (
               <Link

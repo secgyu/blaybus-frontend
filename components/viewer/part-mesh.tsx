@@ -1,11 +1,14 @@
 'use client';
 
-import { useRef, useState, useEffect, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
-import type { ModelPart, Vector3, Quaternion } from '@/lib/types';
+
+import * as THREE from 'three';
+
+import type { ModelPart, Quaternion, Vector3 } from '@/lib/types';
 
 interface PartMeshProps {
   part: ModelPart;
@@ -55,7 +58,7 @@ export function PartMesh({
             newMaterial.color = new THREE.Color(color);
             newMaterial.metalness = 0.6;
             newMaterial.roughness = 0.3;
-            
+
             // Apply emissive effect based on selection/hover
             if (isSelected) {
               newMaterial.emissive = new THREE.Color('#00d4ff');
@@ -77,7 +80,12 @@ export function PartMesh({
   // JSON uses xyzw format (same as Three.js)
   const targetQuat = useMemo(() => {
     if (quaternion) {
-      return new THREE.Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);
+      return new THREE.Quaternion(
+        quaternion[0],
+        quaternion[1],
+        quaternion[2],
+        quaternion[3]
+      );
     }
     return null;
   }, [quaternion]);
@@ -86,24 +94,33 @@ export function PartMesh({
   useFrame((_, delta) => {
     if (groupRef.current) {
       // Position lerp
-      groupRef.current.position.x += (position[0] - groupRef.current.position.x) * delta * 5;
-      groupRef.current.position.y += (position[1] - groupRef.current.position.y) * delta * 5;
-      groupRef.current.position.z += (position[2] - groupRef.current.position.z) * delta * 5;
+      groupRef.current.position.x +=
+        (position[0] - groupRef.current.position.x) * delta * 5;
+      groupRef.current.position.y +=
+        (position[1] - groupRef.current.position.y) * delta * 5;
+      groupRef.current.position.z +=
+        (position[2] - groupRef.current.position.z) * delta * 5;
 
       // Quaternion slerp (if provided)
       if (targetQuat) {
         groupRef.current.quaternion.slerp(targetQuat, delta * 5);
       } else if (rotation) {
-        groupRef.current.rotation.x += (rotation[0] - groupRef.current.rotation.x) * delta * 5;
-        groupRef.current.rotation.y += (rotation[1] - groupRef.current.rotation.y) * delta * 5;
-        groupRef.current.rotation.z += (rotation[2] - groupRef.current.rotation.z) * delta * 5;
+        groupRef.current.rotation.x +=
+          (rotation[0] - groupRef.current.rotation.x) * delta * 5;
+        groupRef.current.rotation.y +=
+          (rotation[1] - groupRef.current.rotation.y) * delta * 5;
+        groupRef.current.rotation.z +=
+          (rotation[2] - groupRef.current.rotation.z) * delta * 5;
       }
 
       // Scale lerp (if provided)
       if (scale) {
-        groupRef.current.scale.x += (scale[0] - groupRef.current.scale.x) * delta * 5;
-        groupRef.current.scale.y += (scale[1] - groupRef.current.scale.y) * delta * 5;
-        groupRef.current.scale.z += (scale[2] - groupRef.current.scale.z) * delta * 5;
+        groupRef.current.scale.x +=
+          (scale[0] - groupRef.current.scale.x) * delta * 5;
+        groupRef.current.scale.y +=
+          (scale[1] - groupRef.current.scale.y) * delta * 5;
+        groupRef.current.scale.z +=
+          (scale[2] - groupRef.current.scale.z) * delta * 5;
       }
     }
   });

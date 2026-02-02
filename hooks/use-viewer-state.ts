@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import type { ViewerState, ChatMessage } from '@/lib/types';
+import { useCallback, useEffect, useState } from 'react';
+
+import type { ChatMessage, ViewerState } from '@/lib/types';
 
 const STORAGE_PREFIX = 'simvex_';
 
@@ -41,7 +42,10 @@ export function useViewerState(modelId: string) {
   // Save to localStorage on state change
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem(`${STORAGE_PREFIX}${modelId}`, JSON.stringify(state));
+      localStorage.setItem(
+        `${STORAGE_PREFIX}${modelId}`,
+        JSON.stringify(state)
+      );
     }
   }, [state, modelId, isLoaded]);
 
@@ -57,15 +61,15 @@ export function useViewerState(modelId: string) {
     setState((prev) => ({ ...prev, notes }));
   }, []);
 
-  const addChatMessage = useCallback((message: Omit<ChatMessage, 'timestamp'>) => {
-    setState((prev) => ({
-      ...prev,
-      aiHistory: [
-        ...prev.aiHistory,
-        { ...message, timestamp: Date.now() },
-      ],
-    }));
-  }, []);
+  const addChatMessage = useCallback(
+    (message: Omit<ChatMessage, 'timestamp'>) => {
+      setState((prev) => ({
+        ...prev,
+        aiHistory: [...prev.aiHistory, { ...message, timestamp: Date.now() }],
+      }));
+    },
+    []
+  );
 
   const clearChatHistory = useCallback(() => {
     setState((prev) => ({ ...prev, aiHistory: [] }));

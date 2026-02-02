@@ -1,9 +1,9 @@
 'use client';
 
-import React from "react"
-
+import React from 'react';
 import { useState } from 'react';
-import { Plus, Globe, Send } from 'lucide-react';
+
+import { Globe, Plus, Send } from 'lucide-react';
 
 interface SearchBarProps {
   onSubmit: (query: string) => void;
@@ -22,7 +22,10 @@ export function SearchBar({ onSubmit, disabled }: SearchBarProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-xl px-6">
+    <form
+      onSubmit={handleSubmit}
+      className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-xl px-6"
+    >
       <div className="glass-panel p-2 flex items-center gap-2">
         <button
           type="button"
@@ -30,7 +33,7 @@ export function SearchBar({ onSubmit, disabled }: SearchBarProps) {
         >
           <Plus className="w-5 h-5" />
         </button>
-        
+
         <input
           type="text"
           value={query}
@@ -39,7 +42,7 @@ export function SearchBar({ onSubmit, disabled }: SearchBarProps) {
           disabled={disabled}
           className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
-        
+
         <button
           type="button"
           className="px-3 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center gap-1.5"
@@ -47,7 +50,7 @@ export function SearchBar({ onSubmit, disabled }: SearchBarProps) {
           <Globe className="w-3.5 h-3.5" />
           Web에서 물어보기
         </button>
-        
+
         <button
           type="submit"
           disabled={!query.trim() || disabled}

@@ -173,6 +173,7 @@ function generateMachineViceMockData(): ModelData {
 
 export const mockDataMap: Record<string, ModelData> = {
   v4_engine: V4EngineData as ModelData,
+  v4_engine_final: V4EngineData as ModelData, // alias for compatibility
   suspension: SuspensionData as ModelData,
   drone: generateDroneMockData(),
   robot_arm: generateRobotArmMockData(),

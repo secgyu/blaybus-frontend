@@ -22,13 +22,14 @@ export function toViewerModel(data: ModelData, systemPrompt: string = ''): Model
   // ModelPart 배열 생성
   const parts: ModelPart[] = data.parts.map((part) => {
     const nodes = nodesByPartId.get(part.partId) || [];
-    
+
     // 노드들을 인스턴스로 변환
+    // scale 0.01은 Blender 내보내기 설정이므로 무시하고 1로 사용
     const instances: PartInstance[] = nodes.map((node) => ({
       nodeId: node.nodeId,
       position: node.assembled.pos,
       rotation: node.assembled.quat,
-      scale: node.assembled.scale,
+      scale: [1, 1, 1] as [number, number, number], // scale 무시, GLB 자체 크기 사용
       explodeDir: node.explode.dir,
       explodeDistance: node.explode.distance,
     }));
@@ -43,12 +44,12 @@ export function toViewerModel(data: ModelData, systemPrompt: string = ''): Model
       instances: instances.length > 0 ? instances : undefined,
       // 단일 인스턴스용 기본값
       basePosition: instances[0]?.position,
-      explodeOffset: instances[0] 
+      explodeOffset: instances[0]
         ? [
-            instances[0].explodeDir[0] * instances[0].explodeDistance,
-            instances[0].explodeDir[1] * instances[0].explodeDistance,
-            instances[0].explodeDir[2] * instances[0].explodeDistance,
-          ] as [number, number, number]
+          instances[0].explodeDir[0] * instances[0].explodeDistance,
+          instances[0].explodeDir[1] * instances[0].explodeDistance,
+          instances[0].explodeDir[2] * instances[0].explodeDistance,
+        ] as [number, number, number]
         : [0, 0, 0],
     };
   });

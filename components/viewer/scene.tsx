@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
-import { Suspense } from 'react';
-import { ModelViewer } from './model-viewer';
-import type { Model } from '@/lib/types';
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
+import { Suspense } from "react";
+import { ModelViewer } from "./model-viewer";
+import type { Model } from "@/lib/types";
 
 interface SceneProps {
   model: Model;
@@ -23,31 +23,20 @@ function LoadingFallback() {
   );
 }
 
-export function Scene({
-  model,
-  explodeValue,
-  selectedPartId,
-  onPartClick,
-  onPartHover,
-}: SceneProps) {
+export function Scene({ model, explodeValue, selectedPartId, onPartClick, onPartHover }: SceneProps) {
   return (
     <div className="w-full h-full relative">
       {/* Grid background overlay */}
       <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
-      
+
       <Canvas
-        camera={{ position: [5, 3, 5], fov: 50 }}
+        camera={{ position: [1, 0.5, 1], fov: 50 }}
         gl={{ antialias: true, alpha: true }}
-        style={{ background: '#070b14' }}
+        style={{ background: "#070b14" }}
       >
         {/* Lighting */}
         <ambientLight intensity={0.4} />
-        <directionalLight
-          position={[10, 10, 5]}
-          intensity={1}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
+        <directionalLight position={[10, 10, 5]} intensity={1} castShadow shadow-mapSize={[2048, 2048]} />
         <directionalLight position={[-5, 5, -5]} intensity={0.3} />
         <pointLight position={[0, 5, 0]} intensity={0.5} color="#00d4ff" />
 
@@ -66,14 +55,7 @@ export function Scene({
         </Suspense>
 
         {/* Shadows */}
-        <ContactShadows
-          position={[0, -1.5, 0]}
-          opacity={0.4}
-          scale={10}
-          blur={2}
-          far={4}
-          color="#00d4ff"
-        />
+        <ContactShadows position={[0.25, -0.1, 0]} opacity={0.4} scale={2} blur={2} far={1} color="#00d4ff" />
 
         {/* Controls */}
         <OrbitControls
@@ -90,9 +72,9 @@ export function Scene({
         />
 
         {/* Grid helper */}
-        <gridHelper args={[20, 40, '#1e3a5f', '#0d1f33']} position={[0, -1.5, 0]} />
+        <gridHelper args={[2, 20, "#1e3a5f", "#0d1f33"]} position={[0.25, -0.1, 0]} />
       </Canvas>
-      
+
       {/* Viewport info overlay */}
       <div className="absolute bottom-4 left-4 text-xs font-mono text-muted-foreground/60">
         <div>RMB: Rotate | MMB: Pan | Scroll: Zoom</div>

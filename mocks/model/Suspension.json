@@ -1,8 +1,8 @@
 {
   "model": {
     "modelId": "suspension",
-    "title": "서스펜션",
-    "thumbnailUrl": "/thumbs/suspension.png",
+    "title": "서스펜션 (Suspension)",
+    "thumbnailUrl": "/models/Suspension/서스펜션 조립도.png",
     "overview": "서스펜션 조립도/분해도를 통해 스프링-댐퍼 구조를 학습합니다.",
     "theory": "스프링은 하중을 지지하고, 댐퍼(로드)는 진동을 감쇠합니다. 실제 추출된 3D 좌표를 기반으로 구성 요소의 결합 위치를 확인합니다."
   },
@@ -39,12 +39,12 @@
       "parentNodeId": null,
       "assembled": {
         "pos": [0.0, 0.0, 0.0],
-        "quat": [0.70381, 0.00998, -0.00998, 0.71025],
+        "quat": [0.99989, -0.0, -0.01411, 0.00455],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.0, 0.0, 0.0],
-        "distance": 0.0
+        "dir": [0.0, -1.0, 0.0],
+        "distance": 0.15
       }
     },
     {
@@ -53,12 +53,12 @@
       "parentNodeId": "ROD_NODE",
       "assembled": {
         "pos": [0.0, 0.0, 0.0],
-        "quat": [-0.70711, 0.0, 0.0, 0.70711],
+        "quat": [0.0, 0.0, 0.0, 1],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.0, 1.0, 0.0],
-        "distance": 0.5
+        "dir": [0.5, 0.0, 0.5],
+        "distance": 0.25
       }
     },
     {
@@ -66,13 +66,13 @@
       "partId": "BASE",
       "parentNodeId": "ROD_NODE",
       "assembled": {
-        "pos": [0.0, 0.1, 0.0],
-        "quat": [0.70404, 0.0077, -0.00086, 0.71012],
+        "pos": [0.00081, 0.10287, -0.00255],
+        "quat": [0.99996, 0.00484, -0.00605, 0.0043],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.0, 1.0, 0.0],
-        "distance": 1.0
+        "dir": [0.0, 1.0, 0.3],
+        "distance": 0.35
       }
     },
     {
@@ -80,13 +80,13 @@
       "partId": "NIT",
       "parentNodeId": "ROD_NODE",
       "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [0.62834, -0.30539, 0.30539, 0.64704],
+        "pos": [-0.00118, 0.00067, -0.0002],
+        "quat": [0.90183, 0.0, 0.43189, 0.01323],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.0, -1.0, 0.0],
-        "distance": 0.5
+        "dir": [-0.5, 0.8, -0.3],
+        "distance": 0.25
       }
     }
   ]

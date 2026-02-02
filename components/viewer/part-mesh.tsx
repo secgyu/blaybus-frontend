@@ -74,6 +74,7 @@ export function PartMesh({
   }, [clonedScene, color, isSelected, isHovered]);
 
   // Target quaternion for smooth interpolation
+  // JSON uses xyzw format (same as Three.js)
   const targetQuat = useMemo(() => {
     if (quaternion) {
       return new THREE.Quaternion(quaternion[0], quaternion[1], quaternion[2], quaternion[3]);

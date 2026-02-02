@@ -4,103 +4,89 @@
     "title": "서스펜션",
     "thumbnailUrl": "/thumbs/suspension.png",
     "overview": "서스펜션 조립도/분해도를 통해 스프링-댐퍼 구조를 학습합니다.",
-    "theory": "스프링은 하중을 지지하고, 댐퍼(로드)는 진동을 감쇠합니다. 프리로드(너트) 조절 개념과 구성 요소의 역할을 3D로 확인합니다."
+    "theory": "스프링은 하중을 지지하고, 댐퍼(로드)는 진동을 감쇠합니다. 실제 추출된 3D 좌표를 기반으로 구성 요소의 결합 위치를 확인합니다."
   },
   "parts": [
     {
       "partId": "BASE",
       "displayNameKo": "베이스",
       "glbUrl": "/models/Suspension/BASE.glb",
-      "summary": "하부 지지/마운트 역할"
+      "summary": "하부 지지 및 마운트 역할"
     },
     {
       "partId": "ROD",
       "displayNameKo": "로드",
       "glbUrl": "/models/Suspension/ROD.glb",
-      "summary": "중심 축(댐퍼 로드) 역할"
+      "summary": "서스펜션의 중심 축 (댐퍼)"
     },
     {
       "partId": "SPRING",
       "displayNameKo": "스프링",
       "glbUrl": "/models/Suspension/SPRING.glb",
-      "summary": "하중을 지지하고 탄성력을 제공"
+      "summary": "충격 흡수 및 탄성 제공"
     },
     {
       "partId": "NIT",
-      "displayNameKo": "상부 부품(NIT)",
+      "displayNameKo": "상부 캡(NIT)",
       "glbUrl": "/models/Suspension/NIT.glb",
-      "summary": "상부 시트/캡 역할(샘플 명칭 기준)"
+      "summary": "스프링과 로드를 고정하는 상부 부품"
     }
   ],
   "nodes": [
     {
-      "nodeId": "suspension_root",
-      "partId": "suspension_root",
+      "nodeId": "ROD_NODE",
+      "partId": "ROD",
       "parentNodeId": null,
       "assembled": {
-        "pos": [0, 0, 0],
-        "quat": [0, 0, 0, 1],
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.70381, 0.00998, -0.00998, 0.71025],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0, 0, 0],
-        "distance": 0
+        "dir": [0.0, 0.0, 0.0],
+        "distance": 0.0
       }
     },
     {
-      "nodeId": "BASE_1",
-      "partId": "BASE",
-      "parentNodeId": "suspension_root",
+      "nodeId": "SPRING_NODE",
+      "partId": "SPRING",
+      "parentNodeId": "ROD_NODE",
       "assembled": {
-        "pos": [-0.00024093524552881718, 0.0008701677434146404, 0.11687705665826797],
-        "quat": [0.0, 0.0, 0.0, 1.0],
-        "scale": [1.0, 1.0, 1.0]
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [-0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0, 0, 1],
+        "dir": [0.0, 1.0, 0.0],
         "distance": 0.5
       }
     },
     {
-      "nodeId": "ROD_1",
-      "partId": "ROD",
-      "parentNodeId": "suspension_root",
+      "nodeId": "BASE_NODE",
+      "partId": "BASE",
+      "parentNodeId": "ROD_NODE",
+      "assembled": {
+        "pos": [0.0, 0.1, 0.0],
+        "quat": [0.70404, 0.0077, -0.00086, 0.71012],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.0, 1.0, 0.0],
+        "distance": 1.0
+      }
+    },
+    {
+      "nodeId": "NIT_NODE",
+      "partId": "NIT",
+      "parentNodeId": "ROD_NODE",
       "assembled": {
         "pos": [0.0, 0.0, 0.0],
-        "quat": [0.0, 0.0, 0.0, 1.0],
-        "scale": [1.0, 1.0, 1.0]
+        "quat": [0.62834, -0.30539, 0.30539, 0.64704],
+        "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0, 0, 0],
-        "distance": 0
-      }
-    },
-    {
-      "nodeId": "SPRING_1",
-      "partId": "SPRING",
-      "parentNodeId": "suspension_root",
-      "assembled": {
-        "pos": [-0.002648221096023917, -0.0016347693745046854, 0.009484807960689068],
-        "quat": [0.0, 0.0, 0.0, 1.0],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": {
-        "dir": [0, 0, 1],
-        "distance": 0.25
-      }
-    },
-    {
-      "nodeId": "NIT_1",
-      "partId": "NIT",
-      "parentNodeId": "suspension_root",
-      "assembled": {
-        "pos": [0.0017083182465285063, -0.00015940581215545535, 0.007444897200912237],
-        "quat": [0.0, 0.0, 0.0, 1.0],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": {
-        "dir": [0, 0, -1],
-        "distance": 0.3
+        "dir": [0.0, -1.0, 0.0],
+        "distance": 0.5
       }
     }
   ]

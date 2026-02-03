@@ -1,0 +1,160 @@
+{
+  "model": {
+    "modelId": "robot_arm",
+    "title": "로봇 암 (Robot Arm)",
+    "thumbnailUrl": "/models/Robot Arm/로보팔 조립도.png",
+    "overview": "블렌더(Blender)에서 스크립트로 자동 추출한 로봇 암(Robot Arm) 어셈블리 데이터입니다.",
+    "theory": "로봇 암은 여러 개의 링크(link)와 관절(joint)로 구성된 직렬(Serial) 매니퓰레이터 구조로, 각 관절의 회전/이동을 조합해 말단(end-effector)을 원하는 위치와 자세로 제어합니다."
+  },
+  "parts": [
+    {
+      "partId": "base",
+      "glbUrl": "/models/Robot Arm/base.glb",
+      "displayNameKo": "베이스",
+      "summary": "로봇 암 전체를 지지하는 베이스 부품으로, 설치면에 고정됩니다."
+    },
+    {
+      "partId": "Part2",
+      "glbUrl": "/models/Robot Arm/Part2.glb",
+      "displayNameKo": "1축 관절",
+      "summary": "베이스 상단의 링크로, 로봇 암의 초기 자세를 형성합니다."
+    },
+    {
+      "partId": "Part3",
+      "glbUrl": "/models/Robot Arm/Part3.glb",
+      "displayNameKo": "2축 관절",
+      "summary": "하부 링크로, 베이스에서 상부 링크로 힘과 자세를 전달합니다."
+    },
+    {
+      "partId": "Part4",
+      "glbUrl": "/models/Robot Arm/Part4.glb",
+      "displayNameKo": "상완",
+      "summary": "팔의 상부 구간 링크로, 도달 범위에 영향을 줍니다."
+    },
+    {
+      "partId": "Part5",
+      "glbUrl": "/models/Robot Arm/Part5.glb",
+      "displayNameKo": "팔꿈치 관절",
+      "summary": "중간 링크로, 상·하부 링크를 연결합니다."
+    },
+    {
+      "partId": "Part6",
+      "glbUrl": "/models/Robot Arm/Part6.glb",
+      "displayNameKo": "전완",
+      "summary": "상부 링크 구간으로, 인접 관절과 함께 회전 자유도를 형성합니다."
+    },
+    {
+      "partId": "Part7",
+      "glbUrl": "/models/Robot Arm/Part7.glb",
+      "displayNameKo": "손목",
+      "summary": "엔드이펙터 근처에서 자세 제어에 기여하는 말단부 파트입니다."
+    },
+    {
+      "partId": "Part8",
+      "glbUrl": "/models/Robot Arm/Part8.glb",
+      "displayNameKo": "엔드이펙터",
+      "summary": "그리퍼/툴 계열 부품으로, 복수 인스턴스로 배치됩니다."
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "base_NODE",
+      "partId": "base",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0005, -0.05791, -0.00411],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, -1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part2_NODE",
+      "partId": "Part2",
+      "parentNodeId": "base_NODE",
+      "assembled": {
+        "pos": [0.0005, 0.02485, -0.00293],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, 0.5, 0], "distance": 0.08 }
+    },
+    {
+      "nodeId": "Part3_NODE",
+      "partId": "Part3",
+      "parentNodeId": "Part2_NODE",
+      "assembled": {
+        "pos": [-0.14949, 0.18486, -0.00411],
+        "quat": [-0.22852, 0.66916, -0.66916, 0.22852],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.3, 0.7, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part4_NODE",
+      "partId": "Part4",
+      "parentNodeId": "Part3_NODE",
+      "assembled": {
+        "pos": [0.18714, 0.43032, 0.05121],
+        "quat": [-0.08738, -0.70169, -0.08738, 0.70169],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.5, 0.8, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part5_NODE",
+      "partId": "Part5",
+      "parentNodeId": "Part4_NODE",
+      "assembled": {
+        "pos": [-0.10019, 0.50243, 0.05225],
+        "quat": [-0.0876, -0.70166, -0.0876, 0.70166],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.6, 0.9, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part6_NODE",
+      "partId": "Part6",
+      "parentNodeId": "Part5_NODE",
+      "assembled": {
+        "pos": [-0.24764, 0.51406, 0.05215],
+        "quat": [-0.40223, -0.58156, -0.40223, 0.58156],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.7, 1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part7_NODE",
+      "partId": "Part7",
+      "parentNodeId": "Part6_NODE",
+      "assembled": {
+        "pos": [-0.29632, 0.49529, 0.05208],
+        "quat": [0.12474, -0.69602, 0.12474, 0.69602],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.8, 1.1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Part8_1_NODE",
+      "partId": "Part8",
+      "parentNodeId": "Part7_NODE",
+      "assembled": {
+        "pos": [-0.38417, 0.45558, 0.03899],
+        "quat": [-0.4249, -0.57677, -0.40532, 0.5679],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.9, 1.2, -0.3], "distance": 0.08 }
+    },
+    {
+      "nodeId": "Part8_2_NODE",
+      "partId": "Part8",
+      "parentNodeId": "Part7_NODE",
+      "assembled": {
+        "pos": [-0.38788, 0.47292, 0.08333],
+        "quat": [0.4056, 0.64212, -0.40483, 0.50919],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.9, 1.2, 0.3], "distance": 0.08 }
+    }
+  ]
+}

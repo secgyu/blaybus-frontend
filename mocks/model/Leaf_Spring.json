@@ -1,0 +1,177 @@
+{
+  "model": {
+    "modelId": "leaf_spring",
+    "title": "판스프링 (Leaf Spring)",
+    "thumbnailUrl": "/models/Leaf Spring/판스프링 조립도.png",
+    "overview": "블렌더(Blender)에서 스크립트로 자동 추출한 리프 스프링(Leaf Spring) 어셈블리 데이터입니다. 각 부품은 개별 GLB로 분리되어 있으며, nodes의 assembled 변환값(위치/회전/스케일)을 적용하면 조립 상태로 정확히 배치됩니다.",
+    "theory": "리프 스프링은 여러 장의 판스프링(Leaf)이 적층되어 하중을 탄성 변형으로 흡수하는 서스펜션 요소입니다. 중앙 클램프(Clamp)가 리프 적층을 고정하고, 서포트/샤시 브라켓(Support/Chassis)이 차체에 체결되어 하중을 전달합니다. 러버(고무) 부품은 진동/충격을 감쇠하고 금속 간 직접 접촉을 줄입니다."
+  },
+  "parts": [
+    {
+      "partId": "Clamp_Center",
+      "glbUrl": "/models/Leaf Spring/Clamp-Center.glb",
+      "displayNameKo": "센터 클램프",
+      "summary": "리프 스프링 적층의 중앙을 눌러 고정하는 센터 클램프(체결부)입니다."
+    },
+    {
+      "partId": "Clamp_Primary",
+      "glbUrl": "/models/Leaf Spring/Clamp-Primary.glb",
+      "displayNameKo": "1차 클램프",
+      "summary": "주(Primary) 클램프 구성 요소로, 적층 리프를 고정하는 체결 파트입니다."
+    },
+    {
+      "partId": "Clamp_Secondary",
+      "glbUrl": "/models/Leaf Spring/Clamp-Secondary.glb",
+      "displayNameKo": "2차 클램프",
+      "summary": "보조(Secondary) 클램프 구성 요소로, 주 클램프와 함께 고정력을 보강합니다."
+    },
+    {
+      "partId": "Leaf_Layer",
+      "glbUrl": "/models/Leaf Spring/Leaf-Layer.glb",
+      "displayNameKo": "리프 레이어",
+      "summary": "하중을 탄성 변형으로 흡수하는 판스프링(리프) 적층 레이어입니다."
+    },
+    {
+      "partId": "Support",
+      "glbUrl": "/models/Leaf Spring/Support.glb",
+      "displayNameKo": "서포트",
+      "summary": "리프 스프링 어셈블리를 지지하고 차체/브라켓으로 힘을 전달하는 서포트 부품입니다."
+    },
+    {
+      "partId": "Support_Chassis",
+      "glbUrl": "/models/Leaf Spring/Support-Chassis.glb",
+      "displayNameKo": "샤시 서포트",
+      "summary": "차체(Chassis) 측 체결/지지를 담당하는 브라켓(서포트) 부품입니다."
+    },
+    {
+      "partId": "Support_Chassis_Rigid",
+      "glbUrl": "/models/Leaf Spring/Support-Chassis Rigid.glb",
+      "displayNameKo": "리지드 샤시 서포트",
+      "summary": "차체 체결부의 강성을 제공하는 리지드(Rigid) 보강 브라켓/플레이트 역할의 부품입니다."
+    },
+    {
+      "partId": "Support_Rubber_60mm",
+      "glbUrl": "/models/Leaf Spring/Support-Rubber 60mm.glb",
+      "displayNameKo": "60mm 러버",
+      "summary": "지지부에 삽입되는 60mm 규격 러버(완충/진동 감쇠)입니다."
+    },
+    {
+      "partId": "Support_Rubber",
+      "glbUrl": "/models/Leaf Spring/Support-Rubber.glb",
+      "displayNameKo": "서포트 러버",
+      "summary": "금속 접촉을 줄이고 충격을 흡수하는 기본 러버(부싱/패드) 부품입니다."
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "Clamp_Center_NODE",
+      "partId": "Clamp_Center",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, -0.0755, 0.03461],
+        "quat": [-0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, 1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Clamp_Primary_NODE",
+      "partId": "Clamp_Primary",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, 1, 0.2], "distance": 0.08 }
+    },
+    {
+      "nodeId": "Clamp_Secondary_NODE",
+      "partId": "Clamp_Secondary",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, 1, -0.2], "distance": 0.08 }
+    },
+    {
+      "nodeId": "Leaf_Layer_NODE",
+      "partId": "Leaf_Layer",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, -0.0, -0.04403],
+        "quat": [-0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0, -1, 0], "distance": 0.05 }
+    },
+    {
+      "nodeId": "Support_NODE",
+      "partId": "Support",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.59886, 0.08102, -0.00599],
+        "quat": [-0.55255, -0.83348, 0.0, 0.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [1, 0.5, 0], "distance": 0.15 }
+    },
+    {
+      "nodeId": "Support_Chassis_NODE",
+      "partId": "Support_Chassis",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.63684, 0.12391, -0.05015],
+        "quat": [-0.70709, -0.00541, -0.70709, 0.00541],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [1, 0.8, 0], "distance": 0.12 }
+    },
+    {
+      "nodeId": "Support_Chassis_Rigid_NODE",
+      "partId": "Support_Chassis_Rigid",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [-0.45317, 0.0343, -0.05308],
+        "quat": [-0.70711, -0.00147, -0.70711, 0.00147],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [-1, 0.8, 0], "distance": 0.12 }
+    },
+    {
+      "nodeId": "Support_Rubber_60mm_1_NODE",
+      "partId": "Support_Rubber_60mm",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.63722, 0.12458, -0.04272],
+        "quat": [-0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [1, 1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Support_Rubber_NODE",
+      "partId": "Support_Rubber",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [-0.4535, 0.03405, -0.03452],
+        "quat": [-0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [-1, 1, 0], "distance": 0.1 }
+    },
+    {
+      "nodeId": "Support_Rubber_60mm_2_NODE",
+      "partId": "Support_Rubber_60mm",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.53576, 0.08164, -0.04272],
+        "quat": [-0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": { "dir": [0.8, 1, 0], "distance": 0.1 }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "model": {
+    "modelId": "machine_vice",
+    "title": "공작 기계 바이스 (Machine Vice)",
+    "thumbnailUrl": "/models/Machine Vice/공작 기계 바이스.jpg",
+    "overview": "블렌더(Blender)에서 스크립트로 자동 추출한 머신 바이스(Machine Vice) 어셈블리 데이터입니다.",
+    "theory": "머신 바이스는 공작물(workpiece)을 고정하기 위한 기계식 클램핑 장치입니다. 베이스/가이드 위에서 이동 죠(lose backe)가 직선 이동하고, 리드 스크류(Trapezspindel, 사다리꼴 나사)가 회전하면서 축방향 힘을 만들어 공작물을 고정합니다."
+  },
+  "parts": [
+    {
+      "partId": "machine_vice_full",
+      "glbUrl": "/models/Machine Vice/machine_vice_full.glb",
+      "displayNameKo": "공작 기계 바이스 (전체)",
+      "summary": "공작 기계 바이스 전체 어셈블리입니다."
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "machine_vice_full_NODE",
+      "partId": "machine_vice_full",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0, 0, 0],
+        "quat": [0, 0, 0, 1],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0, 0, 0], "distance": 0 }
+    }
+  ]
+}

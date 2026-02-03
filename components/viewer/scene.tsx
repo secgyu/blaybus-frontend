@@ -3,6 +3,8 @@
 import {
   Suspense,
   forwardRef,
+  useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -17,7 +19,8 @@ import { Minus, Plus, RotateCcw, RotateCw } from 'lucide-react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 import { Button } from '@/components/ui/button';
-import type { Model } from '@/lib/types';
+import type { CameraState, Model } from '@/lib/types';
+import { useViewerStore } from '@/store/viewer-store';
 
 import { ModelViewer } from './model-viewer';
 
@@ -46,12 +49,64 @@ interface ControlsHandle {
   stopRotate: () => void;
 }
 
-const ManualControls = forwardRef<ControlsHandle, object>(
-  function ManualControls(_props, ref) {
+interface ManualControlsProps {
+  initialCameraState: CameraState | null;
+  onCameraChange: (state: CameraState) => void;
+}
+
+const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
+  function ManualControls({ initialCameraState, onCameraChange }, ref) {
     const controlsRef = useRef<OrbitControlsImpl>(null);
     const { camera } = useThree();
     const isRotatingRef = useRef(false);
     const rotateDirectionRef = useRef(0);
+    const isInitializedRef = useRef(false);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 저장된 카메라 상태로 초기화
+    useEffect(() => {
+      if (
+        initialCameraState &&
+        !isInitializedRef.current &&
+        controlsRef.current
+      ) {
+        const { position, target } = initialCameraState;
+        camera.position.set(position[0], position[1], position[2]);
+        controlsRef.current.target.set(target[0], target[1], target[2]);
+        camera.lookAt(target[0], target[1], target[2]);
+        controlsRef.current.update();
+        isInitializedRef.current = true;
+      }
+    }, [initialCameraState, camera]);
+
+    // 디바운스된 카메라 상태 저장
+    const saveCameraState = useCallback(() => {
+      if (controlsRef.current) {
+        const position = camera.position;
+        const target = controlsRef.current.target;
+        onCameraChange({
+          position: [position.x, position.y, position.z],
+          target: [target.x, target.y, target.z],
+          zoom: camera.zoom,
+        });
+      }
+    }, [camera, onCameraChange]);
+
+    const debouncedSave = useCallback(() => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      saveTimeoutRef.current = setTimeout(saveCameraState, 300);
+    }, [saveCameraState]);
+
+    // 클린업
+    useEffect(() => {
+      return () => {
+        if (saveTimeoutRef.current) {
+          clearTimeout(saveTimeoutRef.current);
+        }
+      };
+    }, []);
 
     useImperativeHandle(ref, () => ({
       zoomIn: () => {
@@ -59,6 +114,7 @@ const ManualControls = forwardRef<ControlsHandle, object>(
           const zoomFactor = 0.8;
           camera.position.lerp(controlsRef.current.target, 1 - zoomFactor);
           controlsRef.current.update();
+          debouncedSave();
         }
       },
       zoomOut: () => {
@@ -69,6 +125,7 @@ const ManualControls = forwardRef<ControlsHandle, object>(
             .normalize();
           camera.position.add(direction.multiplyScalar(0.2));
           controlsRef.current.update();
+          debouncedSave();
         }
       },
       startRotateLeft: () => {
@@ -82,6 +139,7 @@ const ManualControls = forwardRef<ControlsHandle, object>(
       stopRotate: () => {
         isRotatingRef.current = false;
         rotateDirectionRef.current = 0;
+        debouncedSave();
       },
     }));
 
@@ -117,10 +175,17 @@ const ManualControls = forwardRef<ControlsHandle, object>(
           MIDDLE: 2,
           RIGHT: 0,
         }}
+        onChange={debouncedSave}
       />
     );
   }
 );
+
+interface CanvasContentProps extends SceneProps {
+  controlsRef: React.RefObject<ControlsHandle | null>;
+  initialCameraState: CameraState | null;
+  onCameraChange: (state: CameraState) => void;
+}
 
 function CanvasContent({
   model,
@@ -129,7 +194,9 @@ function CanvasContent({
   onPartClick,
   onPartHover,
   controlsRef,
-}: SceneProps & { controlsRef: React.RefObject<ControlsHandle | null> }) {
+  initialCameraState,
+  onCameraChange,
+}: CanvasContentProps) {
   return (
     <>
       <ambientLight intensity={0.4} />
@@ -163,7 +230,11 @@ function CanvasContent({
         color="#00d4ff"
       />
 
-      <ManualControls ref={controlsRef} />
+      <ManualControls
+        ref={controlsRef}
+        initialCameraState={initialCameraState}
+        onCameraChange={onCameraChange}
+      />
 
       <gridHelper
         args={[2, 20, '#1e3a5f', '#0d1f33']}
@@ -183,6 +254,22 @@ export function Scene({
   const controlsRef = useRef<ControlsHandle>(null);
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
   const [isRotatingRight, setIsRotatingRight] = useState(false);
+
+  // zustand store에서 카메라 상태 가져오기
+  const store = useViewerStore(model.id);
+  const cameraState = store((state) => state.cameraState);
+  const setCameraState = store((state) => state.setCameraState);
+  const isHydrated = store((state) => state.isHydrated);
+
+  // hydration 완료 후에만 초기 카메라 상태 전달
+  const initialCameraState = isHydrated ? cameraState : null;
+
+  const handleCameraChange = useCallback(
+    (state: CameraState) => {
+      setCameraState(state);
+    },
+    [setCameraState]
+  );
 
   const handleRotateLeftStart = () => {
     setIsRotatingLeft(true);
@@ -228,6 +315,8 @@ export function Scene({
           onPartClick={onPartClick}
           onPartHover={onPartHover}
           controlsRef={controlsRef}
+          initialCameraState={initialCameraState}
+          onCameraChange={handleCameraChange}
         />
       </Canvas>
 

@@ -35,21 +35,20 @@ export interface Model {
   systemPrompt: string;
 }
 
+/** 카메라 상태 */
+export interface CameraState {
+  position: [number, number, number];
+  target: [number, number, number];
+  zoom: number;
+}
+
 export interface ViewerState {
   modelId: string;
-  camera: {
-    position: [number, number, number];
-    rotation: [number, number, number];
-    zoom: number;
-  };
+  camera: CameraState;
   explodeValue: number;
   selectedPartId: string | null;
   notes: string;
-  aiHistory: Array<{
-    role: 'user' | 'assistant';
-    content: string;
-    timestamp: number;
-  }>;
+  aiHistory: ChatMessage[];
 }
 
 export interface ChatMessage {

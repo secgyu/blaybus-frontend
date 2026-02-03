@@ -11,10 +11,10 @@ import { LeftSidebar } from '@/components/viewer/left-sidebar';
 import { RightSidebar } from '@/components/viewer/right-sidebar';
 import { Scene } from '@/components/viewer/scene';
 import { SearchBar } from '@/components/viewer/search-bar';
-import { useViewerState } from '@/hooks/use-viewer-state';
 import { fetchViewerData, sendChatMessage } from '@/lib/api';
 import { toViewerModel } from '@/lib/transform';
 import type { Model } from '@/lib/types';
+import { useViewerStore } from '@/store/viewer-store';
 
 // System prompts for AI chat
 const systemPrompts: Record<string, string> = {
@@ -115,21 +115,24 @@ export default function StudyPage({ params }: PageProps) {
     loadModel();
   }, [modelId]);
 
-  const {
-    state,
-    isLoaded,
-    setExplodeValue,
-    setSelectedPartId,
-    setNotes,
-    addChatMessage,
-    clearChatHistory,
-  } = useViewerState(modelId);
+  // Zustand store 사용
+  const store = useViewerStore(modelId);
+  const selectedPartId = store((state) => state.selectedPartId);
+  const explodeValue = store((state) => state.explodeValue);
+  const notes = store((state) => state.notes);
+  const aiHistory = store((state) => state.aiHistory);
+  const isHydrated = store((state) => state.isHydrated);
+  const setSelectedPartId = store((state) => state.setSelectedPartId);
+  const setExplodeValue = store((state) => state.setExplodeValue);
+  const setNotes = store((state) => state.setNotes);
+  const addChatMessage = store((state) => state.addChatMessage);
+  const clearChatHistory = store((state) => state.clearChatHistory);
 
   const [showRightPanel, setShowRightPanel] = useState(true);
   const [hoveredPartId, setHoveredPartId] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
 
-  const selectedPart = model?.parts.find((p) => p.id === state.selectedPartId);
+  const selectedPart = model?.parts.find((p) => p.id === selectedPartId);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
@@ -142,7 +145,7 @@ export default function StudyPage({ params }: PageProps) {
       try {
         // Build messages array for API
         const messages = [
-          ...state.aiHistory.map((m) => ({
+          ...aiHistory.map((m) => ({
             role: m.role as 'user' | 'assistant',
             content: m.content,
           })),
@@ -171,7 +174,7 @@ export default function StudyPage({ params }: PageProps) {
         setIsAiLoading(false);
       }
     },
-    [model, modelId, state.aiHistory, selectedPart, addChatMessage]
+    [model, modelId, aiHistory, selectedPart, addChatMessage]
   );
 
   const handleSearchSubmit = (query: string) => {
@@ -196,7 +199,8 @@ export default function StudyPage({ params }: PageProps) {
     notFound();
   }
 
-  if (!isLoaded) {
+  // Wait for hydration
+  if (!isHydrated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-primary animate-pulse">Loading...</div>
@@ -215,8 +219,8 @@ export default function StudyPage({ params }: PageProps) {
         {/* Left Sidebar */}
         <LeftSidebar
           model={model}
-          selectedPartId={state.selectedPartId}
-          explodeValue={state.explodeValue}
+          selectedPartId={selectedPartId}
+          explodeValue={explodeValue}
           onExplodeChange={setExplodeValue}
           onPartSelect={setSelectedPartId}
         />
@@ -225,8 +229,8 @@ export default function StudyPage({ params }: PageProps) {
         <main className="flex-1 relative">
           <Scene
             model={model}
-            explodeValue={state.explodeValue}
-            selectedPartId={state.selectedPartId || hoveredPartId}
+            explodeValue={explodeValue}
+            selectedPartId={selectedPartId || hoveredPartId}
             onPartClick={setSelectedPartId}
             onPartHover={setHoveredPartId}
           />
@@ -235,7 +239,7 @@ export default function StudyPage({ params }: PageProps) {
           <SearchBar onSubmit={handleSearchSubmit} disabled={isAiLoading} />
 
           {/* Part Info Tooltip */}
-          {hoveredPartId && !state.selectedPartId && (
+          {hoveredPartId && !selectedPartId && (
             <PartTooltip
               part={model.parts.find((p) => p.id === hoveredPartId)!}
             />
@@ -247,9 +251,9 @@ export default function StudyPage({ params }: PageProps) {
           <RightSidebar
             model={model}
             selectedPart={selectedPart || null}
-            notes={state.notes}
+            notes={notes}
             onNotesChange={setNotes}
-            aiHistory={state.aiHistory}
+            aiHistory={aiHistory}
             onSendMessage={handleSendMessage}
             onClearHistory={clearChatHistory}
             isAiLoading={isAiLoading}

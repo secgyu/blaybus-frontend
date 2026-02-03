@@ -2,11 +2,9 @@
 
 import { useMemo, useRef } from 'react';
 
-import { useFrame } from '@react-three/fiber';
-
 import type * as THREE from 'three';
 
-import type { Model, PartInstance, Quaternion, Vector3 } from '@/lib/types';
+import type { Model, Quaternion, Vector3 } from '@/lib/types';
 
 import { PartMesh } from './part-mesh';
 
@@ -36,20 +34,11 @@ export function ModelViewer({
 }: ModelViewerProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Slowly rotate the entire model group
-  useFrame((_, delta) => {
-    if (groupRef.current && explodeValue === 0) {
-      groupRef.current.rotation.y += delta * 0.1;
-    }
-  });
-
-  // Build instanced parts with calculated positions
   const instancedParts = useMemo(() => {
     const result: InstancedPart[] = [];
     const explodeFactor = explodeValue / 100;
 
     for (const part of model.parts) {
-      // instances가 있으면 각 인스턴스별로 처리
       if (part.instances && part.instances.length > 0) {
         for (const inst of part.instances) {
           const position: Vector3 = [
@@ -70,7 +59,6 @@ export function ModelViewer({
           });
         }
       } else {
-        // 기존 방식 (basePosition, explodeOffset)
         const basePos = part.basePosition || [0, 0, 0];
         const explodeOff = part.explodeOffset || [0, 0, 0];
         const position: Vector3 = [
@@ -89,17 +77,16 @@ export function ModelViewer({
     return result;
   }, [model.parts, explodeValue]);
 
-  // Generate unique colors for parts
   const partColors = useMemo(() => {
     const colors = [
-      '#0ea5e9', // Sky blue
-      '#06b6d4', // Cyan
-      '#14b8a6', // Teal
-      '#22c55e', // Green
-      '#84cc16', // Lime
-      '#eab308', // Yellow
-      '#f97316', // Orange
-      '#ef4444', // Red
+      '#0ea5e9',
+      '#06b6d4',
+      '#14b8a6',
+      '#22c55e',
+      '#84cc16',
+      '#eab308',
+      '#f97316',
+      '#ef4444',
     ];
 
     return model.parts.reduce(

@@ -1,12 +1,22 @@
 'use client';
 
-import { Suspense, useCallback, useRef, useState } from 'react';
+import {
+  Suspense,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import { ContactShadows, Environment, OrbitControls } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
+import * as THREE from 'three';
+
+import { Minus, Plus, RotateCcw, RotateCw } from 'lucide-react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
+import { Button } from '@/components/ui/button';
 import type { Model } from '@/lib/types';
 
 import { ModelViewer } from './model-viewer';
@@ -28,68 +38,138 @@ function LoadingFallback() {
   );
 }
 
-interface AutoRotateControlsProps {
-  rotateDirection: number;
-  onRotateDirectionChange: (dir: number) => void;
+interface ControlsHandle {
+  zoomIn: () => void;
+  zoomOut: () => void;
+  startRotateLeft: () => void;
+  startRotateRight: () => void;
+  stopRotate: () => void;
 }
 
-function AutoRotateControls({
-  rotateDirection,
-  onRotateDirectionChange,
-}: AutoRotateControlsProps) {
-  const controlsRef = useRef<OrbitControlsImpl>(null);
-  const lastAzimuthRef = useRef<number>(0);
-  const isDraggingRef = useRef(false);
+const ManualControls = forwardRef<ControlsHandle, object>(
+  function ManualControls(_props, ref) {
+    const controlsRef = useRef<OrbitControlsImpl>(null);
+    const { camera } = useThree();
+    const isRotatingRef = useRef(false);
+    const rotateDirectionRef = useRef(0);
 
-  useFrame(() => {
-    if (controlsRef.current && !isDraggingRef.current) {
-      // 자동 회전 적용
-      controlsRef.current.autoRotate = true;
-      controlsRef.current.autoRotateSpeed = rotateDirection * 1.5;
-    }
-  });
+    useImperativeHandle(ref, () => ({
+      zoomIn: () => {
+        if (controlsRef.current) {
+          const zoomFactor = 0.8;
+          camera.position.lerp(controlsRef.current.target, 1 - zoomFactor);
+          controlsRef.current.update();
+        }
+      },
+      zoomOut: () => {
+        if (controlsRef.current) {
+          const direction = camera.position
+            .clone()
+            .sub(controlsRef.current.target)
+            .normalize();
+          camera.position.add(direction.multiplyScalar(0.2));
+          controlsRef.current.update();
+        }
+      },
+      startRotateLeft: () => {
+        isRotatingRef.current = true;
+        rotateDirectionRef.current = 1;
+      },
+      startRotateRight: () => {
+        isRotatingRef.current = true;
+        rotateDirectionRef.current = -1;
+      },
+      stopRotate: () => {
+        isRotatingRef.current = false;
+        rotateDirectionRef.current = 0;
+      },
+    }));
 
-  const handleStart = useCallback(() => {
-    isDraggingRef.current = true;
-    if (controlsRef.current) {
-      lastAzimuthRef.current = controlsRef.current.getAzimuthalAngle();
-      controlsRef.current.autoRotate = false;
-    }
-  }, []);
+    useFrame((_, delta) => {
+      if (controlsRef.current && isRotatingRef.current) {
+        const rotateSpeed = 2;
+        const angle = rotateDirectionRef.current * rotateSpeed * delta;
 
-  const handleEnd = useCallback(() => {
-    if (controlsRef.current) {
-      const currentAzimuth = controlsRef.current.getAzimuthalAngle();
-      const delta = currentAzimuth - lastAzimuthRef.current;
-
-      // 드래그 방향에 따라 회전 방향 결정
-      if (Math.abs(delta) > 0.01) {
-        onRotateDirectionChange(delta > 0 ? -1 : 1);
+        const target = controlsRef.current.target;
+        const offset = camera.position.clone().sub(target);
+        const spherical = new THREE.Spherical().setFromVector3(offset);
+        spherical.theta += angle;
+        offset.setFromSpherical(spherical);
+        camera.position.copy(target).add(offset);
+        camera.lookAt(target);
+        controlsRef.current.update();
       }
+    });
 
-      controlsRef.current.autoRotate = true;
-    }
-    isDraggingRef.current = false;
-  }, [onRotateDirectionChange]);
+    return (
+      <OrbitControls
+        ref={controlsRef}
+        enableDamping
+        dampingFactor={0.05}
+        rotateSpeed={0.5}
+        zoomSpeed={0.8}
+        panSpeed={0.5}
+        autoRotate={false}
+        minPolarAngle={0}
+        maxPolarAngle={Math.PI}
+        mouseButtons={{
+          LEFT: 0,
+          MIDDLE: 2,
+          RIGHT: 0,
+        }}
+      />
+    );
+  }
+);
 
+function CanvasContent({
+  model,
+  explodeValue,
+  selectedPartId,
+  onPartClick,
+  onPartHover,
+  controlsRef,
+}: SceneProps & { controlsRef: React.RefObject<ControlsHandle | null> }) {
   return (
-    <OrbitControls
-      ref={controlsRef}
-      enableDamping
-      dampingFactor={0.05}
-      rotateSpeed={0.5}
-      zoomSpeed={0.8}
-      panSpeed={0.5}
-      autoRotate
-      autoRotateSpeed={rotateDirection * 1.5}
-      mouseButtons={{
-        LEFT: undefined,
-        MIDDLE: 2,
-        RIGHT: 0,
-      }}
-      onStart={handleStart}
-      onEnd={handleEnd}
-    />
+    <>
+      <ambientLight intensity={0.4} />
+      <directionalLight
+        position={[10, 10, 5]}
+        intensity={1}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+      />
+      <directionalLight position={[-5, 5, -5]} intensity={0.3} />
+      <pointLight position={[0, 5, 0]} intensity={0.5} color="#00d4ff" />
+
+      <Environment preset="city" />
+
+      <Suspense fallback={<LoadingFallback />}>
+        <ModelViewer
+          model={model}
+          explodeValue={explodeValue}
+          selectedPartId={selectedPartId}
+          onPartClick={onPartClick}
+          onPartHover={onPartHover}
+        />
+      </Suspense>
+
+      <ContactShadows
+        position={[0, -0.1, 0]}
+        opacity={0.4}
+        scale={2}
+        blur={2}
+        far={1}
+        color="#00d4ff"
+      />
+
+      <ManualControls ref={controlsRef} />
+
+      <gridHelper
+        args={[2, 20, '#1e3a5f', '#0d1f33']}
+        position={[0, -0.1, 0]}
+      />
+    </>
   );
 }
 
@@ -100,11 +180,40 @@ export function Scene({
   onPartClick,
   onPartHover,
 }: SceneProps) {
-  const [rotateDirection, setRotateDirection] = useState(1); // 1: 오른쪽, -1: 왼쪽
+  const controlsRef = useRef<ControlsHandle>(null);
+  const [isRotatingLeft, setIsRotatingLeft] = useState(false);
+  const [isRotatingRight, setIsRotatingRight] = useState(false);
+
+  const handleRotateLeftStart = () => {
+    setIsRotatingLeft(true);
+    controlsRef.current?.startRotateLeft();
+  };
+
+  const handleRotateLeftEnd = () => {
+    setIsRotatingLeft(false);
+    controlsRef.current?.stopRotate();
+  };
+
+  const handleRotateRightStart = () => {
+    setIsRotatingRight(true);
+    controlsRef.current?.startRotateRight();
+  };
+
+  const handleRotateRightEnd = () => {
+    setIsRotatingRight(false);
+    controlsRef.current?.stopRotate();
+  };
+
+  const handleZoomIn = () => {
+    controlsRef.current?.zoomIn();
+  };
+
+  const handleZoomOut = () => {
+    controlsRef.current?.zoomOut();
+  };
 
   return (
     <div className="w-full h-full relative">
-      {/* Grid background overlay */}
       <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
       <Canvas
@@ -112,55 +221,72 @@ export function Scene({
         gl={{ antialias: true, alpha: true }}
         style={{ background: '#070b14' }}
       >
-        {/* Lighting */}
-        <ambientLight intensity={0.4} />
-        <directionalLight
-          position={[10, 10, 5]}
-          intensity={1}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        <directionalLight position={[-5, 5, -5]} intensity={0.3} />
-        <pointLight position={[0, 5, 0]} intensity={0.5} color="#00d4ff" />
-
-        {/* Environment */}
-        <Environment preset="city" />
-
-        {/* Model */}
-        <Suspense fallback={<LoadingFallback />}>
-          <ModelViewer
-            model={model}
-            explodeValue={explodeValue}
-            selectedPartId={selectedPartId}
-            onPartClick={onPartClick}
-            onPartHover={onPartHover}
-          />
-        </Suspense>
-
-        {/* Shadows */}
-        <ContactShadows
-          position={[0, -0.1, 0]}
-          opacity={0.4}
-          scale={2}
-          blur={2}
-          far={1}
-          color="#00d4ff"
-        />
-
-        {/* Controls with Auto Rotate */}
-        <AutoRotateControls
-          rotateDirection={rotateDirection}
-          onRotateDirectionChange={setRotateDirection}
-        />
-
-        {/* Grid helper */}
-        <gridHelper
-          args={[2, 20, '#1e3a5f', '#0d1f33']}
-          position={[0, -0.1, 0]}
+        <CanvasContent
+          model={model}
+          explodeValue={explodeValue}
+          selectedPartId={selectedPartId}
+          onPartClick={onPartClick}
+          onPartHover={onPartHover}
+          controlsRef={controlsRef}
         />
       </Canvas>
 
-      {/* Viewport info overlay */}
+      <div className="absolute bottom-20 right-4 flex flex-col gap-2 z-10">
+        <div className="flex flex-col gap-1 glass-panel p-1 rounded-lg">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 hover:bg-primary/20 hover:text-primary"
+            onClick={handleZoomIn}
+            title="확대"
+          >
+            <Plus className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 hover:bg-primary/20 hover:text-primary"
+            onClick={handleZoomOut}
+            title="축소"
+          >
+            <Minus className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <div className="flex gap-1 glass-panel p-1 rounded-lg">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`h-10 w-10 hover:bg-primary/20 hover:text-primary transition-colors ${
+              isRotatingLeft ? 'bg-primary/30 text-primary' : ''
+            }`}
+            onMouseDown={handleRotateLeftStart}
+            onMouseUp={handleRotateLeftEnd}
+            onMouseLeave={handleRotateLeftEnd}
+            onTouchStart={handleRotateLeftStart}
+            onTouchEnd={handleRotateLeftEnd}
+            title="왼쪽으로 회전"
+          >
+            <RotateCcw className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`h-10 w-10 hover:bg-primary/20 hover:text-primary transition-colors ${
+              isRotatingRight ? 'bg-primary/30 text-primary' : ''
+            }`}
+            onMouseDown={handleRotateRightStart}
+            onMouseUp={handleRotateRightEnd}
+            onMouseLeave={handleRotateRightEnd}
+            onTouchStart={handleRotateRightStart}
+            onTouchEnd={handleRotateRightEnd}
+            title="오른쪽으로 회전"
+          >
+            <RotateCw className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+
       <div className="absolute bottom-4 left-4 text-xs font-mono text-muted-foreground/60">
         <div>RMB: Rotate | MMB: Pan | Scroll: Zoom</div>
       </div>

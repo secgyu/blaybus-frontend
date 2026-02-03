@@ -1,0 +1,166 @@
+{
+  "model": {
+    "modelId": "robot_gripper",
+    "title": "로봇 그리퍼 (Robot Gripper)",
+    "thumbnailUrl": "/models/Robot Gripper/로봇집게 조립도.png",
+    "overview": "기어-링크 메커니즘 기반의 로봇 그리퍼 조립/분해 시각화입니다. Blender에서 추출한 실제 3D 변환(위치/회전/스케일)을 그대로 사용합니다.",
+    "theory": "베이스 플레이트를 기준으로 기어가 링크를 구동하고, 링크 끝단의 그리퍼가 물체를 파지합니다."
+  },
+  "parts": [
+    {
+      "partId": "Base_Plate",
+      "displayNameKo": "베이스 플레이트",
+      "glbUrl": "/models/Robot Gripper/Base Plate.glb",
+      "summary": "전체 조립의 기준이 되는 하부 플레이트"
+    },
+    {
+      "partId": "Base_Mounting_bracket",
+      "displayNameKo": "마운팅 브래킷",
+      "glbUrl": "/models/Robot Gripper/Base Mounting bracket.glb",
+      "summary": "플레이트에 체결되는 고정부(장착 브래킷)"
+    },
+    {
+      "partId": "Base_Gear",
+      "displayNameKo": "베이스 기어",
+      "glbUrl": "/models/Robot Gripper/Base Gear.glb",
+      "summary": "링크 구동을 전달하는 중심 기어(구동부)"
+    },
+    {
+      "partId": "Gear_link_1",
+      "displayNameKo": "기어 링크 1",
+      "glbUrl": "/models/Robot Gripper/Gear link 1.glb",
+      "summary": "기어의 회전을 링크로 전달하는 연결 부품(좌측)"
+    },
+    {
+      "partId": "Gear_link_2",
+      "displayNameKo": "기어 링크 2",
+      "glbUrl": "/models/Robot Gripper/Gear link 2.glb",
+      "summary": "기어의 회전을 링크로 전달하는 연결 부품(우측)"
+    },
+    {
+      "partId": "Link_1",
+      "displayNameKo": "링크 1",
+      "glbUrl": "/models/Robot Gripper/Link.glb",
+      "summary": "기어 링크와 그리퍼를 연결하는 관절 링크(좌측)"
+    },
+    {
+      "partId": "Link_2",
+      "displayNameKo": "링크 2",
+      "glbUrl": "/models/Robot Gripper/Link.glb",
+      "summary": "기어 링크와 그리퍼를 연결하는 관절 링크(우측)"
+    },
+    {
+      "partId": "Gripper_1",
+      "displayNameKo": "그리퍼 1",
+      "glbUrl": "/models/Robot Gripper/Gripper.glb",
+      "summary": "물체를 파지하는 끝단 집게(좌측)"
+    },
+    {
+      "partId": "Gripper_2",
+      "displayNameKo": "그리퍼 2",
+      "glbUrl": "/models/Robot Gripper/Gripper.glb",
+      "summary": "물체를 파지하는 끝단 집게(우측)"
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "Base_Plate_NODE",
+      "partId": "Base_Plate",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0.0, 0.0, 0.0], "distance": 0.0 }
+    },
+    {
+      "nodeId": "Base_Mounting_bracket_NODE",
+      "partId": "Base_Mounting_bracket",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.00955, 0.00307, -0.00582],
+        "quat": [-0.0, -0.71074, 0.0, 0.70345],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [-0.00955, 0.99994, -0.00582], "distance": 0.35 }
+    },
+    {
+      "nodeId": "Base_Gear_NODE",
+      "partId": "Base_Gear",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.00741, -0.0078, 0.01763],
+        "quat": [0.70599, 0.70823, -0.00087, 0.00087],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0.00741, 0.99982, 0.01763], "distance": 0.35 }
+    },
+    {
+      "nodeId": "Gear_link_1_NODE",
+      "partId": "Gear_link_1",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.0138, 0.00179, 0.03711],
+        "quat": [-0.70929, 0.70486, -0.00626, 0.00622],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0.01379, 0.99922, 0.03708], "distance": 0.35 }
+    },
+    {
+      "nodeId": "Gear_link_2_NODE",
+      "partId": "Gear_link_2",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.01326, 0.00275, 0.03747],
+        "quat": [-0.46906, -0.52884, -0.52791, 0.47076],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [-0.01325, 0.99921, 0.03744], "distance": 0.35 }
+    },
+    {
+      "nodeId": "Link_1_NODE",
+      "partId": "Link_1",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.00531, 0.00063, 0.0734],
+        "quat": [0.0, -0.0, -0.70711, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [-0.0053, -0.9973, 0.0732], "distance": 0.5 }
+    },
+    {
+      "nodeId": "Link_2_NODE",
+      "partId": "Link_2",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.0049, 0.00063, 0.0736],
+        "quat": [0.0, -0.0, -0.70711, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0.00489, -0.99729, 0.0734], "distance": 0.5 }
+    },
+    {
+      "nodeId": "Gripper_1_NODE",
+      "partId": "Gripper_1",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.00088, -0.00202, 0.08675],
+        "quat": [0.58378, -0.399, 0.40653, 0.57856],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [-0.00088, -0.99626, 0.08643], "distance": 0.5 }
+    },
+    {
+      "nodeId": "Gripper_2_NODE",
+      "partId": "Gripper_2",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.00052, -0.00202, 0.08695],
+        "quat": [-0.40277, -0.58118, -0.58118, 0.40277],
+        "scale": [1, 1, 1]
+      },
+      "explode": { "dir": [0.00052, -0.99624, 0.08662], "distance": 0.5 }
+    }
+  ]
+}

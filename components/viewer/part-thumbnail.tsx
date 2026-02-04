@@ -22,11 +22,9 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
   );
   const { camera } = useThree();
 
-  // Clone the scene and store original materials
   const clonedScene = useMemo(() => {
     const cloned = scene.clone();
 
-    // Clone materials once and store them
     cloned.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         const originalMaterial = child.material as THREE.MeshStandardMaterial;
@@ -44,7 +42,6 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
     return cloned;
   }, [scene]);
 
-  // Auto-fit camera to model
   useEffect(() => {
     if (clonedScene && camera) {
       const box = new THREE.Box3().setFromObject(clonedScene);
@@ -58,7 +55,6 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
     }
   }, [clonedScene, camera]);
 
-  // Update material colors based on isSelected
   useEffect(() => {
     materialsRef.current.forEach((material) => {
       material.color.set(isSelected ? '#00d4ff' : '#8892b0');
@@ -68,7 +64,6 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
     });
   }, [isSelected]);
 
-  // Slow rotation animation
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.5;
@@ -117,14 +112,7 @@ export function PartThumbnail({
   onClick,
 }: PartThumbnailProps) {
   return (
-    <button
-      onClick={onClick}
-      className={`
-        aspect-square rounded-lg overflow-hidden transition-all
-        hover:ring-2 hover:ring-primary/50
-        ${isSelected ? 'ring-2 ring-primary bg-primary/10' : 'bg-secondary/50'}
-      `}
-    >
+    <div onClick={onClick} className="w-full h-full cursor-pointer">
       <Canvas
         camera={{ fov: 50, near: 0.001, far: 1000 }}
         gl={{ antialias: true, alpha: true }}
@@ -138,6 +126,6 @@ export function PartThumbnail({
           <ThumbnailModel glbPath={part.glbPath} isSelected={isSelected} />
         </Suspense>
       </Canvas>
-    </button>
+    </div>
   );
 }

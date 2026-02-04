@@ -15,7 +15,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
 import * as THREE from 'three';
 
-import { Minus, Plus, RotateCcw, RotateCw } from 'lucide-react';
+import { RotateCcw, RotateCw } from 'lucide-react';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 import { Button } from '@/components/ui/button';
@@ -47,15 +47,35 @@ interface ControlsHandle {
   startRotateLeft: () => void;
   startRotateRight: () => void;
   stopRotate: () => void;
+  setZoomLevel: (zoomPercent: number) => void;
+  getZoomLevel: () => number;
 }
 
 interface ManualControlsProps {
   initialCameraState: CameraState | null;
   onCameraChange: (state: CameraState) => void;
+  onZoomChange: (zoomPercent: number) => void;
+}
+
+const MIN_DISTANCE = 0.3;
+const MAX_DISTANCE = 5;
+
+function distanceToZoomPercent(distance: number): number {
+  const clamped = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
+  return Math.round(
+    ((MAX_DISTANCE - clamped) / (MAX_DISTANCE - MIN_DISTANCE)) * 100
+  );
+}
+
+function zoomPercentToDistance(percent: number): number {
+  return MAX_DISTANCE - (percent / 100) * (MAX_DISTANCE - MIN_DISTANCE);
 }
 
 const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
-  function ManualControls({ initialCameraState, onCameraChange }, ref) {
+  function ManualControls(
+    { initialCameraState, onCameraChange, onZoomChange },
+    ref
+  ) {
     const controlsRef = useRef<OrbitControlsImpl>(null);
     const { camera } = useThree();
     const isRotatingRef = useRef(false);
@@ -63,7 +83,13 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
     const isInitializedRef = useRef(false);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // 저장된 카메라 상태로 초기화
+    const getCurrentDistance = useCallback(() => {
+      if (controlsRef.current) {
+        return camera.position.distanceTo(controlsRef.current.target);
+      }
+      return 1.5;
+    }, [camera]);
+
     useEffect(() => {
       if (
         initialCameraState &&
@@ -76,30 +102,35 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         camera.lookAt(target[0], target[1], target[2]);
         controlsRef.current.update();
         isInitializedRef.current = true;
-      }
-    }, [initialCameraState, camera]);
 
-    // 디바운스된 카메라 상태 저장
+        const distance = camera.position.distanceTo(controlsRef.current.target);
+        onZoomChange(distanceToZoomPercent(distance));
+      }
+    }, [initialCameraState, camera, onZoomChange]);
+
     const saveCameraState = useCallback(() => {
       if (controlsRef.current) {
         const position = camera.position;
         const target = controlsRef.current.target;
+        const distance = position.distanceTo(target);
+
         onCameraChange({
           position: [position.x, position.y, position.z],
           target: [target.x, target.y, target.z],
           zoom: camera.zoom,
         });
+
+        onZoomChange(distanceToZoomPercent(distance));
       }
-    }, [camera, onCameraChange]);
+    }, [camera, onCameraChange, onZoomChange]);
 
     const debouncedSave = useCallback(() => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
-      saveTimeoutRef.current = setTimeout(saveCameraState, 300);
+      saveTimeoutRef.current = setTimeout(saveCameraState, 50);
     }, [saveCameraState]);
 
-    // 클린업
     useEffect(() => {
       return () => {
         if (saveTimeoutRef.current) {
@@ -141,6 +172,23 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         rotateDirectionRef.current = 0;
         debouncedSave();
       },
+      setZoomLevel: (zoomPercent: number) => {
+        if (controlsRef.current) {
+          const targetDistance = zoomPercentToDistance(zoomPercent);
+          const direction = camera.position
+            .clone()
+            .sub(controlsRef.current.target)
+            .normalize();
+          camera.position
+            .copy(controlsRef.current.target)
+            .add(direction.multiplyScalar(targetDistance));
+          controlsRef.current.update();
+          debouncedSave();
+        }
+      },
+      getZoomLevel: () => {
+        return distanceToZoomPercent(getCurrentDistance());
+      },
     }));
 
     useFrame((_, delta) => {
@@ -170,6 +218,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         autoRotate={false}
         minPolarAngle={0}
         maxPolarAngle={Math.PI}
+        minDistance={MIN_DISTANCE}
+        maxDistance={MAX_DISTANCE}
         mouseButtons={{
           LEFT: 0,
           MIDDLE: 2,
@@ -185,6 +235,7 @@ interface CanvasContentProps extends SceneProps {
   controlsRef: React.RefObject<ControlsHandle | null>;
   initialCameraState: CameraState | null;
   onCameraChange: (state: CameraState) => void;
+  onZoomChange: (zoomPercent: number) => void;
 }
 
 function CanvasContent({
@@ -196,18 +247,20 @@ function CanvasContent({
   controlsRef,
   initialCameraState,
   onCameraChange,
+  onZoomChange,
 }: CanvasContentProps) {
   return (
     <>
       <Environment preset="city" blur={0.8} environmentIntensity={0.3} />
       <ambientLight intensity={1} />
-      
-      <directionalLight 
-        position={[-5, 5, -5]} 
-        intensity={1} 
+
+      <directionalLight
+        position={[-5, 5, -5]}
+        intensity={1}
         castShadow
         shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0001}/>
+        shadow-bias={-0.0001}
+      />
 
       <pointLight position={[0, 5, 0]} intensity={0.5} color="#00d4ff" />
 
@@ -234,6 +287,7 @@ function CanvasContent({
         ref={controlsRef}
         initialCameraState={initialCameraState}
         onCameraChange={onCameraChange}
+        onZoomChange={onZoomChange}
       />
 
       <gridHelper
@@ -244,16 +298,22 @@ function CanvasContent({
   );
 }
 
+interface SceneWithControlsProps extends SceneProps {
+  onExplodeChange: (value: number) => void;
+}
+
 export function Scene({
   model,
   explodeValue,
   selectedPartId,
   onPartClick,
   onPartHover,
-}: SceneProps) {
+  onExplodeChange,
+}: SceneWithControlsProps) {
   const controlsRef = useRef<ControlsHandle>(null);
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
   const [isRotatingRight, setIsRotatingRight] = useState(false);
+  const [zoomValue, setZoomValue] = useState(50);
 
   // zustand store에서 카메라 상태 가져오기
   const store = useViewerStore(model.id);
@@ -270,6 +330,15 @@ export function Scene({
     },
     [setCameraState]
   );
+
+  const handleZoomChange = useCallback((zoomPercent: number) => {
+    setZoomValue(zoomPercent);
+  }, []);
+
+  const handleZoomSliderChange = (value: number) => {
+    setZoomValue(value);
+    controlsRef.current?.setZoomLevel(value);
+  };
 
   const handleRotateLeftStart = () => {
     setIsRotatingLeft(true);
@@ -293,91 +362,144 @@ export function Scene({
 
   const handleZoomIn = () => {
     controlsRef.current?.zoomIn();
+    setZoomValue((prev) => Math.min(100, prev + 10));
   };
 
   const handleZoomOut = () => {
     controlsRef.current?.zoomOut();
+    setZoomValue((prev) => Math.max(0, prev - 10));
   };
 
   return (
-    <div className="w-full h-full relative">
-      <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
+    <div className="w-full h-full relative flex flex-col">
+      <div className="flex-1 relative">
+        <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
-      <Canvas
-        camera={{ position: [1, 0.5, 1], fov: 50 }}
-        gl={{ antialias: true, alpha: true , toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.5}}
-        style={{ background: '#070b14' }}
-      >
-        <CanvasContent
-          model={model}
-          explodeValue={explodeValue}
-          selectedPartId={selectedPartId}
-          onPartClick={onPartClick}
-          onPartHover={onPartHover}
-          controlsRef={controlsRef}
-          initialCameraState={initialCameraState}
-          onCameraChange={handleCameraChange}
-        />
-      </Canvas>
-
-      <div className="absolute bottom-20 right-4 flex flex-col gap-2 z-10">
-        <div className="flex flex-col gap-1 glass-panel p-1 rounded-lg">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 hover:bg-primary/20 hover:text-primary"
-            onClick={handleZoomIn}
-            title="확대"
-          >
-            <Plus className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 hover:bg-primary/20 hover:text-primary"
-            onClick={handleZoomOut}
-            title="축소"
-          >
-            <Minus className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <div className="flex gap-1 glass-panel p-1 rounded-lg">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`h-10 w-10 hover:bg-primary/20 hover:text-primary transition-colors ${
-              isRotatingLeft ? 'bg-primary/30 text-primary' : ''
-            }`}
-            onMouseDown={handleRotateLeftStart}
-            onMouseUp={handleRotateLeftEnd}
-            onMouseLeave={handleRotateLeftEnd}
-            onTouchStart={handleRotateLeftStart}
-            onTouchEnd={handleRotateLeftEnd}
-            title="왼쪽으로 회전"
-          >
-            <RotateCcw className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`h-10 w-10 hover:bg-primary/20 hover:text-primary transition-colors ${
-              isRotatingRight ? 'bg-primary/30 text-primary' : ''
-            }`}
-            onMouseDown={handleRotateRightStart}
-            onMouseUp={handleRotateRightEnd}
-            onMouseLeave={handleRotateRightEnd}
-            onTouchStart={handleRotateRightStart}
-            onTouchEnd={handleRotateRightEnd}
-            title="오른쪽으로 회전"
-          >
-            <RotateCw className="h-5 w-5" />
-          </Button>
-        </div>
+        <Canvas
+          camera={{ position: [1, 0.5, 1], fov: 50 }}
+          gl={{
+            antialias: true,
+            alpha: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
+            toneMappingExposure: 1.5,
+          }}
+          style={{ background: '#070b14' }}
+        >
+          <CanvasContent
+            model={model}
+            explodeValue={explodeValue}
+            selectedPartId={selectedPartId}
+            onPartClick={onPartClick}
+            onPartHover={onPartHover}
+            controlsRef={controlsRef}
+            initialCameraState={initialCameraState}
+            onCameraChange={handleCameraChange}
+            onZoomChange={handleZoomChange}
+          />
+        </Canvas>
       </div>
 
-      <div className="absolute bottom-4 left-4 text-xs font-mono text-muted-foreground/60">
-        <div>RMB: Rotate | MMB: Pan | Scroll: Zoom</div>
+      <div className="flex-shrink-0 bg-card/90 backdrop-blur-sm border-t border-border p-3">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 flex-1">
+            <span className="text-xs font-medium text-foreground whitespace-nowrap">
+              분해도
+            </span>
+            <div className="flex-1 relative max-w-[200px]">
+              <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-primary rounded-full transition-all duration-150"
+                  style={{ width: `${explodeValue}%` }}
+                />
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={explodeValue}
+                onChange={(e) => onExplodeChange(Number(e.target.value))}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-[0_0_8px_rgba(0,212,255,0.6)] pointer-events-none transition-all duration-150"
+                style={{ left: `calc(${explodeValue}% - 6px)` }}
+              />
+            </div>
+            <div className="flex text-[10px] text-muted-foreground gap-2">
+              <span>조립</span>
+              <span className="text-primary font-mono">{explodeValue}%</span>
+              <span>분해</span>
+            </div>
+          </div>
+
+          <div className="w-px h-8 bg-border" />
+
+          <div className="flex items-center gap-3 flex-1">
+            <span className="text-xs font-medium text-foreground whitespace-nowrap">
+              zoom
+            </span>
+            <div className="flex-1 relative max-w-[200px]">
+              <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-cyan-500 to-primary rounded-full transition-all duration-150"
+                  style={{ width: `${zoomValue}%` }}
+                />
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={zoomValue}
+                onChange={(e) => handleZoomSliderChange(Number(e.target.value))}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-primary rounded-full shadow-[0_0_8px_rgba(0,212,255,0.6)] pointer-events-none transition-all duration-150"
+                style={{ left: `calc(${zoomValue}% - 6px)` }}
+              />
+            </div>
+            <div className="flex text-[10px] text-muted-foreground gap-2">
+              <span>zoom out</span>
+              <span className="text-primary font-mono">{zoomValue}%</span>
+              <span>zoom in</span>
+            </div>
+          </div>
+
+          <div className="w-px h-8 bg-border" />
+
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 hover:bg-primary/20 hover:text-primary transition-colors ${
+                isRotatingLeft ? 'bg-primary/30 text-primary' : ''
+              }`}
+              onMouseDown={handleRotateLeftStart}
+              onMouseUp={handleRotateLeftEnd}
+              onMouseLeave={handleRotateLeftEnd}
+              onTouchStart={handleRotateLeftStart}
+              onTouchEnd={handleRotateLeftEnd}
+              title="왼쪽으로 회전"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 hover:bg-primary/20 hover:text-primary transition-colors ${
+                isRotatingRight ? 'bg-primary/30 text-primary' : ''
+              }`}
+              onMouseDown={handleRotateRightStart}
+              onMouseUp={handleRotateRightEnd}
+              onMouseLeave={handleRotateRightEnd}
+              onTouchStart={handleRotateRightStart}
+              onTouchEnd={handleRotateRightEnd}
+              title="오른쪽으로 회전"
+            >
+              <RotateCw className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

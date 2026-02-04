@@ -8,9 +8,8 @@ import { notFound } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 import { Header } from '@/components/header';
-import { LeftSidebar } from '@/components/viewer/left-sidebar';
-import { RightSidebar } from '@/components/viewer/right-sidebar';
-import { SearchBar } from '@/components/viewer/search-bar';
+import { StudyLeftPanel } from '@/components/viewer/study-left-panel';
+import { StudyRightPanel } from '@/components/viewer/study-right-panel';
 import { fetchViewerData, sendChatMessage } from '@/lib/api';
 import { toViewerModel } from '@/lib/transform';
 import type { Model } from '@/lib/types';
@@ -144,17 +143,13 @@ export default function StudyPage({ params }: PageProps) {
   const addChatMessage = store((state) => state.addChatMessage);
   const clearChatHistory = store((state) => state.clearChatHistory);
 
-  const [showRightPanel, setShowRightPanel] = useState(true);
   const [hoveredPartId, setHoveredPartId] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
-
-  const selectedPart = model?.parts.find((p) => p.id === selectedPartId);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
       if (!model) return;
 
-      // Add user message
       addChatMessage({ role: 'user', content: message });
       setIsAiLoading(true);
 
@@ -185,11 +180,6 @@ export default function StudyPage({ params }: PageProps) {
     [model, modelId, aiHistory, addChatMessage]
   );
 
-  const handleSearchSubmit = (query: string) => {
-    handleSendMessage(query);
-    setShowRightPanel(true);
-  };
-
   // Show loading state
   if (isLoading) {
     return (
@@ -218,33 +208,32 @@ export default function StudyPage({ params }: PageProps) {
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden">
-      <Header
-        showCopilot
-        onCopilotClick={() => setShowRightPanel(!showRightPanel)}
-      />
+      <Header />
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar */}
-        <LeftSidebar
-          model={model}
-          selectedPartId={selectedPartId}
-          explodeValue={explodeValue}
-          onExplodeChange={setExplodeValue}
-          onPartSelect={setSelectedPartId}
-        />
+        {/* 좌측 패널 - 20% */}
+        <div className="w-[20%] min-w-[200px] max-w-[320px]">
+          <StudyLeftPanel
+            model={model}
+            notes={notes}
+            onNotesChange={setNotes}
+            aiHistory={aiHistory}
+            onSendMessage={handleSendMessage}
+            onClearHistory={clearChatHistory}
+            isAiLoading={isAiLoading}
+          />
+        </div>
 
-        {/* 3D Viewport */}
-        <main className="flex-1 relative">
+        {/* 중앙 3D 뷰어 - 50% */}
+        <main className="flex-1 relative min-w-[400px]">
           <Scene
             model={model}
             explodeValue={explodeValue}
             selectedPartId={selectedPartId || hoveredPartId}
             onPartClick={setSelectedPartId}
             onPartHover={setHoveredPartId}
+            onExplodeChange={setExplodeValue}
           />
-
-          {/* Search Bar */}
-          <SearchBar onSubmit={handleSearchSubmit} disabled={isAiLoading} />
 
           {/* Part Info Tooltip */}
           {hoveredPartId && !selectedPartId && (
@@ -254,19 +243,14 @@ export default function StudyPage({ params }: PageProps) {
           )}
         </main>
 
-        {/* Right Sidebar */}
-        {showRightPanel && (
-          <RightSidebar
+        {/* 우측 패널 - 20% */}
+        <div className="w-[20%] min-w-[200px] max-w-[320px]">
+          <StudyRightPanel
             model={model}
-            selectedPart={selectedPart || null}
-            notes={notes}
-            onNotesChange={setNotes}
-            aiHistory={aiHistory}
-            onSendMessage={handleSendMessage}
-            onClearHistory={clearChatHistory}
-            isAiLoading={isAiLoading}
+            selectedPartId={selectedPartId}
+            onPartSelect={setSelectedPartId}
           />
-        )}
+        </div>
       </div>
     </div>
   );

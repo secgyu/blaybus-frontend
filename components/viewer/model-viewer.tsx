@@ -8,6 +8,17 @@ import type { Model, Quaternion, Vector3 } from '@/lib/types';
 
 import { PartMesh } from './part-mesh';
 
+function getNodeExplodeProgress(
+  sliderValue: number,
+  start: number,
+  duration: number
+): number {
+  if (duration <= 0) return sliderValue > start ? 1 : 0;
+  if (sliderValue <= start) return 0;
+  if (sliderValue >= start + duration) return 1;
+  return (sliderValue - start) / duration;
+}
+
 interface InstancedPart {
   key: string;
   partId: string;
@@ -36,18 +47,22 @@ export function ModelViewer({
 
   const instancedParts = useMemo(() => {
     const result: InstancedPart[] = [];
-    const explodeFactor = explodeValue / 100;
+    const sliderValue = explodeValue / 100; // 0~1 범위로 변환
 
     for (const part of model.parts) {
       if (part.instances && part.instances.length > 0) {
         for (const inst of part.instances) {
+          const start = inst.explodeStart ?? 0;
+          const duration = inst.explodeDuration ?? 1;
+          const progress = getNodeExplodeProgress(sliderValue, start, duration);
+
           const position: Vector3 = [
             inst.position[0] +
-              inst.explodeDir[0] * inst.explodeDistance * explodeFactor,
+              inst.explodeDir[0] * inst.explodeDistance * progress,
             inst.position[1] +
-              inst.explodeDir[1] * inst.explodeDistance * explodeFactor,
+              inst.explodeDir[1] * inst.explodeDistance * progress,
             inst.position[2] +
-              inst.explodeDir[2] * inst.explodeDistance * explodeFactor,
+              inst.explodeDir[2] * inst.explodeDistance * progress,
           ];
           result.push({
             key: inst.nodeId,
@@ -62,9 +77,9 @@ export function ModelViewer({
         const basePos = part.basePosition || [0, 0, 0];
         const explodeOff = part.explodeOffset || [0, 0, 0];
         const position: Vector3 = [
-          basePos[0] + explodeOff[0] * explodeFactor,
-          basePos[1] + explodeOff[1] * explodeFactor,
-          basePos[2] + explodeOff[2] * explodeFactor,
+          basePos[0] + explodeOff[0] * sliderValue,
+          basePos[1] + explodeOff[1] * sliderValue,
+          basePos[2] + explodeOff[2] * sliderValue,
         ];
         result.push({
           key: part.id,

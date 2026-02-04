@@ -9,6 +9,8 @@ export interface PartInstance {
   scale?: Vector3;
   explodeDir: Vector3;
   explodeDistance: number;
+  explodeStart?: number;
+  explodeDuration?: number;
 }
 
 export interface ModelPart {
@@ -18,11 +20,9 @@ export interface ModelPart {
   role: string;
   material: string;
   glbPath: string;
-  /** 단일 인스턴스용 (기존 호환) */
   basePosition?: Vector3;
   baseRotation?: [number, number, number];
   explodeOffset?: Vector3;
-  /** 다중 인스턴스용 */
   instances?: PartInstance[];
 }
 

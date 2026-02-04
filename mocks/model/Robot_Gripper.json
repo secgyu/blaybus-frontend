@@ -193,7 +193,7 @@
     },
     {
       "nodeId": "Base_Plate_NODE",
-      "partId": "Base Plate",
+      "partId": "Base_Plate",
       "parentNodeId": null,
       "assembled": {
         "pos": [0.0, 0.0, 0.0],

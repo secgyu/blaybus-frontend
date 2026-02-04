@@ -35,6 +35,8 @@ export function toViewerModel(
       scale: [1, 1, 1] as [number, number, number], // scale 무시, GLB 자체 크기 사용
       explodeDir: node.explode.dir,
       explodeDistance: node.explode.distance,
+      explodeStart: node.explode.start,
+      explodeDuration: node.explode.duration,
     }));
 
     return {

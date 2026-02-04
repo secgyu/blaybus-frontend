@@ -32,6 +32,8 @@ export interface AssembledTransform {
 export interface ExplodeInfo {
   dir: Vector3;
   distance: number;
+  start?: number;
+  duration?: number;
 }
 
 /** 씬 그래프 노드 */

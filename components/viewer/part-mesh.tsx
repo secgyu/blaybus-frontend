@@ -9,6 +9,7 @@ import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 
 import type { ModelPart, Quaternion, Vector3 } from '@/lib/types';
+import { MATERIAL_PRESET, type MaterialType } from '@/types/model';
 
 interface PartMeshProps {
   part: ModelPart;
@@ -17,6 +18,7 @@ interface PartMeshProps {
   quaternion?: Quaternion;
   scale?: Vector3;
   color: string;
+  materialType?: MaterialType;
   isSelected: boolean;
   onClick: () => void;
   onPointerOver: () => void;
@@ -30,6 +32,7 @@ export function PartMesh({
   quaternion,
   scale,
   color,
+  materialType,
   isSelected,
   onClick,
   onPointerOver,
@@ -45,6 +48,15 @@ export function PartMesh({
     return cloned;
   }, [scene]);
 
+  // Get material preset or use defaults
+  const materialConfig = useMemo(() => {
+    if (materialType && MATERIAL_PRESET[materialType]) {
+      return MATERIAL_PRESET[materialType];
+    }
+    // Default fallback
+    return { color, metalness: 0.6, roughness: 0.3, vertexColors: false };
+  }, [materialType, color]);
+
   // Apply material color and effects
   useEffect(() => {
     if (clonedScene) {
@@ -55,9 +67,17 @@ export function PartMesh({
             // Clone material to avoid affecting other instances
             child.material = material.clone();
             const newMaterial = child.material as THREE.MeshStandardMaterial;
-            newMaterial.color = new THREE.Color(color);
-            newMaterial.metalness = 0.6;
-            newMaterial.roughness = 0.3;
+
+            // Apply preset or fallback color
+            const baseColor = materialType ? materialConfig.color : color;
+            newMaterial.color = new THREE.Color(baseColor);
+            newMaterial.metalness = materialConfig.metalness;
+            newMaterial.roughness = materialConfig.roughness;
+
+            // Handle vertex colors if specified
+            if (materialConfig.vertexColors !== undefined) {
+              newMaterial.vertexColors = materialConfig.vertexColors;
+            }
 
             // Apply emissive effect based on selection/hover
             if (isSelected) {
@@ -88,7 +108,7 @@ export function PartMesh({
         }
       });
     }
-  }, [clonedScene, color, isSelected, isHovered]);
+  }, [clonedScene, color, materialType, materialConfig, isSelected, isHovered]);
 
   // Target quaternion for smooth interpolation
   // JSON uses xyzw format (same as Three.js)

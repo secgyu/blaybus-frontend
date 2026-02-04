@@ -46,6 +46,7 @@ export function toViewerModel(
       role: part.summary,
       material: '기본 재질', // API에서 제공하지 않으므로 기본값
       glbPath: part.glbUrl,
+      materialType: part.materialType, // Material Preset 적용
       instances: instances.length > 0 ? instances : undefined,
       // 단일 인스턴스용 기본값
       basePosition: instances[0]?.position,
@@ -80,6 +81,7 @@ export function toApiModelData(model: Model): ModelData {
     displayNameKo: part.nameKo,
     glbUrl: part.glbPath,
     summary: part.role,
+    materialType: part.materialType,
   }));
 
   const nodes: Node[] = [];

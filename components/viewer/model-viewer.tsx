@@ -127,6 +127,7 @@ export function ModelViewer({
             quaternion={inst.rotation}
             scale={inst.scale}
             color={partColors[inst.partId]}
+            materialType={part.materialType}
             isSelected={selectedPartId === inst.partId}
             onClick={() => onPartClick(inst.partId)}
             onPointerOver={() => onPartHover(inst.partId)}

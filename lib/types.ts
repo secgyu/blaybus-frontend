@@ -20,6 +20,7 @@ export interface ModelPart {
   role: string;
   material: string;
   glbPath: string;
+  materialType?: import('@/types/model').MaterialType;
   basePosition?: Vector3;
   baseRotation?: [number, number, number];
   explodeOffset?: Vector3;

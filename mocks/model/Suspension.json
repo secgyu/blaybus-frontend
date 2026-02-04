@@ -34,17 +34,19 @@
   ],
   "nodes": [
     {
-      "nodeId": "ROD_NODE",
-      "partId": "ROD",
-      "parentNodeId": null,
+      "nodeId": "BASE_NODE",
+      "partId": "BASE",
+      "parentNodeId": "ROD_NODE",
       "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [0.99989, -0.0, -0.01411, 0.00455],
+        "pos": [0.00081, 0.10287, -0.00255],
+        "quat": [0.99996, 0.00484, -0.00605, 0.0043],
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.0, -1.0, 0.0],
-        "distance": 0.15
+        "dir": [0.00787, 0.99966, -0.02478],
+        "distance": 0.41162,
+        "start": 0.0,
+        "duration": 0.3
       }
     },
     {
@@ -57,22 +59,10 @@
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [0.5, 0.0, 0.5],
-        "distance": 0.25
-      }
-    },
-    {
-      "nodeId": "BASE_NODE",
-      "partId": "BASE",
-      "parentNodeId": "ROD_NODE",
-      "assembled": {
-        "pos": [0.00081, 0.10287, -0.00255],
-        "quat": [0.99996, 0.00484, -0.00605, 0.0043],
-        "scale": [1, 1, 1]
-      },
-      "explode": {
-        "dir": [0.0, 1.0, 0.3],
-        "distance": 0.35
+        "dir": [0.0, 1.0, 0.0],
+        "distance": 0.2,
+        "start": 0.3,
+        "duration": 0.3
       }
     },
     {
@@ -85,8 +75,26 @@
         "scale": [1, 1, 1]
       },
       "explode": {
-        "dir": [-0.5, 0.8, -0.3],
-        "distance": 0.25
+        "dir": [-0.86031, 0.48848, -0.14581],
+        "distance": 0.2,
+        "start": 0.6,
+        "duration": 0.3
+      }
+    },
+    {
+      "nodeId": "ROD_NODE",
+      "partId": "ROD",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.99989, -0.0, -0.01411, 0.00455],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.0, 0.0, 0.0],
+        "distance": 0.0,
+        "start": 0.0,
+        "duration": 0.0
       }
     }
   ]

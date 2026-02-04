@@ -8,7 +8,7 @@
   },
   "parts": [
     {
-      "partId": "Base_Plate",
+      "partId": "Base Plate",
       "displayNameKo": "베이스 플레이트",
       "glbUrl": "/models/Robot Gripper/Base Plate.glb",
       "summary": "전체 조립의 기준이 되는 하부 플레이트"
@@ -64,83 +64,6 @@
   ],
   "nodes": [
     {
-      "nodeId": "Base_Plate_NODE",
-      "partId": "Base_Plate",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [0.70711, 0.0, 0.0, 0.70711],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [0.0, 0.0, 0.0], "distance": 0.0 }
-    },
-    {
-      "nodeId": "Base_Mounting_bracket_NODE",
-      "partId": "Base_Mounting_bracket",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [-0.00955, 0.00307, -0.00582],
-        "quat": [-0.0, -0.71074, 0.0, 0.70345],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [-0.3, 0.8, -0.5], "distance": 0.12 }
-    },
-    {
-      "nodeId": "Base_Gear_NODE",
-      "partId": "Base_Gear",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [0.00741, -0.0078, 0.01763],
-        "quat": [0.70599, 0.70823, -0.00087, 0.00087],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [0.0, 1.0, 0.0], "distance": 0.08 }
-    },
-    {
-      "nodeId": "Gear_link_1_NODE",
-      "partId": "Gear_link_1",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [0.0138, 0.00179, 0.03711],
-        "quat": [-0.70929, 0.70486, -0.00626, 0.00622],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [-0.6, 0.7, 0.4], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Gear_link_2_NODE",
-      "partId": "Gear_link_2",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [-0.01326, 0.00275, 0.03747],
-        "quat": [-0.46906, -0.52884, -0.52791, 0.47076],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [0.6, 0.7, 0.4], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Link_1_NODE",
-      "partId": "Link_1",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [-0.00531, 0.00063, 0.0734],
-        "quat": [0.0, -0.0, -0.70711, 0.70711],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [-0.5, -0.3, 0.8], "distance": 0.12 }
-    },
-    {
-      "nodeId": "Link_2_NODE",
-      "partId": "Link_2",
-      "parentNodeId": "Base_Plate",
-      "assembled": {
-        "pos": [0.0049, 0.00063, 0.0736],
-        "quat": [0.0, -0.0, -0.70711, 0.70711],
-        "scale": [1, 1, 1]
-      },
-      "explode": { "dir": [0.5, -0.3, 0.8], "distance": 0.12 }
-    },
-    {
       "nodeId": "Gripper_1_NODE",
       "partId": "Gripper_1",
       "parentNodeId": "Base_Plate",
@@ -149,7 +72,12 @@
         "quat": [0.58378, -0.399, 0.40653, 0.57856],
         "scale": [1, 1, 1]
       },
-      "explode": { "dir": [-0.4, -0.2, 0.9], "distance": 0.15 }
+      "explode": {
+        "dir": [-0.4, -0.2, 0.9],
+        "distance": 0.15,
+        "start": 0.0,
+        "duration": 0.2
+      }
     },
     {
       "nodeId": "Gripper_2_NODE",
@@ -160,7 +88,124 @@
         "quat": [-0.40277, -0.58118, -0.58118, 0.40277],
         "scale": [1, 1, 1]
       },
-      "explode": { "dir": [0.4, -0.2, 0.9], "distance": 0.15 }
+      "explode": {
+        "dir": [0.4, -0.2, 0.9],
+        "distance": 0.15,
+        "start": 0.0,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Link_1_NODE",
+      "partId": "Link_1",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.00531, 0.00063, 0.0734],
+        "quat": [0.0, -0.0, -0.70711, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [-0.5, -0.3, 0.8],
+        "distance": 0.12,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Link_2_NODE",
+      "partId": "Link_2",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.0049, 0.00063, 0.0736],
+        "quat": [0.0, -0.0, -0.70711, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.5, -0.3, 0.8],
+        "distance": 0.12,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Gear_link_1_NODE",
+      "partId": "Gear_link_1",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.0138, 0.00179, 0.03711],
+        "quat": [-0.70929, 0.70486, -0.00626, 0.00622],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [-0.6, 0.7, 0.4],
+        "distance": 0.1,
+        "start": 0.4,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Gear_link_2_NODE",
+      "partId": "Gear_link_2",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.01326, 0.00275, 0.03747],
+        "quat": [-0.46906, -0.52884, -0.52791, 0.47076],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.6, 0.7, 0.4],
+        "distance": 0.1,
+        "start": 0.4,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Base_Gear_NODE",
+      "partId": "Base_Gear",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [0.00741, -0.0078, 0.01763],
+        "quat": [0.70599, 0.70823, -0.00087, 0.00087],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.0, 1.0, 0.0],
+        "distance": 0.08,
+        "start": 0.6,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Base_Mounting_bracket_NODE",
+      "partId": "Base_Mounting_bracket",
+      "parentNodeId": "Base_Plate",
+      "assembled": {
+        "pos": [-0.00955, 0.00307, -0.00582],
+        "quat": [-0.0, -0.71074, 0.0, 0.70345],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [-0.3, 0.8, -0.5],
+        "distance": 0.12,
+        "start": 0.8,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Base_Plate_NODE",
+      "partId": "Base Plate",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1, 1, 1]
+      },
+      "explode": {
+        "dir": [0.0, 0.0, 0.0],
+        "distance": 0.0,
+        "start": 0.0,
+        "duration": 0.0
+      }
     }
   ]
 }

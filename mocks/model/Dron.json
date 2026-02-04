@@ -100,105 +100,6 @@
   ],
   "nodes": [
     {
-      "nodeId": "Main_frame_front_NODE",
-      "partId": "Main_frame_front",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [-0.70787, -0.0, 0.0, 0.70635],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.0, 1.0, 0.0], "distance": 0.45 }
-    },
-    {
-      "nodeId": "Main_frame_back_NODE",
-      "partId": "Main_frame_back",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [-0.70787, -0.0, 0.0, 0.70635],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.0, -1.0, 0.0], "distance": 0.45 }
-    },
-    {
-      "nodeId": "Arm_gear_4_NODE",
-      "partId": "Arm_gear_4",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [0.08887, -0.0116, 0.02931],
-        "quat": [0.0, 0.0, 0.0, 1.0],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.7, 0.0, 0.7], "distance": 0.15 }
-    },
-    {
-      "nodeId": "Impellar_Blade_4_NODE",
-      "partId": "Impellar_Blade_4",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [0.08835, 0.01105, 0.02963],
-        "quat": [0.0, -0.81329, 0.0, 0.58186],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.7, 0.5, 0.7], "distance": 0.2 }
-    },
-    {
-      "nodeId": "Leg_4_NODE",
-      "partId": "Leg_4",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [0.08867, -0.00044, 0.02939],
-        "quat": [-0.0, -0.91738, 0.0, 0.39801],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.7, -0.3, 0.7], "distance": 0.18 }
-    },
-    {
-      "nodeId": "Leg_3_NODE",
-      "partId": "Leg_3",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [-0.08738, -0.00044, 0.03179],
-        "quat": [0.0, 0.92706, -0.0, 0.37492],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-0.7, -0.3, 0.7], "distance": 0.18 }
-    },
-    {
-      "nodeId": "Impellar_Blade_3_NODE",
-      "partId": "Impellar_Blade_3",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [-0.08762, 0.01105, 0.03146],
-        "quat": [0.0, 0.85418, -0.0, 0.51998],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-0.7, 0.5, 0.7], "distance": 0.2 }
-    },
-    {
-      "nodeId": "Arm_gear_3_NODE",
-      "partId": "Arm_gear_3",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [-0.08731, -0.0116, 0.03199],
-        "quat": [-0.0, -0.71293, 0.0, 0.70124],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-0.7, 0.0, 0.7], "distance": 0.15 }
-    },
-    {
-      "nodeId": "Arm_gear_1_NODE",
-      "partId": "Arm_gear_1",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [-0.08768, -0.0116, -0.1711],
-        "quat": [-0.0, 0.99999, -0.0, 0.00472],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-0.7, 0.0, -0.7], "distance": 0.15 }
-    },
-    {
       "nodeId": "Impellar_Blade_1_NODE",
       "partId": "Impellar_Blade_1",
       "parentNodeId": "Main_frame_front_NODE",
@@ -207,29 +108,12 @@
         "quat": [0.0, 0.23976, -0.0, 0.97083],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [-0.7, 0.5, -0.7], "distance": 0.2 }
-    },
-    {
-      "nodeId": "Leg_1_NODE",
-      "partId": "Leg_1",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [-0.08748, -0.00044, -0.17118],
-        "quat": [0.0, 0.39368, -0.0, 0.91925],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-0.7, -0.3, -0.7], "distance": 0.18 }
-    },
-    {
-      "nodeId": "Arm_gear_2_NODE",
-      "partId": "Arm_gear_2",
-      "parentNodeId": "Main_frame_front_NODE",
-      "assembled": {
-        "pos": [0.07856, -0.0116, -0.17921],
-        "quat": [0.0, 0.76885, -0.0, 0.63943],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.7, 0.0, -0.7], "distance": 0.15 }
+      "explode": {
+        "dir": [-0.7, 0.5, -0.7],
+        "distance": 0.2,
+        "start": 0.0,
+        "duration": 0.2
+      }
     },
     {
       "nodeId": "Impellar_Blade_2_NODE",
@@ -240,7 +124,124 @@
         "quat": [0.0, -0.4322, 0.0, 0.90178],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0.7, 0.5, -0.7], "distance": 0.2 }
+      "explode": {
+        "dir": [0.7, 0.5, -0.7],
+        "distance": 0.2,
+        "start": 0.0,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Impellar_Blade_3_NODE",
+      "partId": "Impellar_Blade_3",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [-0.08762, 0.01105, 0.03146],
+        "quat": [0.0, 0.85418, -0.0, 0.51998],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.7, 0.5, 0.7],
+        "distance": 0.2,
+        "start": 0.0,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Impellar_Blade_4_NODE",
+      "partId": "Impellar_Blade_4",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [0.08835, 0.01105, 0.02963],
+        "quat": [0.0, -0.81329, 0.0, 0.58186],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.7, 0.5, 0.7],
+        "distance": 0.2,
+        "start": 0.0,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Arm_gear_1_NODE",
+      "partId": "Arm_gear_1",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [-0.08768, -0.0116, -0.1711],
+        "quat": [-0.0, 0.99999, -0.0, 0.00472],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.7, 0.0, -0.7],
+        "distance": 0.15,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Arm_gear_2_NODE",
+      "partId": "Arm_gear_2",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [0.07856, -0.0116, -0.17921],
+        "quat": [0.0, 0.76885, -0.0, 0.63943],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.7, 0.0, -0.7],
+        "distance": 0.15,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Arm_gear_3_NODE",
+      "partId": "Arm_gear_3",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [-0.08731, -0.0116, 0.03199],
+        "quat": [-0.0, -0.71293, 0.0, 0.70124],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.7, 0.0, 0.7],
+        "distance": 0.15,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Arm_gear_4_NODE",
+      "partId": "Arm_gear_4",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [0.08887, -0.0116, 0.02931],
+        "quat": [0.0, 0.0, 0.0, 1.0],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.7, 0.0, 0.7],
+        "distance": 0.15,
+        "start": 0.2,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Leg_1_NODE",
+      "partId": "Leg_1",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [-0.08748, -0.00044, -0.17118],
+        "quat": [0.0, 0.39368, -0.0, 0.91925],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.7, -0.3, -0.7],
+        "distance": 0.18,
+        "start": 0.4,
+        "duration": 0.2
+      }
     },
     {
       "nodeId": "Leg_2_NODE",
@@ -251,7 +252,76 @@
         "quat": [-0.0, -0.28059, 0.0, 0.95983],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0.7, -0.3, -0.7], "distance": 0.18 }
+      "explode": {
+        "dir": [0.7, -0.3, -0.7],
+        "distance": 0.18,
+        "start": 0.4,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Leg_3_NODE",
+      "partId": "Leg_3",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [-0.08738, -0.00044, 0.03179],
+        "quat": [0.0, 0.92706, -0.0, 0.37492],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-0.7, -0.3, 0.7],
+        "distance": 0.18,
+        "start": 0.4,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Leg_4_NODE",
+      "partId": "Leg_4",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [0.08867, -0.00044, 0.02939],
+        "quat": [-0.0, -0.91738, 0.0, 0.39801],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.7, -0.3, 0.7],
+        "distance": 0.18,
+        "start": 0.4,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Main_frame_front_NODE",
+      "partId": "Main_frame_front",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [-0.70787, -0.0, 0.0, 0.70635],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, -1.0, 0.0],
+        "distance": 0.45,
+        "start": 0.6,
+        "duration": 0.3
+      }
+    },
+    {
+      "nodeId": "Main_frame_back_NODE",
+      "partId": "Main_frame_back",
+      "parentNodeId": "Main_frame_front_NODE",
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [-0.70787, -0.0, 0.0, 0.70635],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.0, 1.0, 0.0],
+        "distance": 0.45,
+        "start": 0.6,
+        "duration": 0.3
+      }
     },
     {
       "nodeId": "Beater_disc_NODE",
@@ -262,7 +332,12 @@
         "quat": [-0.50237, 0.49762, -0.49782, 0.50217],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0.0, -0.5, -0.8], "distance": 0.25 }
+      "explode": {
+        "dir": [0.0, -0.5, -0.8],
+        "distance": 0.25,
+        "start": 0.6,
+        "duration": 0.3
+      }
     }
   ]
 }

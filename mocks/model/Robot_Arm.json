@@ -58,83 +58,6 @@
   ],
   "nodes": [
     {
-      "nodeId": "base_NODE",
-      "partId": "base",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.0005, -0.05791, -0.00411],
-        "quat": [0.0, -0.70711, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0, -1, 0], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Part2_NODE",
-      "partId": "Part2",
-      "parentNodeId": "base_NODE",
-      "assembled": {
-        "pos": [0.0005, 0.02485, -0.00293],
-        "quat": [0.0, -0.70711, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0, 0.5, 0], "distance": 0.08 }
-    },
-    {
-      "nodeId": "Part3_NODE",
-      "partId": "Part3",
-      "parentNodeId": "Part2_NODE",
-      "assembled": {
-        "pos": [-0.14949, 0.18486, -0.00411],
-        "quat": [-0.22852, 0.66916, -0.66916, 0.22852],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.3, 0.7, 0], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Part4_NODE",
-      "partId": "Part4",
-      "parentNodeId": "Part3_NODE",
-      "assembled": {
-        "pos": [0.18714, 0.43032, 0.05121],
-        "quat": [-0.08738, -0.70169, -0.08738, 0.70169],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.5, 0.8, 0], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Part5_NODE",
-      "partId": "Part5",
-      "parentNodeId": "Part4_NODE",
-      "assembled": {
-        "pos": [-0.10019, 0.50243, 0.05225],
-        "quat": [-0.0876, -0.70166, -0.0876, 0.70166],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.6, 0.9, 0], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Part6_NODE",
-      "partId": "Part6",
-      "parentNodeId": "Part5_NODE",
-      "assembled": {
-        "pos": [-0.24764, 0.51406, 0.05215],
-        "quat": [-0.40223, -0.58156, -0.40223, 0.58156],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.7, 1, 0], "distance": 0.1 }
-    },
-    {
-      "nodeId": "Part7_NODE",
-      "partId": "Part7",
-      "parentNodeId": "Part6_NODE",
-      "assembled": {
-        "pos": [-0.29632, 0.49529, 0.05208],
-        "quat": [0.12474, -0.69602, 0.12474, 0.69602],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0.8, 1.1, 0], "distance": 0.1 }
-    },
-    {
       "nodeId": "Part8_1_NODE",
       "partId": "Part8",
       "parentNodeId": "Part7_NODE",
@@ -143,7 +66,12 @@
         "quat": [-0.4249, -0.57677, -0.40532, 0.5679],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0.9, 1.2, -0.3], "distance": 0.08 }
+      "explode": {
+        "dir": [0.9, 1.2, -0.3],
+        "distance": 0.15,
+        "start": 0.0,
+        "duration": 0.15
+      }
     },
     {
       "nodeId": "Part8_2_NODE",
@@ -154,7 +82,124 @@
         "quat": [0.4056, 0.64212, -0.40483, 0.50919],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0.9, 1.2, 0.3], "distance": 0.08 }
+      "explode": {
+        "dir": [0.9, 1.2, 0.3],
+        "distance": 0.15,
+        "start": 0.0,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part7_NODE",
+      "partId": "Part7",
+      "parentNodeId": "Part6_NODE",
+      "assembled": {
+        "pos": [-0.29632, 0.49529, 0.05208],
+        "quat": [0.12474, -0.69602, 0.12474, 0.69602],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.8, 1.1, 0],
+        "distance": 0.12,
+        "start": 0.15,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part6_NODE",
+      "partId": "Part6",
+      "parentNodeId": "Part5_NODE",
+      "assembled": {
+        "pos": [-0.24764, 0.51406, 0.05215],
+        "quat": [-0.40223, -0.58156, -0.40223, 0.58156],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.7, 1, 0],
+        "distance": 0.1,
+        "start": 0.3,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part5_NODE",
+      "partId": "Part5",
+      "parentNodeId": "Part4_NODE",
+      "assembled": {
+        "pos": [-0.10019, 0.50243, 0.05225],
+        "quat": [-0.0876, -0.70166, -0.0876, 0.70166],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.6, 0.9, 0],
+        "distance": 0.1,
+        "start": 0.45,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part4_NODE",
+      "partId": "Part4",
+      "parentNodeId": "Part3_NODE",
+      "assembled": {
+        "pos": [0.18714, 0.43032, 0.05121],
+        "quat": [-0.08738, -0.70169, -0.08738, 0.70169],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.5, 0.8, 0],
+        "distance": 0.1,
+        "start": 0.6,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part3_NODE",
+      "partId": "Part3",
+      "parentNodeId": "Part2_NODE",
+      "assembled": {
+        "pos": [-0.14949, 0.18486, -0.00411],
+        "quat": [-0.22852, 0.66916, -0.66916, 0.22852],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0.3, 0.7, 0],
+        "distance": 0.1,
+        "start": 0.75,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part2_NODE",
+      "partId": "Part2",
+      "parentNodeId": "base_NODE",
+      "assembled": {
+        "pos": [0.0005, 0.02485, -0.00293],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0.5, 0],
+        "distance": 0.08,
+        "start": 0.9,
+        "duration": 0.1
+      }
+    },
+    {
+      "nodeId": "base_NODE",
+      "partId": "base",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0005, -0.05791, -0.00411],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, -1, 0],
+        "distance": 0.05,
+        "start": 0.9,
+        "duration": 0.1
+      }
     }
   ]
 }

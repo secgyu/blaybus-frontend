@@ -58,37 +58,20 @@
   ],
   "nodes": [
     {
-      "nodeId": "Part1_Fuhrung_NODE",
-      "partId": "Part1_Fuhrung",
+      "nodeId": "Part7_TrapezSpindel_NODE",
+      "partId": "Part7_TrapezSpindel",
       "parentNodeId": null,
       "assembled": {
-        "pos": [0.02018, 0.02948, 0.06567],
-        "quat": [-0.70711, 0.0, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0, 1, 0], "distance": 0.03 }
-    },
-    {
-      "nodeId": "Part2_Feste Backe_NODE",
-      "partId": "Part2_Feste Backe",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.1841, 0.0, 0.0],
+        "pos": [-0.0685, 0.04197, 0.03868],
         "quat": [0.0, -0.70711, 0.0, 0.70711],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [1, 0.5, 0], "distance": 0.05 }
-    },
-    {
-      "nodeId": "Part3_lose backe_NODE",
-      "partId": "Part3_lose backe",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.05164, 0.03353, 0.00086],
-        "quat": [0.0, -0.70711, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-1, 0.5, 0], "distance": 0.05 }
+      "explode": {
+        "dir": [-1, 0.2, 0],
+        "distance": 0.2,
+        "start": 0.0,
+        "duration": 0.2
+      }
     },
     {
       "nodeId": "Part4_spindelsockel_NODE",
@@ -99,7 +82,44 @@
         "quat": [0.0, -0.70711, 0.0, 0.70711],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [-0.5, 0.8, 0], "distance": 0.04 }
+      "explode": {
+        "dir": [-0.5, 0.8, 0],
+        "distance": 0.12,
+        "start": 0.2,
+        "duration": 0.15
+      }
+    },
+    {
+      "nodeId": "Part3_lose backe_NODE",
+      "partId": "Part3_lose backe",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.05164, 0.03353, 0.00086],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [-1, 0.5, 0],
+        "distance": 0.1,
+        "start": 0.35,
+        "duration": 0.2
+      }
+    },
+    {
+      "nodeId": "Part2_Feste Backe_NODE",
+      "partId": "Part2_Feste Backe",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.1841, 0.0, 0.0],
+        "quat": [0.0, -0.70711, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [1, 0.5, 0],
+        "distance": 0.08,
+        "start": 0.55,
+        "duration": 0.2
+      }
     },
     {
       "nodeId": "Part5_Spannbacke_1_NODE",
@@ -110,40 +130,12 @@
         "quat": [0.0, 0.70711, -0.0, 0.70711],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0, 1, 0.3], "distance": 0.03 }
-    },
-    {
-      "nodeId": "Part6_fuhrungschiene_1_NODE",
-      "partId": "Part6_fuhrungschiene",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.05108, 0.01724, 0.05482],
-        "quat": [0.70711, 0.0, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0, 0.8, 0.5], "distance": 0.03 }
-    },
-    {
-      "nodeId": "Part7_TrapezSpindel_NODE",
-      "partId": "Part7_TrapezSpindel",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [-0.0685, 0.04197, 0.03868],
-        "quat": [0.0, -0.70711, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [-1, 0.2, 0], "distance": 0.06 }
-    },
-    {
-      "nodeId": "Part8_grundplatte_NODE",
-      "partId": "Part8_grundplatte",
-      "parentNodeId": null,
-      "assembled": {
-        "pos": [0.0, 0.0, 0.0],
-        "quat": [0.70711, 0.0, 0.0, 0.70711],
-        "scale": [1.0, 1.0, 1.0]
-      },
-      "explode": { "dir": [0, -1, 0], "distance": 0.03 }
+      "explode": {
+        "dir": [0, 1, 0.3],
+        "distance": 0.05,
+        "start": 0.75,
+        "duration": 0.25
+      }
     },
     {
       "nodeId": "Part5_Spannbacke_2_NODE",
@@ -154,7 +146,44 @@
         "quat": [0.0, -0.70711, 0.0, 0.70711],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0, 1, -0.3], "distance": 0.03 }
+      "explode": {
+        "dir": [0, 1, -0.3],
+        "distance": 0.05,
+        "start": 0.75,
+        "duration": 0.25
+      }
+    },
+    {
+      "nodeId": "Part1_Fuhrung_NODE",
+      "partId": "Part1_Fuhrung",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.02018, 0.02948, 0.06567],
+        "quat": [-0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 1, 0],
+        "distance": 0.03,
+        "start": 0.75,
+        "duration": 0.25
+      }
+    },
+    {
+      "nodeId": "Part6_fuhrungschiene_1_NODE",
+      "partId": "Part6_fuhrungschiene",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.05108, 0.01724, 0.05482],
+        "quat": [0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, 0.8, 0.5],
+        "distance": 0.03,
+        "start": 0.75,
+        "duration": 0.25
+      }
     },
     {
       "nodeId": "Part6_fuhrungschiene_2_NODE",
@@ -165,7 +194,28 @@
         "quat": [0.70711, 0.0, 0.0, 0.70711],
         "scale": [1.0, 1.0, 1.0]
       },
-      "explode": { "dir": [0, 0.8, -0.5], "distance": 0.03 }
+      "explode": {
+        "dir": [0, 0.8, -0.5],
+        "distance": 0.03,
+        "start": 0.75,
+        "duration": 0.25
+      }
+    },
+    {
+      "nodeId": "Part8_grundplatte_NODE",
+      "partId": "Part8_grundplatte",
+      "parentNodeId": null,
+      "assembled": {
+        "pos": [0.0, 0.0, 0.0],
+        "quat": [0.70711, 0.0, 0.0, 0.70711],
+        "scale": [1.0, 1.0, 1.0]
+      },
+      "explode": {
+        "dir": [0, -1, 0],
+        "distance": 0.03,
+        "start": 0.75,
+        "duration": 0.25
+      }
     }
   ]
 }

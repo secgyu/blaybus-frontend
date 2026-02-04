@@ -16,7 +16,6 @@ import { toViewerModel } from '@/lib/transform';
 import type { Model } from '@/lib/types';
 import { useViewerStore } from '@/store/viewer-store';
 
-// 동적 임포트: Three.js 관련 라이브러리를 필요할 때만 로드
 const Scene = dynamic(
   () =>
     import('@/components/viewer/scene').then((mod) => ({ default: mod.Scene })),

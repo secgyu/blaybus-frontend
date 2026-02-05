@@ -86,8 +86,9 @@ export function PartMesh({
               newMaterial.roughness = 1.0;
               newMaterial.toneMapped = false;
             } else if (isHovered) {
+              // 호버 시 밝게 강조 (전체 밝기가 낮아졌으므로 더 돋보임)
               newMaterial.emissive.set('#00d4ff');
-              newMaterial.emissiveIntensity = 0.8;
+              newMaterial.emissiveIntensity = 1.2;
             } else {
               newMaterial.emissive.set('#000000');
               newMaterial.emissiveIntensity = 0;

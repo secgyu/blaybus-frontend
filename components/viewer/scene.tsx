@@ -255,13 +255,13 @@ function CanvasContent({
         files="/assets/my_warehouse_256.hdr"
         blur={1}
         background={false}
-        environmentIntensity={1.5}
+        environmentIntensity={0.6}
       />
-      <ambientLight intensity={0.4} />
+      <ambientLight intensity={0.15} />
 
       <directionalLight
         position={[-5, 8, 5]}
-        intensity={2.5}
+        intensity={1.2}
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0001}
@@ -269,13 +269,13 @@ function CanvasContent({
       />
       <spotLight
         position={[5, 0, -5]}
-        intensity={1.5}
+        intensity={0.6}
         angle={0.5}
         penumbra={1}
         color="#ffffff"
       />
 
-      <pointLight position={[0, 5, 0]} intensity={0.5} color="#00d4ff" />
+      <pointLight position={[0, 5, 0]} intensity={0.2} color="#00d4ff" />
 
       <Suspense fallback={<LoadingFallback />}>
         <ModelViewer
@@ -444,7 +444,7 @@ export function Scene({
               antialias: true,
               alpha: true,
               toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 1.0,
+              toneMappingExposure: 0.7,
               preserveDrawingBuffer: true,
               powerPreference: 'high-performance',
               failIfMajorPerformanceCaveat: false,

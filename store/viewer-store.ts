@@ -53,7 +53,7 @@ const storeCache = new Map<string, ReturnType<typeof createViewerStore>>();
 
 // 뷰어 스토어 생성 함수
 function createViewerStore(modelId: string) {
-  return create<ViewerStoreState>()(
+  const store = create<ViewerStoreState>()(
     persist(
       (set) => ({
         ...getDefaultState(),
@@ -96,12 +96,22 @@ function createViewerStore(modelId: string) {
           notes: state.notes,
           aiHistory: state.aiHistory,
         }),
-        onRehydrateStorage: () => (state) => {
-          state?.setHydrated(true);
+        onRehydrateStorage: () => (state, error) => {
+          if (error) {
+            console.error('Hydration error:', error);
+          }
+          // state가 undefined인 경우에도 store를 통해 직접 설정
+          if (state) {
+            state.setHydrated(true);
+          } else {
+            // fallback: store를 직접 업데이트
+            store.setState({ isHydrated: true });
+          }
         },
       }
     )
   );
+  return store;
 }
 
 // 모델별 스토어 가져오기 (캐싱)

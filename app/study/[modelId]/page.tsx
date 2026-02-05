@@ -145,6 +145,34 @@ export default function StudyPage({ params }: PageProps) {
 
   const [hoveredPartId, setHoveredPartId] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [isSceneReady, setIsSceneReady] = useState(false);
+
+  // Hydration 보장: 클라이언트에서 마운트 후 hydration 완료 확인
+  useEffect(() => {
+    // 이미 hydrated 상태이면 스킵
+    if (isHydrated) return;
+
+    // zustand persist가 hydration을 완료할 때까지 약간 대기 후 강제 설정
+    const timeout = setTimeout(() => {
+      const currentState = store.getState();
+      if (!currentState.isHydrated) {
+        currentState.setHydrated(true);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [store, isHydrated]);
+
+  // Scene 마운트 지연: WebGL 컨텍스트 충돌 방지
+  useEffect(() => {
+    // 모델과 hydration이 준비되면 Scene 마운트 준비
+    if (model && isHydrated && !isSceneReady) {
+      const timeout = setTimeout(() => {
+        setIsSceneReady(true);
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+  }, [model, isHydrated, isSceneReady]);
 
   const handleSendMessage = useCallback(
     async (message: string) => {
@@ -224,14 +252,23 @@ export default function StudyPage({ params }: PageProps) {
         </div>
 
         <main className="flex-1 relative min-w-[400px]">
-          <Scene
-            model={model}
-            explodeValue={explodeValue}
-            selectedPartId={selectedPartId}
-            onPartClick={setSelectedPartId}
-            onPartHover={setHoveredPartId}
-            onExplodeChange={setExplodeValue}
-          />
+          {isSceneReady ? (
+            <Scene
+              model={model}
+              explodeValue={explodeValue}
+              selectedPartId={selectedPartId}
+              onPartClick={setSelectedPartId}
+              onPartHover={setHoveredPartId}
+              onExplodeChange={setExplodeValue}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
+              <div className="flex items-center gap-3">
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                <span className="text-primary">3D 뷰어 로딩 중...</span>
+              </div>
+            </div>
+          )}
 
           {hoveredPartId && !selectedPartId && (
             <PartTooltip

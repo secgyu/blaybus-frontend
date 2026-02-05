@@ -327,6 +327,47 @@ export function Scene({
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
   const [isRotatingRight, setIsRotatingRight] = useState(false);
   const [zoomValue, setZoomValue] = useState(50);
+  const [canvasKey, setCanvasKey] = useState(() => Date.now());
+  const [contextLost, setContextLost] = useState(false);
+  const retryCountRef = useRef(0);
+
+  // WebGL 컨텍스트 손실 시 Canvas 재생성
+  const handleCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
+    const canvas = gl.domElement;
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      console.warn('WebGL context lost');
+      setContextLost(true);
+
+      // 자동 복구 시도 (최대 3회)
+      if (retryCountRef.current < 3) {
+        retryCountRef.current += 1;
+        setTimeout(() => {
+          setCanvasKey(Date.now());
+          setContextLost(false);
+        }, 500);
+      }
+    };
+
+    const handleContextRestored = () => {
+      console.log('WebGL context restored');
+      setContextLost(false);
+      retryCountRef.current = 0;
+    };
+
+    canvas.addEventListener('webglcontextlost', handleContextLost);
+    canvas.addEventListener('webglcontextrestored', handleContextRestored);
+
+    // 컨텍스트 정상 생성 시 초기화
+    setContextLost(false);
+    retryCountRef.current = 0;
+
+    return () => {
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+    };
+  }, []);
 
   // zustand store에서 카메라 상태 가져오기
   const store = useViewerStore(model.id);
@@ -388,30 +429,43 @@ export function Scene({
       <div className="flex-1 relative">
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
-        <Canvas
-          camera={{ position: [1, 0.5, 1], fov: 45 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.0,
-            preserveDrawingBuffer: true,
-          }}
-          shadows
-          style={{ background: '#070b14' }}
-        >
-          <CanvasContent
-            model={model}
-            explodeValue={explodeValue}
-            selectedPartId={selectedPartId}
-            onPartClick={onPartClick}
-            onPartHover={onPartHover}
-            controlsRef={controlsRef}
-            initialCameraState={initialCameraState}
-            onCameraChange={handleCameraChange}
-            onZoomChange={handleZoomChange}
-          />
-        </Canvas>
+        {contextLost ? (
+          <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <span className="text-primary">3D 뷰어 복구 중...</span>
+            </div>
+          </div>
+        ) : (
+          <Canvas
+            key={canvasKey}
+            camera={{ position: [1, 0.5, 1], fov: 45 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.0,
+              preserveDrawingBuffer: true,
+              powerPreference: 'high-performance',
+              failIfMajorPerformanceCaveat: false,
+            }}
+            shadows
+            style={{ background: '#070b14' }}
+            onCreated={handleCreated}
+          >
+            <CanvasContent
+              model={model}
+              explodeValue={explodeValue}
+              selectedPartId={selectedPartId}
+              onPartClick={onPartClick}
+              onPartHover={onPartHover}
+              controlsRef={controlsRef}
+              initialCameraState={initialCameraState}
+              onCameraChange={handleCameraChange}
+              onZoomChange={handleZoomChange}
+            />
+          </Canvas>
+        )}
       </div>
 
       <div className="flex-shrink-0 bg-card/90 backdrop-blur-sm border-t border-border p-3">

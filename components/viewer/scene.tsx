@@ -251,7 +251,13 @@ function CanvasContent({
 }: CanvasContentProps) {
   return (
     <>
-      <Environment preset="warehouse" blur={0.6} environmentIntensity={0.6} />
+      <Environment 
+        
+        files="/assets/my_warehouse_256.hdr" 
+        blur={1} 
+        background={false} 
+        environmentIntensity={1.5} 
+      />
       <ambientLight intensity={0.4} />
 
       <directionalLight

@@ -111,10 +111,12 @@ export function PartMesh({
             (c) => c.userData.isEdgeLine
           );
           if (!existingEdges && mesh.geometry) {
-            const edgesGeometry = new THREE.EdgesGeometry(mesh.geometry, 30);
+            const edgesGeometry = new THREE.EdgesGeometry(mesh.geometry, 80);
             const edgesMaterial = new THREE.LineBasicMaterial({
-              color: 0x000000,
-              linewidth: 0.3,
+              color: 0xffffff,
+              linewidth: 1,
+              transparent: true,
+              opacity: 0.3
             });
             const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
             edges.userData.isEdgeLine = true;

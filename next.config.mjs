@@ -6,25 +6,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
-    const backendUrl =
-      process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || '';
-
-    if (!backendUrl) {
-      return [];
-    }
-
-    return [
-      {
-        source: '/glb/:path*',
-        destination: `${backendUrl}/glb/:path*`,
-      },
-      {
-        source: '/thumbs/:path*',
-        destination: `${backendUrl}/thumbs/:path*`,
-      },
-    ];
-  },
 };
 
 export default nextConfig;

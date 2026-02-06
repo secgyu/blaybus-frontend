@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
+function toAbsoluteUrl(path: string): string {
+  if (!path) return path;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${API_BASE_URL}${path}`;
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -24,6 +30,19 @@ export async function GET(
     }
 
     const data = await response.json();
+
+    if (data.model?.thumbnailUrl) {
+      data.model.thumbnailUrl = toAbsoluteUrl(data.model.thumbnailUrl);
+    }
+    if (data.parts) {
+      data.parts = data.parts.map(
+        (part: { glbUrl?: string; [key: string]: unknown }) => ({
+          ...part,
+          glbUrl: part.glbUrl ? toAbsoluteUrl(part.glbUrl) : part.glbUrl,
+        })
+      );
+    }
+
     return NextResponse.json(data);
   } catch {
     return NextResponse.json(

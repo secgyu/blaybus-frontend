@@ -205,7 +205,7 @@ export default function StudyPage({ params }: PageProps) {
           onNotesChange={setNotes}
         />
 
-        {/* Center: 3D Viewer */}
+        {/* Center: 3D Viewer + Right Panel overlay */}
         <main className="flex-1 relative min-w-[400px]">
           {isSceneReady ? (
             <Scene
@@ -230,16 +230,16 @@ export default function StudyPage({ params }: PageProps) {
               part={model.parts.find((p) => p.id === hoveredPartId)!}
             />
           )}
-        </main>
 
-        {/* Right Panel: Parts + Description */}
-        <div className="w-[280px] min-w-[240px]">
-          <StudyRightPanel
-            model={model}
-            selectedPartId={selectedPartId}
-            onPartSelect={setSelectedPartId}
-          />
-        </div>
+          {/* Right Panel: 3D 뷰어 위에 오버레이 */}
+          <div className="absolute top-3 right-3 bottom-3 w-[394px] z-10">
+            <StudyRightPanel
+              model={model}
+              selectedPartId={selectedPartId}
+              onPartSelect={setSelectedPartId}
+            />
+          </div>
+        </main>
       </div>
     </div>
   );

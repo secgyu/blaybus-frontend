@@ -25,6 +25,7 @@ export interface ModelPart {
   baseRotation?: [number, number, number];
   explodeOffset?: Vector3;
   instances?: PartInstance[];
+  summary?: string;
 }
 
 export interface Model {

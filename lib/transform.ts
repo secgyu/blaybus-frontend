@@ -41,7 +41,10 @@ export function toViewerModel(
 
     return {
       id: part.partId,
-      name: part.partId.replace(/_/g, ' '),
+      name: part.partId
+        .replace(/_/g, ' ')
+        .toLowerCase()
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
       nameKo: part.displayNameKo,
       role: part.summary,
       material: '기본 재질', // API에서 제공하지 않으므로 기본값

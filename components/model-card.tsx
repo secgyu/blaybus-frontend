@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 
 import { Box, ChevronRight } from 'lucide-react';

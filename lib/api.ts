@@ -24,6 +24,42 @@ export interface FetchModelsOptions {
   sort?: string[];
 }
 
+// ---------------------------------------------------------------------------
+// 서버 사이드 전용: 백엔드 API를 직접 호출 (서버 컴포넌트에서 사용)
+// ---------------------------------------------------------------------------
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+
+export async function fetchModelsServer(
+  options: FetchModelsOptions = {}
+): Promise<ModelSummary[]> {
+  const params = new URLSearchParams();
+
+  if (options.page !== undefined) {
+    params.append('page', options.page.toString());
+  }
+  if (options.size !== undefined) {
+    params.append('size', options.size.toString());
+  }
+  if (options.sort) {
+    options.sort.forEach((s) => params.append('sort', s));
+  }
+
+  const queryString = params.toString();
+  const url = `${API_BASE_URL}/api/models${queryString ? `?${queryString}` : ''}`;
+
+  const response = await fetch(url, { next: { revalidate: 60 } });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch models: ${response.status}`);
+  }
+
+  const data: ModelSliceResponse = await response.json();
+  return data.models;
+}
+
+// ---------------------------------------------------------------------------
+// 클라이언트 사이드: Next.js API 라우트를 경유 (클라이언트 컴포넌트에서 사용)
+// ---------------------------------------------------------------------------
 export async function fetchModels(
   options: FetchModelsOptions = {}
 ): Promise<ModelSummary[]> {

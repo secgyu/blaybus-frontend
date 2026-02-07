@@ -1,10 +1,6 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
 import Link from 'next/link';
 
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 import { Header } from '@/components/header';
 import { FeaturesSection } from '@/components/home/features-section';
@@ -12,28 +8,19 @@ import { StepsSection } from '@/components/home/steps-section';
 import { TargetAudienceSection } from '@/components/home/target-audience-section';
 import { WhySimvexSection } from '@/components/home/why-simvex-section';
 import { ModelCard } from '@/components/model-card';
-import { fetchModels } from '@/lib/api';
+import { fetchModelsServer } from '@/lib/api';
 import type { ModelSummary } from '@/types/api';
 
-export default function HomePage() {
-  const [models, setModels] = useState<ModelSummary[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function HomePage() {
+  let models: ModelSummary[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    async function loadModels() {
-      try {
-        const data = await fetchModels();
-        setModels(data);
-      } catch (err) {
-        console.error('Failed to fetch models:', err);
-        setError('모델 목록을 불러오는데 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadModels();
-  }, []);
+  try {
+    models = await fetchModelsServer();
+  } catch (err) {
+    console.error('Failed to fetch models:', err);
+    error = '모델 목록을 불러오는데 실패했습니다.';
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,7 +34,7 @@ export default function HomePage() {
         <FeaturesSection />
         <StepsSection />
         <WhySimvexSection />
-        <ModelsSection models={models} isLoading={isLoading} error={error} />
+        <ModelsSection models={models} error={error} />
       </main>
 
       <Footer />
@@ -103,11 +90,9 @@ function HeroSection() {
 
 function ModelsSection({
   models,
-  isLoading,
   error,
 }: {
   models: ModelSummary[];
-  isLoading: boolean;
   error: string | null;
 }) {
   return (
@@ -122,14 +107,7 @@ function ModelsSection({
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-            <span className="ml-3 text-muted-foreground">
-              모델을 불러오는 중...
-            </span>
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="text-center py-12">
             <p className="text-destructive">{error}</p>
           </div>

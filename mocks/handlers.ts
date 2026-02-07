@@ -99,6 +99,24 @@ interface ModelSummary {
   overview: string;
 }
 
+// --- GLB URL 정규화 (공백 → 언더스코어) ---
+const MODEL_FOLDER_MAP: Record<string, string> = {
+  v4_engine: 'V4_Engine',
+  suspension: 'Suspension',
+  robot_gripper: 'Robot_Gripper',
+  drone: 'Drone',
+  robot_arm: 'Robot_Arm',
+  leaf_spring: 'Leaf_Spring',
+  machine_vice: 'Machine_Vice',
+};
+
+function normalizeGlbUrl(glbUrl: string, modelId: string): string {
+  if (!glbUrl || glbUrl.startsWith('http')) return glbUrl;
+  const folder = MODEL_FOLDER_MAP[modelId] || modelId;
+  const filename = glbUrl.split('/').pop()!.replace(/ /g, '_');
+  return `/models/${folder}/${filename}`;
+}
+
 // --- Mock 퀴즈 데이터 (모든 모델 공통) ---
 const mockQuizzes = [
   {
@@ -166,7 +184,16 @@ export const handlers = [
       return HttpResponse.json({ error: 'Model not found' }, { status: 404 });
     }
 
-    return HttpResponse.json(data);
+    // glbUrl 정규화 (공백 → 언더스코어)
+    const normalized = {
+      ...data,
+      parts: data.parts.map((part: Part) => ({
+        ...part,
+        glbUrl: part.glbUrl ? normalizeGlbUrl(part.glbUrl, modelId) : part.glbUrl,
+      })),
+    };
+
+    return HttpResponse.json(normalized);
   }),
 
   // GET /api/models/:id/quiz - 퀴즈 조회

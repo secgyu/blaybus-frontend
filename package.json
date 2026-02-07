@@ -9,7 +9,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "start": "next start"
+    "start": "next start",
+    "analyze": "ANALYZE=true next build --webpack"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.25",
@@ -54,10 +55,6 @@
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.5.1",
-    "expo": "latest",
-    "expo-asset": "latest",
-    "expo-file-system": "latest",
-    "expo-gl": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "16.0.10",
@@ -67,7 +64,6 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.60.0",
     "react-intersection-observer": "^10.0.2",
-    "react-native": "latest",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.4",
     "sonner": "^1.7.4",
@@ -79,6 +75,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.1.6",
     "@tailwindcss/postcss": "^4.1.9",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^22",

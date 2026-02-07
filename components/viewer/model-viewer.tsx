@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from 'react';
 
-import type * as THREE from 'three';
+import type { Group } from 'three';
 
 import type { ViewerModel, Quaternion, Vector3 } from '@/types/viewer';
 
@@ -43,7 +43,7 @@ export function ModelViewer({
   onPartClick,
   onPartHover,
 }: ModelViewerProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
 
   const instancedParts = useMemo(() => {
     const result: InstancedPart[] = [];

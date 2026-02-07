@@ -2,19 +2,19 @@
 
 import { useMemo } from 'react';
 
-import * as THREE from 'three';
+import { Color, DoubleSide, ShaderMaterial } from 'three';
 
 export function FloorGrid() {
   const shaderMaterial = useMemo(() => {
-    return new THREE.ShaderMaterial({
+    return new ShaderMaterial({
       transparent: true,
-      side: THREE.DoubleSide,
+      side: DoubleSide,
       depthWrite: false,
       uniforms: {
         uGridSize: { value: 0.15 },
         uGridThickness: { value: 0.003 },
-        uMainColor: { value: new THREE.Color('#0a3d6b') },
-        uSubColor: { value: new THREE.Color('#071e35') },
+        uMainColor: { value: new Color('#0a3d6b') },
+        uSubColor: { value: new Color('#071e35') },
         uFadeRadius: { value: 4.0 },
         uOpacity: { value: 0.7 },
       },

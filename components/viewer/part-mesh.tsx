@@ -4,7 +4,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
-import * as THREE from 'three';
+import {
+  Color,
+  EdgesGeometry,
+  LineBasicMaterial,
+  LineSegments,
+  Mesh,
+  Quaternion as ThreeQuaternion,
+} from 'three';
+import type { Group, Material, MeshStandardMaterial } from 'three';
 import type { ModelPart, Quaternion, Vector3 } from '@/types/viewer';
 import type { MaterialType } from '@/types/api';
 import { MATERIAL_PRESET } from '@/lib/constants/material-preset';
@@ -36,12 +44,12 @@ export function PartMesh({
   onPointerOver,
   onPointerOut,
 }: PartMeshProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
   const [isHovered, setIsHovered] = useState(false);
   const { scene } = useGLTF(part.glbPath);
 
   // 1. 원본 재질을 백업할 Ref 생성
-  const originalMaterials = useRef<Map<string, THREE.Material>>(new Map());
+  const originalMaterials = useRef<Map<string, Material>>(new Map());
 
   // 2. Scene 복제 (메모리 최적화)
   const clonedScene = useMemo(() => scene.clone(), [scene]);
@@ -57,7 +65,7 @@ export function PartMesh({
   useEffect(() => {
     if (clonedScene) {
       clonedScene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
+        if (child instanceof Mesh) {
           const mesh = child;
 
           if (!originalMaterials.current.has(mesh.uuid)) {
@@ -67,11 +75,11 @@ export function PartMesh({
 
           if (isSelected) {
      
-            const original = originalMaterials.current.get(mesh.uuid) as THREE.MeshStandardMaterial;
+            const original = originalMaterials.current.get(mesh.uuid) as MeshStandardMaterial;
             const newMaterial = original.clone();
 
             const baseColor = materialType ? materialConfig.color : color;
-            newMaterial.color = new THREE.Color(baseColor);
+            newMaterial.color = new Color(baseColor);
             newMaterial.metalness = materialConfig.metalness;
             newMaterial.roughness = materialConfig.roughness;
             newMaterial.emissive.set("#3B82F6");
@@ -82,10 +90,10 @@ export function PartMesh({
 
           } else {
   
-            const original = originalMaterials.current.get(mesh.uuid) as THREE.MeshStandardMaterial;
+            const original = originalMaterials.current.get(mesh.uuid) as MeshStandardMaterial;
             const restoreMaterial = original.clone();
             const baseColor = materialType ? materialConfig.color : color;
-            restoreMaterial.color = new THREE.Color(baseColor);
+            restoreMaterial.color = new Color(baseColor);
             restoreMaterial.metalness = materialConfig.metalness;
             restoreMaterial.roughness = materialConfig.roughness;
 
@@ -112,14 +120,14 @@ export function PartMesh({
             (c) => c.userData.isEdgeLine
           );
           if (!existingEdges && mesh.geometry) {
-            const edgesGeometry = new THREE.EdgesGeometry(mesh.geometry, 80);
-            const edgesMaterial = new THREE.LineBasicMaterial({
+            const edgesGeometry = new EdgesGeometry(mesh.geometry, 80);
+            const edgesMaterial = new LineBasicMaterial({
               color: 0xffffff,
               linewidth: 1,
               transparent: true,
               opacity: 0.3
             });
-            const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+            const edges = new LineSegments(edgesGeometry, edgesMaterial);
             edges.userData.isEdgeLine = true;
             mesh.add(edges);
           }
@@ -130,7 +138,7 @@ export function PartMesh({
 
   const targetQuat = useMemo(() => {
     if (quaternion) {
-      return new THREE.Quaternion(
+      return new ThreeQuaternion(
         quaternion[0],
         quaternion[1],
         quaternion[2],

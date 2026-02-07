@@ -4,7 +4,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { Canvas } from '@react-three/fiber';
 
-import * as THREE from 'three';
+import { ACESFilmicToneMapping } from 'three';
+import type { WebGLRenderer } from 'three';
 
 import type { CameraState, ViewerModel } from '@/types/viewer';
 import { useViewerStore } from '@/store/viewer-store';
@@ -42,7 +43,7 @@ export function Scene({
   const [contextLost, setContextLost] = useState(false);
   const retryCountRef = useRef(0);
 
-  const handleCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
+  const handleCreated = useCallback(({ gl }: { gl: WebGLRenderer }) => {
     const canvas = gl.domElement;
 
     const handleContextLost = (event: Event) => {
@@ -139,7 +140,7 @@ export function Scene({
             gl={{
               antialias: true,
               alpha: true,
-              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMapping: ACESFilmicToneMapping,
               toneMappingExposure: 0.7,
               preserveDrawingBuffer: true,
               powerPreference: 'high-performance',

@@ -5,7 +5,8 @@ import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { Center, useGLTF } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 
-import * as THREE from 'three';
+import { Box3, Mesh, MeshStandardMaterial, Vector3 } from 'three';
+import type { Group, PerspectiveCamera } from 'three';
 
 import type { ModelPart } from '@/types/viewer';
 
@@ -16,8 +17,8 @@ interface ThumbnailModelProps {
 
 function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
   const { scene } = useGLTF(glbPath);
-  const groupRef = useRef<THREE.Group>(null);
-  const materialsRef = useRef<Map<THREE.Mesh, THREE.MeshStandardMaterial>>(
+  const groupRef = useRef<Group>(null);
+  const materialsRef = useRef<Map<Mesh, MeshStandardMaterial>>(
     new Map()
   );
   const { camera } = useThree();
@@ -26,10 +27,10 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
     const cloned = scene.clone();
 
     cloned.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        const originalMaterial = child.material as THREE.MeshStandardMaterial;
+      if (child instanceof Mesh) {
+        const originalMaterial = child.material as MeshStandardMaterial;
         if (originalMaterial) {
-          const newMaterial = new THREE.MeshStandardMaterial({
+          const newMaterial = new MeshStandardMaterial({
             metalness: 0.6,
             roughness: 0.4,
           });
@@ -44,10 +45,10 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
 
   useEffect(() => {
     if (clonedScene && camera) {
-      const box = new THREE.Box3().setFromObject(clonedScene);
-      const size = box.getSize(new THREE.Vector3());
+      const box = new Box3().setFromObject(clonedScene);
+      const size = box.getSize(new Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
-      const fov = (camera as THREE.PerspectiveCamera).fov * (Math.PI / 180);
+      const fov = (camera as PerspectiveCamera).fov * (Math.PI / 180);
       const cameraZ = Math.abs(maxDim / Math.sin(fov / 2)) * 0.6;
 
       camera.position.set(cameraZ * 0.7, cameraZ * 0.5, cameraZ * 0.7);
@@ -80,7 +81,7 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
 }
 
 function FallbackBox({ isSelected }: { isSelected: boolean }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<Mesh>(null);
 
   useFrame((_, delta) => {
     if (meshRef.current) {

@@ -9,63 +9,63 @@
   "parts": [
     {
       "partId": "Clamp_Center",
-      "glbUrl": "/models/Leaf_Spring/Clamp-Center.glb",
+      "glbUrl": "/glb/Clamp-Center.glb",
       "displayNameKo": "센터 클램프",
       "summary": "리프 스프링 적층의 중앙을 눌러 고정하는 센터 클램프(체결부)입니다.",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Clamp_Primary",
-      "glbUrl": "/models/Leaf_Spring/Clamp-Primary.glb",
+      "glbUrl": "/glb/Clamp-Primary.glb",
       "displayNameKo": "1차 클램프",
       "summary": "주(Primary) 클램프 구성 요소로, 적층 리프를 고정하는 체결 파트입니다.",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Clamp_Secondary",
-      "glbUrl": "/models/Leaf_Spring/Clamp-Secondary.glb",
+      "glbUrl": "/glb/Clamp-Secondary.glb",
       "displayNameKo": "2차 클램프",
       "summary": "보조(Secondary) 클램프 구성 요소로, 주 클램프와 함께 고정력을 보강합니다.",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Leaf_Layer",
-      "glbUrl": "/models/Leaf_Spring/Leaf-Layer.glb",
+      "glbUrl": "/glb/Leaf-Layer.glb",
       "displayNameKo": "리프 레이어",
       "summary": "하중을 탄성 변형으로 흡수하는 판스프링(리프) 적층 레이어입니다.",
       "materialType": "METAL_STEEL_HEAT_TREATED"
     },
     {
       "partId": "Support",
-      "glbUrl": "/models/Leaf_Spring/Support.glb",
+      "glbUrl": "/glb/Support.glb",
       "displayNameKo": "서포트",
       "summary": "리프 스프링 어셈블리를 지지하고 차체/브라켓으로 힘을 전달하는 서포트 부품입니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Support_Chassis",
-      "glbUrl": "/models/Leaf_Spring/Support-Chassis.glb",
+      "glbUrl": "/glb/Support-Chassis.glb",
       "displayNameKo": "샤시 서포트",
       "summary": "차체(Chassis) 측 체결/지지를 담당하는 브라켓(서포트) 부품입니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Support_Chassis_Rigid",
-      "glbUrl": "/models/Leaf_Spring/Support-Chassis_Rigid.glb",
+      "glbUrl": "/glb/Support-Chassis_Rigid.glb",
       "displayNameKo": "리지드 샤시 서포트",
       "summary": "차체 체결부의 강성을 제공하는 리지드(Rigid) 보강 브라켓/플레이트 역할의 부품입니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Support_Rubber_60mm",
-      "glbUrl": "/models/Leaf_Spring/Support-Rubber_60mm.glb",
+      "glbUrl": "/glb/Support-Rubber_60mm.glb",
       "displayNameKo": "60mm 러버",
       "summary": "지지부에 삽입되는 60mm 규격 러버(완충/진동 감쇠)입니다.",
       "materialType": "PLASTIC_MATTE"
     },
     {
       "partId": "Support_Rubber",
-      "glbUrl": "/models/Leaf_Spring/Support-Rubber.glb",
+      "glbUrl": "/glb/Support-Rubber.glb",
       "displayNameKo": "서포트 러버",
       "summary": "금속 접촉을 줄이고 충격을 흡수하는 기본 러버(부싱/패드) 부품입니다.",
       "materialType": "PLASTIC_MATTE"

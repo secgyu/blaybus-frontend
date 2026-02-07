@@ -10,63 +10,63 @@
     {
       "partId": "Base_Gear",
       "displayNameKo": "베이스 기어",
-      "glbUrl": "/models/Robot_Gripper/Base_Gear.glb",
+      "glbUrl": "/glb/Base_Gear.glb",
       "summary": "링크 구동을 전달하는 중심 기어(구동부)",
       "materialType": "METAL_STEEL_POLISHED"
     },
     {
       "partId": "Base_Mounting_bracket",
       "displayNameKo": "마운팅 브래킷",
-      "glbUrl": "/models/Robot_Gripper/Base_Mounting_bracket.glb",
+      "glbUrl": "/glb/Base_Mounting_bracket.glb",
       "summary": "플레이트에 체결되는 고정부(장착 브래킷)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Base_Plate",
       "displayNameKo": "베이스 플레이트",
-      "glbUrl": "/models/Robot_Gripper/Base_Plate.glb",
+      "glbUrl": "/glb/Base_Plate.glb",
       "summary": "전체 조립의 기준이 되는 하부 플레이트",
       "materialType": "METAL_STEEL_BRUSHED"
     },
     {
       "partId": "Gear_link_1",
       "displayNameKo": "기어 링크 1",
-      "glbUrl": "/models/Robot_Gripper/Gear_link_1.glb",
+      "glbUrl": "/glb/Gear_link_1.glb",
       "summary": "기어의 회전을 링크로 전달하는 연결 부품(좌측 계열)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Gear_link_2",
       "displayNameKo": "기어 링크 2",
-      "glbUrl": "/models/Robot_Gripper/Gear_link_2.glb",
+      "glbUrl": "/glb/Gear_link_2.glb",
       "summary": "기어의 회전을 링크로 전달하는 연결 부품(우측 계열)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Gripper_1",
       "displayNameKo": "그리퍼 1",
-      "glbUrl": "/models/Robot_Gripper/Gripper.glb",
+      "glbUrl": "/glb/Gripper.glb",
       "summary": "물체를 파지하는 끝단 집게(좌측)",
       "materialType": "METAL_STEEL_HEAT_TREATED"
     },
     {
       "partId": "Gripper_2",
       "displayNameKo": "그리퍼 2",
-      "glbUrl": "/models/Robot_Gripper/Gripper.glb",
+      "glbUrl": "/glb/Gripper.glb",
       "summary": "물체를 파지하는 끝단 집게(우측)",
       "materialType": "METAL_STEEL_HEAT_TREATED"
     },
     {
       "partId": "Link_1",
       "displayNameKo": "링크 1",
-      "glbUrl": "/models/Robot_Gripper/Link.glb",
+      "glbUrl": "/glb/Link.glb",
       "summary": "기어 링크와 그리퍼를 연결하는 관절 링크(좌측)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Link_2",
       "displayNameKo": "링크 2",
-      "glbUrl": "/models/Robot_Gripper/Link.glb",
+      "glbUrl": "/glb/Link.glb",
       "summary": "기어 링크와 그리퍼를 연결하는 관절 링크(우측)",
       "materialType": "METAL_STEEL_MACHINED"
     }

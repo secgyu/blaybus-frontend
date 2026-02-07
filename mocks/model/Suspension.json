@@ -10,28 +10,28 @@
     {
       "partId": "BASE",
       "displayNameKo": "베이스",
-      "glbUrl": "/models/Suspension/BASE.glb",
+      "glbUrl": "/glb/BASE.glb",
       "summary": "하부 지지 및 마운트 역할",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "NIT",
       "displayNameKo": "상부 캡(NIT)",
-      "glbUrl": "/models/Suspension/NIT.glb",
+      "glbUrl": "/glb/NIT.glb",
       "summary": "스프링과 로드를 고정하는 상부 부품",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "ROD",
       "displayNameKo": "로드",
-      "glbUrl": "/models/Suspension/ROD.glb",
+      "glbUrl": "/glb/ROD.glb",
       "summary": "서스펜션의 중심 축 (댐퍼)",
       "materialType": "METAL_STEEL_POLISHED"
     },
     {
       "partId": "SPRING",
       "displayNameKo": "스프링",
-      "glbUrl": "/models/Suspension/SPRING.glb",
+      "glbUrl": "/glb/SPRING.glb",
       "summary": "충격 흡수 및 탄성 제공",
       "materialType": "METAL_STEEL_HEAT_TREATED"
     }

@@ -10,105 +10,105 @@
     {
       "partId": "Arm_gear_1",
       "displayNameKo": "암 기어 1",
-      "glbUrl": "/models/Drone/Arm_gear.glb",
+      "glbUrl": "/glb/Arm_gear.glb",
       "summary": "암 기어 (왼쪽 앞 대각선)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Arm_gear_2",
       "displayNameKo": "암 기어 2",
-      "glbUrl": "/models/Drone/Arm_gear.glb",
+      "glbUrl": "/glb/Arm_gear.glb",
       "summary": "암 기어 (오른쪽 앞 대각선)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Arm_gear_3",
       "displayNameKo": "암 기어 3",
-      "glbUrl": "/models/Drone/Arm_gear.glb",
+      "glbUrl": "/glb/Arm_gear.glb",
       "summary": "암 기어 (왼쪽 뒤 대각선)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Arm_gear_4",
       "displayNameKo": "암 기어 4",
-      "glbUrl": "/models/Drone/Arm_gear.glb",
+      "glbUrl": "/glb/Arm_gear.glb",
       "summary": "암 기어 (오른쪽 뒤 대각선)",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Beater_disc",
       "displayNameKo": "비터 디스크",
-      "glbUrl": "/models/Drone/Beater_disc.glb",
+      "glbUrl": "/glb/Beater_disc.glb",
       "summary": "하부 디스크(회전체/커버 계열)",
       "materialType": "PLASTIC_SATIN"
     },
     {
       "partId": "Impellar_Blade_1",
       "displayNameKo": "임펠러 블레이드 1",
-      "glbUrl": "/models/Drone/Impellar_Blade.glb",
+      "glbUrl": "/glb/Impellar_Blade.glb",
       "summary": "임펠러 블레이드 (왼쪽 앞 대각선)",
       "materialType": "PLASTIC_GLOSS"
     },
     {
       "partId": "Impellar_Blade_2",
       "displayNameKo": "임펠러 블레이드 2",
-      "glbUrl": "/models/Drone/Impellar_Blade.glb",
+      "glbUrl": "/glb/Impellar_Blade.glb",
       "summary": "임펠러 블레이드 (오른쪽 앞 대각선)",
       "materialType": "PLASTIC_GLOSS"
     },
     {
       "partId": "Impellar_Blade_3",
       "displayNameKo": "임펠러 블레이드 3",
-      "glbUrl": "/models/Drone/Impellar_Blade.glb",
+      "glbUrl": "/glb/Impellar_Blade.glb",
       "summary": "임펠러 블레이드 (왼쪽 뒤 대각선)",
       "materialType": "PLASTIC_GLOSS"
     },
     {
       "partId": "Impellar_Blade_4",
       "displayNameKo": "임펠러 블레이드 4",
-      "glbUrl": "/models/Drone/Impellar_Blade.glb",
+      "glbUrl": "/glb/Impellar_Blade.glb",
       "summary": "임펠러 블레이드 (오른쪽 뒤 대각선)",
       "materialType": "PLASTIC_GLOSS"
     },
     {
       "partId": "Leg_1",
       "displayNameKo": "다리 1",
-      "glbUrl": "/models/Drone/Leg.glb",
+      "glbUrl": "/glb/Leg.glb",
       "summary": "다리 (왼쪽 앞 대각선)",
       "materialType": "PLASTIC_MATTE"
     },
     {
       "partId": "Leg_2",
       "displayNameKo": "다리 2",
-      "glbUrl": "/models/Drone/Leg.glb",
+      "glbUrl": "/glb/Leg.glb",
       "summary": "다리 (오른쪽 앞 대각선)",
       "materialType": "PLASTIC_MATTE"
     },
     {
       "partId": "Leg_3",
       "displayNameKo": "다리 3",
-      "glbUrl": "/models/Drone/Leg.glb",
+      "glbUrl": "/glb/Leg.glb",
       "summary": "다리 (왼쪽 뒤 대각선)",
       "materialType": "PLASTIC_MATTE"
     },
     {
       "partId": "Leg_4",
       "displayNameKo": "다리 4",
-      "glbUrl": "/models/Drone/Leg.glb",
+      "glbUrl": "/glb/Leg.glb",
       "summary": "다리 (오른쪽 뒤 대각선)",
       "materialType": "PLASTIC_MATTE"
     },
     {
       "partId": "Main_frame_back",
       "displayNameKo": "메인 프레임 (하단)",
-      "glbUrl": "/models/Drone/Main_frame_MIR.glb",
+      "glbUrl": "/glb/Main_frame_MIR.glb",
       "summary": "드론 하단 프레임(본체 하부)",
       "materialType": "PLASTIC_SATIN"
     },
     {
       "partId": "Main_frame_front",
       "displayNameKo": "메인 프레임 (상단)",
-      "glbUrl": "/models/Drone/Main_frame.glb",
+      "glbUrl": "/glb/Main_frame.glb",
       "summary": "드론 상단 프레임(본체 기준)",
       "materialType": "PLASTIC_SATIN"
     }

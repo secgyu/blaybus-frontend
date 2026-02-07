@@ -9,56 +9,56 @@
   "parts": [
     {
       "partId": "Part1_Fuhrung",
-      "glbUrl": "/models/Machine_Vice/Part1_Fuhrung.glb",
+      "glbUrl": "/glb/Part1_Fuhrung.glb",
       "displayNameKo": "가이드 베이스",
       "summary": "가이드(푸어룽) 본체로, 이동 죠가 직선으로 움직이도록 안내하고 하중을 지지하는 레일/슬라이드 기반 구조물입니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Part2_Feste Backe",
-      "glbUrl": "/models/Machine_Vice/Part2_Feste_Backe.glb",
+      "glbUrl": "/glb/Part2_Feste_Backe.glb",
       "displayNameKo": "고정 조",
       "summary": "고정 죠(페스테 바케)로, 베이스에 고정되어 기준 면을 제공하고 이동 죠와 함께 공작물을 클램핑합니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Part3_lose backe",
-      "glbUrl": "/models/Machine_Vice/Part3-lose_backe.glb",
+      "glbUrl": "/glb/Part3-lose_backe.glb",
       "displayNameKo": "이동 조",
       "summary": "이동 죠(로제 바케)로, 리드 스크류 구동에 따라 전진/후퇴하며 공작물을 눌러 고정합니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
       "partId": "Part4_spindelsockel",
-      "glbUrl": "/models/Machine_Vice/Part4_spindelsockel.glb",
+      "glbUrl": "/glb/Part4_spindelsockel.glb",
       "displayNameKo": "스핀들 소켓",
       "summary": "스핀들 소켓/하우징으로, 리드 스크류의 지지 및 정렬을 담당하고 구동부 하중을 분산하는 베이스 역할의 부품입니다.",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Part5_Spannbacke",
-      "glbUrl": "/models/Machine_Vice/Part5-Spannbacke.glb",
+      "glbUrl": "/glb/Part5-Spannbacke.glb",
       "displayNameKo": "클램핑 조",
       "summary": "죠(턱) 접촉면을 형성하는 죠 플레이트/클램핑 패드로, 공작물과 직접 맞닿아 마찰력 및 접촉면 품질을 제공합니다.",
       "materialType": "METAL_STEEL_HEAT_TREATED"
     },
     {
       "partId": "Part6_fuhrungschiene",
-      "glbUrl": "/models/Machine_Vice/Part6-fuhrungschiene.glb",
+      "glbUrl": "/glb/Part6-fuhrungschiene.glb",
       "displayNameKo": "가이드 레일",
       "summary": "가이드 레일(푸어룽 슈이네)로, 이동 죠가 흔들리지 않게 직진성과 평행도를 유지하도록 안내하는 레일 부품입니다.",
       "materialType": "METAL_STEEL_POLISHED"
     },
     {
       "partId": "Part7_TrapezSpindel",
-      "glbUrl": "/models/Machine_Vice/Part7-TrapezSpindel.glb",
+      "glbUrl": "/glb/Part7-TrapezSpindel.glb",
       "displayNameKo": "사다리꼴 스핀들",
       "summary": "사다리꼴 나사(리드 스크류)로, 회전을 직선 구동력으로 변환해 이동 죠를 전진/후퇴시키는 핵심 구동축입니다.",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "Part8_grundplatte",
-      "glbUrl": "/models/Machine_Vice/Part8-grundplatte.glb",
+      "glbUrl": "/glb/Part8-grundplatte.glb",
       "displayNameKo": "베이스 플레이트",
       "summary": "바이스의 베이스 플레이트(그룬트플라테)로, 전체 구조를 지지하고 작업대/머신에 체결되는 기준 부품입니다.",
       "materialType": "METAL_CAST_ROUGH"

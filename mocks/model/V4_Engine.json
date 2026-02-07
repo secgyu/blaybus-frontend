@@ -10,28 +10,28 @@
     {
       "partId": "CONNECTING_ROD",
       "displayNameKo": "커넥팅 로드",
-      "glbUrl": "/models/V4_Engine/Connecting_Rod.glb",
+      "glbUrl": "/glb/Connecting_Rod.glb",
       "summary": "피스톤과 크랭크샤프트를 연결",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "CONNECTING_ROD_CAP",
       "displayNameKo": "로드 캡",
-      "glbUrl": "/models/V4_Engine/Connecting_Rod_Cap.glb",
+      "glbUrl": "/glb/Connecting_Rod_Cap.glb",
       "summary": "로드를 고정하는 하단 캡",
       "materialType": "METAL_STEEL_BRUSHED"
     },
     {
       "partId": "CRANKSHAFT",
       "displayNameKo": "크랭크샤프트",
-      "glbUrl": "/models/V4_Engine/Crankshaft.glb",
+      "glbUrl": "/glb/Crankshaft.glb",
       "summary": "엔진의 중심 축",
       "materialType": "METAL_STEEL_MACHINED"
     },
     {
       "partId": "PISTON",
       "displayNameKo": "피스톤",
-      "glbUrl": "/models/V4_Engine/Piston.glb",
+      "glbUrl": "/glb/Piston.glb",
       "summary": "왕복 운동을 하는 실린더 내부 부품",
       "materialType": "METAL_ALUMINUM_MACHINED"
     }

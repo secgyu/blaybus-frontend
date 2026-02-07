@@ -585,7 +585,7 @@ export function Scene({
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
         {contextLost ? (
-          <div className="w-full h-full flex items-center justify-center bg-[#070b14] pr-[406px]">
+          <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
             <div className="flex flex-col items-center gap-3">
               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               <span className="text-primary">3D 뷰어 복구 중...</span>
@@ -666,7 +666,7 @@ export function Scene({
 
       {/* Bottom sliders - 풀스크린에서는 숨김 */}
       {!isFullscreen && (
-        <div className="absolute bottom-5 left-5 right-[418px] z-10">
+        <div className="absolute bottom-5 left-[406px] right-[418px] z-10">
           <div className="flex gap-12">
             {/* Explode Slider - 분해도 */}
             <div className="flex-1 flex flex-col items-start">

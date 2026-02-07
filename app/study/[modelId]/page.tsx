@@ -21,7 +21,7 @@ const Scene = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full flex items-center justify-center bg-[#070b14] pr-[406px]">
+      <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
         <div className="flex items-center gap-3">
           <Loader2 className="w-6 h-6 text-primary animate-spin" />
           <span className="text-primary">3D 뷰어 로딩 중...</span>
@@ -238,7 +238,7 @@ export default function StudyPage({ params }: PageProps) {
               onToggleFullscreen={toggleFullscreen}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#070b14] pr-[406px]">
+            <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
               <div className="flex items-center gap-3">
                 <Loader2 className="w-6 h-6 text-primary animate-spin" />
                 <span className="text-primary">3D 뷰어 로딩 중...</span>

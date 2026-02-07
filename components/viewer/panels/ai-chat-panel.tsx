@@ -1,40 +1,88 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Send } from 'lucide-react';
+import { Loader2, Send, Trash2 } from 'lucide-react';
 
-import type { ModelPart } from '@/types/viewer';
+import { sendChatMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { useViewerStore } from '@/store/viewer-store';
+import type { ModelPart } from '@/types/viewer';
 
 interface AIChatPanelProps {
+  modelId: string;
   systemPrompt: string;
   selectedPart: ModelPart | null;
 }
 
-interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-}
-
-export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
+export function AIChatPanel({ modelId, selectedPart }: AIChatPanelProps) {
   const [input, setInput] = useState('');
-  const [messages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const store = useViewerStore(modelId);
+  const aiHistory = store((s) => s.aiHistory);
+  const addChatMessage = store((s) => s.addChatMessage);
+  const clearChatHistory = store((s) => s.clearChatHistory);
+
+  // 새 메시지가 오면 자동 스크롤
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [aiHistory, isLoading]);
+
+  const sendMessage = useCallback(
+    async (message: string) => {
+      if (!message.trim() || isLoading) return;
+
+      // 유저 메시지 추가
+      addChatMessage({ role: 'user', content: message });
+
+      // 히스토리를 문자열 배열로 변환 (API 스펙에 맞게)
+      const history = aiHistory.map((msg) => `${msg.role}: ${msg.content}`);
+
+      setIsLoading(true);
+      try {
+        const response = await sendChatMessage(modelId, message, history);
+        addChatMessage({ role: 'assistant', content: response });
+      } catch {
+        addChatMessage({
+          role: 'assistant',
+          content: '죄송합니다. 응답을 가져오는 중 오류가 발생했습니다. 다시 시도해주세요.',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [modelId, isLoading, aiHistory, addChatMessage]
+  );
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    // TODO: 백엔드 AI API 연동 예정
+    if (!input.trim()) return;
+    const message = input.trim();
+    setInput('');
+    sendMessage(message);
   };
 
   return (
     <div className="flex flex-col h-full">
       {/* 헤더 */}
-      <div className="px-6 pt-5 pb-3 shrink-0">
-        <h2 className="text-lg font-bold text-white">AI 어시스턴트</h2>
-        <p className="text-xs text-white/40 mt-1">
-          학습 중인 모델에 대해 질문해보세요
-        </p>
+      <div className="px-6 pt-5 pb-3 shrink-0 flex items-start justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-white">AI 어시스턴트</h2>
+          <p className="text-xs text-white/40 mt-1">
+            학습 중인 모델에 대해 질문해보세요
+          </p>
+        </div>
+        {aiHistory.length > 0 && (
+          <button
+            onClick={clearChatHistory}
+            className="mt-1 p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/5 transition-colors"
+            title="대화 기록 삭제"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* 선택된 부품 컨텍스트 표시 */}
@@ -48,7 +96,7 @@ export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
 
       {/* 메시지 리스트 */}
       <div className="flex-1 min-h-0 overflow-y-auto px-5">
-        {messages.length === 0 ? (
+        {aiHistory.length === 0 && !isLoading ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <div className="w-12 h-12 rounded-full bg-[#60A5FA]/20 flex items-center justify-center mb-3">
               <RobotSmallIcon className="w-6 h-6 text-[#60A5FA]" />
@@ -66,6 +114,7 @@ export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
               ].map((suggestion) => (
                 <button
                   key={suggestion}
+                  onClick={() => sendMessage(suggestion)}
                   className="text-left px-3 py-2 rounded-lg border border-[#595959]/50 text-xs text-white/60 hover:text-white hover:border-[#60A5FA]/50 transition-colors"
                 >
                   {suggestion}
@@ -75,9 +124,9 @@ export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
           </div>
         ) : (
           <div className="flex flex-col gap-3 py-2">
-            {messages.map((message) => (
+            {aiHistory.map((message, index) => (
               <div
-                key={message.id}
+                key={`${message.role}-${message.timestamp}-${index}`}
                 className={cn(
                   'flex',
                   message.role === 'user' ? 'justify-end' : 'justify-start'
@@ -91,10 +140,19 @@ export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
                       : 'bg-[#1a1f30] border border-[#595959]/30 text-white/80 rounded-bl-sm'
                   )}
                 >
-                  <p className="whitespace-pre-wrap">{message.text}</p>
+                  <p className="whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#1a1f30] border border-[#595959]/30 text-white/50 text-sm">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>생각 중...</span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
         )}
       </div>
@@ -106,11 +164,12 @@ export function AIChatPanel({ selectedPart }: AIChatPanelProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="질문을 입력하세요..."
-            className="flex-1 h-[44px] px-4 bg-transparent border border-[#595959]/50 rounded-xl text-sm text-white placeholder:text-[#595959] focus:outline-none focus:border-[#60A5FA]/50 transition-colors"
+            disabled={isLoading}
+            className="flex-1 h-[44px] px-4 bg-transparent border border-[#595959]/50 rounded-xl text-sm text-white placeholder:text-[#595959] focus:outline-none focus:border-[#60A5FA]/50 transition-colors disabled:opacity-50"
           />
           <button
             type="submit"
-            disabled={!input.trim()}
+            disabled={!input.trim() || isLoading}
             className="w-[44px] h-[44px] shrink-0 rounded-xl bg-[#1E40AF] hover:bg-[#1E3A8A] disabled:opacity-30 disabled:hover:bg-[#1E40AF] text-white flex items-center justify-center transition-colors"
           >
             <Send className="w-4 h-4" />

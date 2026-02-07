@@ -11,8 +11,7 @@ import {
 import { OrbitControls } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 
-import { Box3, MOUSE, Spherical, Vector3 } from 'three';
-import type { PerspectiveCamera } from 'three';
+import * as THREE from 'three';
 
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
@@ -76,9 +75,9 @@ export const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
       ) {
         const modelGroup = scene.getObjectByName('model-root');
         if (modelGroup) {
-            const box = new Box3().setFromObject(modelGroup);
-            if (!box.isEmpty()) {
-              const size = box.getSize(new Vector3());
+          const box = new THREE.Box3().setFromObject(modelGroup);
+          if (!box.isEmpty()) {
+            const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
             distLimitsRef.current = {
               min: maxDim * 0.3,
@@ -196,12 +195,13 @@ export const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         if (autoFitFrameCount.current >= 10) {
           const modelGroup = scene.getObjectByName('model-root');
           if (modelGroup) {
-            const box = new Box3().setFromObject(modelGroup);
+            const box = new THREE.Box3().setFromObject(modelGroup);
             if (!box.isEmpty()) {
-              const center = box.getCenter(new Vector3());
-              const size = box.getSize(new Vector3());
+              const center = box.getCenter(new THREE.Vector3());
+              const size = box.getSize(new THREE.Vector3());
               const maxDim = Math.max(size.x, size.y, size.z);
-              const fov = (camera as PerspectiveCamera).fov;
+
+              const fov = (camera as THREE.PerspectiveCamera).fov;
               const fovRad = (fov * Math.PI) / 180;
 
               distLimitsRef.current = {
@@ -224,32 +224,6 @@ export const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
 
               controlsRef.current.target.copy(center);
               camera.lookAt(center);
-              camera.updateProjectionMatrix();
-              camera.updateMatrixWorld();
-
-              const canvasWidth = gl.domElement.clientWidth;
-              const leftPanelOverlayPx = 394;
-              const rightPanelPx = 406;
-
-              const visibleCenterPx =
-                (leftPanelOverlayPx + (canvasWidth - rightPanelPx)) / 2;
-              const targetNDCx = (2 * visibleCenterPx) / canvasWidth - 1;
-
-              const centerNDC = center.clone().project(camera);
-
-              const ndcShift = centerNDC.x - targetNDCx;
-              const halfWidth =
-                dist *
-                Math.tan(fovRad / 2) *
-                (canvasWidth / gl.domElement.clientHeight);
-              const panWorld = ndcShift * halfWidth;
-
-              const rightVec = new Vector3();
-              rightVec.setFromMatrixColumn(camera.matrixWorld, 0);
-              const panOffset = rightVec.multiplyScalar(panWorld);
-
-              controlsRef.current.target.add(panOffset);
-              camera.position.add(panOffset);
               controlsRef.current.update();
 
               isInitializedRef.current = true;
@@ -272,7 +246,7 @@ export const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
 
         const target = controlsRef.current.target;
         const offset = camera.position.clone().sub(target);
-        const spherical = new Spherical().setFromVector3(offset);
+        const spherical = new THREE.Spherical().setFromVector3(offset);
         spherical.theta += angle;
         offset.setFromSpherical(spherical);
         camera.position.copy(target).add(offset);
@@ -295,9 +269,9 @@ export const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         minDistance={distLimitsRef.current.min}
         maxDistance={distLimitsRef.current.max}
         mouseButtons={{
-          LEFT: MOUSE.ROTATE,
-          MIDDLE: MOUSE.DOLLY,
-          RIGHT: MOUSE.PAN,
+          LEFT: THREE.MOUSE.ROTATE,
+          MIDDLE: THREE.MOUSE.DOLLY,
+          RIGHT: THREE.MOUSE.PAN,
         }}
         onChange={debouncedSave}
       />

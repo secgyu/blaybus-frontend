@@ -3,9 +3,10 @@
 import { use, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 import { StudyHeader } from '@/components/study-header';
 import { StudyLeftPanel } from '@/components/viewer/study-left-panel';
@@ -14,6 +15,15 @@ import { fetchViewerData } from '@/lib/api';
 import { toViewerModel } from '@/lib/transform';
 import type { Model } from '@/lib/types';
 import { useViewerStore } from '@/store/viewer-store';
+
+const COMING_SOON_IDS: Record<string, string> = {
+  bio_dna_helix: '생명공학',
+  bio_cell_structure: '생명공학',
+  bio_protein_folding: '생명공학',
+  med_artificial_joint: '의공학',
+  med_prosthetic_hand: '의공학',
+  med_stent: '의공학',
+};
 
 const Scene = dynamic(
   () =>
@@ -106,6 +116,115 @@ interface PageProps {
 
 export default function StudyPage({ params }: PageProps) {
   const { modelId } = use(params);
+
+  // Coming soon 모델인 경우 별도 UI 렌더링
+  if (COMING_SOON_IDS[modelId]) {
+    return <ComingSoonPage modelId={modelId} />;
+  }
+
+  return <ViewerPage modelId={modelId} />;
+}
+
+/* ─── Coming Soon Page ─── */
+
+function ComingSoonPage({ modelId }: { modelId: string }) {
+  const title = COMING_SOON_IDS[modelId];
+
+  return (
+    <div className="h-screen bg-[#070B14] relative overflow-hidden">
+      {/* 흐릿한 배경 (가짜 뷰어 레이아웃) */}
+      <div className="absolute inset-0 blur-sm brightness-[0.3] pointer-events-none select-none">
+        {/* 헤더 */}
+        <div className="h-14 bg-[#0D1117] border-b border-[#1E3A8A]/20 flex items-center px-6">
+          <div className="w-24 h-4 rounded bg-[#1E3A8A]/30" />
+          <div className="ml-8 flex gap-4">
+            <div className="w-16 h-3 rounded bg-[#1E3A8A]/20" />
+            <div className="w-16 h-3 rounded bg-[#1E3A8A]/20" />
+            <div className="w-16 h-3 rounded bg-[#1E3A8A]/20" />
+          </div>
+        </div>
+
+        <div className="flex h-[calc(100%-56px)]">
+          {/* 좌측 패널 */}
+          <div className="w-[340px] bg-[#0B1120]/90 border-r border-[#1E3A8A]/15 p-6 shrink-0">
+            <div className="space-y-4">
+              <div className="w-32 h-5 rounded bg-[#1E3A8A]/20" />
+              <div className="w-full h-3 rounded bg-[#1E3A8A]/10" />
+              <div className="w-3/4 h-3 rounded bg-[#1E3A8A]/10" />
+              <div className="w-full h-3 rounded bg-[#1E3A8A]/10" />
+              <div className="mt-8 w-40 h-4 rounded bg-[#1E3A8A]/15" />
+              <div className="space-y-2">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-3 p-3 rounded-lg bg-[#1E3A8A]/5"
+                  >
+                    <div className="w-8 h-8 rounded bg-[#1E3A8A]/15 shrink-0" />
+                    <div className="flex-1 space-y-1">
+                      <div className="w-20 h-3 rounded bg-[#1E3A8A]/15" />
+                      <div className="w-32 h-2 rounded bg-[#1E3A8A]/10" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 bg-[#070B14] relative">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-40 h-40 rounded-full bg-[#1E3A8A]/5 flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full bg-[#1E3A8A]/8" />
+              </div>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-linear-to-t from-[#1E3A8A]/5 to-transparent" />
+          </div>
+
+          <div className="w-[394px] bg-[#0B1120]/90 border-l border-[#1E3A8A]/15 p-4 shrink-0">
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <div className="flex-1 h-9 rounded-lg bg-[#1E3A8A]/15" />
+                <div className="flex-1 h-9 rounded-lg bg-[#1E3A8A]/10" />
+              </div>
+              <div className="space-y-2 mt-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-14 rounded-lg bg-[#1E3A8A]/8" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 mb-6">
+            <div className="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse" />
+            <span className="text-xs text-[#3B82F6]">{title}</span>
+          </div>
+
+          <h2 className="text-2xl font-bold text-[#FAFAFA] mb-3">
+            추후 업데이트될 예정입니다.
+          </h2>
+          <p className="text-sm text-[#FAFAFA]/40 mb-10 max-w-md leading-relaxed">
+            현재 {title} 분야의 3D 모델을 준비하고 있습니다.
+            <br />
+            빠른 시일 내에 제공될 예정이니 조금만 기다려주세요.
+          </p>
+
+          <Link
+            href="/study"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#3B82F6] text-white text-sm font-medium hover:bg-[#2563EB] transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            모델 목록으로 돌아가기
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewerPage({ modelId }: { modelId: string }) {
   const [model, setModel] = useState<Model | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -147,7 +266,6 @@ export default function StudyPage({ params }: PageProps) {
     setIsFullscreen((prev) => !prev);
   }, []);
 
-  // ESC 키로 풀스크린 모드 해제
   useEffect(() => {
     if (!isFullscreen) return;
 

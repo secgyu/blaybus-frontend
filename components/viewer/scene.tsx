@@ -25,7 +25,6 @@ import { useViewerStore } from '@/store/viewer-store';
 
 import { ModelViewer } from './model-viewer';
 
-// 셰이더 기반 바닥 그리드 컴포넌트
 function FloorGrid() {
   const shaderMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
@@ -132,18 +131,25 @@ interface ManualControlsProps {
   onZoomChange: (zoomPercent: number) => void;
 }
 
-const MIN_DISTANCE = 0.3;
-const MAX_DISTANCE = 5;
+// 기본 줌 범위 (auto-fit 전 fallback)
+const DEFAULT_MIN_DISTANCE = 0.3;
+const DEFAULT_MAX_DISTANCE = 5;
 
-function distanceToZoomPercent(distance: number): number {
-  const clamped = Math.max(MIN_DISTANCE, Math.min(MAX_DISTANCE, distance));
-  return Math.round(
-    ((MAX_DISTANCE - clamped) / (MAX_DISTANCE - MIN_DISTANCE)) * 100
-  );
+function distanceToZoomPercent(
+  distance: number,
+  minDist: number,
+  maxDist: number
+): number {
+  const clamped = Math.max(minDist, Math.min(maxDist, distance));
+  return Math.round(((maxDist - clamped) / (maxDist - minDist)) * 100);
 }
 
-function zoomPercentToDistance(percent: number): number {
-  return MAX_DISTANCE - (percent / 100) * (MAX_DISTANCE - MIN_DISTANCE);
+function zoomPercentToDistance(
+  percent: number,
+  minDist: number,
+  maxDist: number
+): number {
+  return maxDist - (percent / 100) * (maxDist - minDist);
 }
 
 // 사용자가 한 번도 카메라를 조작하지 않은 기본 상태인지 확인
@@ -172,8 +178,13 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
     const isInitializedRef = useRef(false);
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const autoFitFrameCount = useRef(0);
-    // auto-fit 대상 여부: null이거나 기본값(한 번도 조작 안 한 상태)이면 auto-fit
     const needsAutoFit = useRef(isUninitializedCameraState(initialCameraState));
+
+    // 모델 크기 기반 동적 줌 범위
+    const distLimitsRef = useRef({
+      min: DEFAULT_MIN_DISTANCE,
+      max: DEFAULT_MAX_DISTANCE,
+    });
 
     const getCurrentDistance = useCallback(() => {
       if (controlsRef.current) {
@@ -190,6 +201,20 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         !isInitializedRef.current &&
         controlsRef.current
       ) {
+        // 복원 전에 모델 크기로 줌 범위 설정
+        const modelGroup = scene.getObjectByName('model-root');
+        if (modelGroup) {
+          const box = new THREE.Box3().setFromObject(modelGroup);
+          if (!box.isEmpty()) {
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            distLimitsRef.current = {
+              min: maxDim * 0.3,
+              max: maxDim * 6,
+            };
+          }
+        }
+
         const { position, target } = initialCameraState;
         camera.position.set(position[0], position[1], position[2]);
         controlsRef.current.target.set(target[0], target[1], target[2]);
@@ -198,9 +223,10 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         isInitializedRef.current = true;
 
         const distance = camera.position.distanceTo(controlsRef.current.target);
-        onZoomChange(distanceToZoomPercent(distance));
+        const { min, max } = distLimitsRef.current;
+        onZoomChange(distanceToZoomPercent(distance, min, max));
       }
-    }, [initialCameraState, camera, onZoomChange]);
+    }, [initialCameraState, camera, onZoomChange, scene]);
 
     const saveCameraState = useCallback(() => {
       if (controlsRef.current) {
@@ -214,7 +240,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
           zoom: camera.zoom,
         });
 
-        onZoomChange(distanceToZoomPercent(distance));
+        const { min, max } = distLimitsRef.current;
+        onZoomChange(distanceToZoomPercent(distance, min, max));
       }
     }, [camera, onCameraChange, onZoomChange]);
 
@@ -268,7 +295,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
       },
       setZoomLevel: (zoomPercent: number) => {
         if (controlsRef.current) {
-          const targetDistance = zoomPercentToDistance(zoomPercent);
+          const { min, max } = distLimitsRef.current;
+          const targetDistance = zoomPercentToDistance(zoomPercent, min, max);
           const direction = camera.position
             .clone()
             .sub(controlsRef.current.target)
@@ -281,7 +309,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         }
       },
       getZoomLevel: () => {
-        return distanceToZoomPercent(getCurrentDistance());
+        const { min, max } = distLimitsRef.current;
+        return distanceToZoomPercent(getCurrentDistance(), min, max);
       },
     }));
 
@@ -301,35 +330,61 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
               const size = box.getSize(new THREE.Vector3());
               const maxDim = Math.max(size.x, size.y, size.z);
               const fov = (camera as THREE.PerspectiveCamera).fov;
+              const fovRad = (fov * Math.PI) / 180;
 
-              let dist = maxDim / 2 / Math.tan((fov * Math.PI) / 360);
-              dist *= 2.0;
-              dist = Math.max(dist, MIN_DISTANCE);
-              dist = Math.min(dist, MAX_DISTANCE);
+              // 1. 모델 크기 기반 동적 줌 범위 설정
+              distLimitsRef.current = {
+                min: maxDim * 0.3,
+                max: maxDim * 6,
+              };
 
+              // 2. 모델이 화면의 ~60%를 차지하는 거리 계산
+              let dist = maxDim / (2 * Math.tan(fovRad / 2));
+              dist *= 1.5; // 여유 패딩
+              dist = Math.max(dist, distLimitsRef.current.min);
+              dist = Math.min(dist, distLimitsRef.current.max);
+
+              // 3. 구면 좌표로 카메라 배치 (30° 위에서, 45° 각도)
+              const elevation = Math.PI / 6; // 30° 위에서 내려다보기
+              const azimuth = Math.PI / 4; // 45° 측면
               camera.position.set(
-                center.x + dist * 0.6,
-                center.y + dist * 0.5,
-                center.z + dist * 0.6
+                center.x + dist * Math.cos(elevation) * Math.sin(azimuth),
+                center.y + dist * Math.sin(elevation),
+                center.z + dist * Math.cos(elevation) * Math.cos(azimuth)
               );
 
+              // 4. 모델 중심을 바라보기
               controlsRef.current.target.copy(center);
               camera.lookAt(center);
+              camera.updateProjectionMatrix();
               camera.updateMatrixWorld();
 
+              // 5. NDC 기반 정밀 센터링 (좌측+우측 패널 모두 보정)
               const canvasWidth = gl.domElement.clientWidth;
-              const canvasHeight = gl.domElement.clientHeight;
-              const rightPanelPx = 406;
-              const shiftPx = rightPanelPx / 2;
-              const fovRad = (fov * Math.PI) / 180;
-              const worldHeight = 2 * dist * Math.tan(fovRad / 2);
-              const aspect = canvasWidth / canvasHeight;
-              const worldWidth = worldHeight * aspect;
-              const shiftWorld = (shiftPx / canvasWidth) * worldWidth;
+              const leftPanelOverlayPx = 394; // 좌측 콘텐츠 패널 오버레이 (기본 열림)
+              const rightPanelPx = 406; // 우측 패널
+
+              // 가시 영역: leftPanelOverlayPx ~ (canvasWidth - rightPanelPx)
+              // 가시 영역 중앙 (px)
+              const visibleCenterPx =
+                (leftPanelOverlayPx + (canvasWidth - rightPanelPx)) / 2;
+              const targetNDCx = (2 * visibleCenterPx) / canvasWidth - 1;
+
+              // 현재 모델 중심의 NDC 좌표 (lookAt 직후이므로 ~0,0)
+              const centerNDC = center.clone().project(camera);
+
+              // NDC 오프셋 → 월드 좌표 pan
+              const ndcShift = centerNDC.x - targetNDCx;
+              const aspect = canvasWidth / gl.domElement.clientWidth;
+              const halfWidth =
+                dist *
+                Math.tan(fovRad / 2) *
+                (canvasWidth / gl.domElement.clientHeight);
+              const panWorld = ndcShift * halfWidth;
 
               const rightVec = new THREE.Vector3();
               rightVec.setFromMatrixColumn(camera.matrixWorld, 0);
-              const panOffset = rightVec.multiplyScalar(shiftWorld);
+              const panOffset = rightVec.multiplyScalar(panWorld);
 
               controlsRef.current.target.add(panOffset);
               camera.position.add(panOffset);
@@ -341,7 +396,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
               const distance = camera.position.distanceTo(
                 controlsRef.current.target
               );
-              onZoomChange(distanceToZoomPercent(distance));
+              const { min, max } = distLimitsRef.current;
+              onZoomChange(distanceToZoomPercent(distance, min, max));
               debouncedSave();
             }
           }
@@ -375,8 +431,8 @@ const ManualControls = forwardRef<ControlsHandle, ManualControlsProps>(
         autoRotate={false}
         minPolarAngle={0}
         maxPolarAngle={Math.PI}
-        minDistance={MIN_DISTANCE}
-        maxDistance={MAX_DISTANCE}
+        minDistance={distLimitsRef.current.min}
+        maxDistance={distLimitsRef.current.max}
         mouseButtons={{
           LEFT: THREE.MOUSE.ROTATE,
           MIDDLE: THREE.MOUSE.DOLLY,

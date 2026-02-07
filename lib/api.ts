@@ -1,7 +1,7 @@
 import type {
   ModelData,
-  ModelSummary,
   ModelSliceResponse,
+  ModelSummary,
   Quiz,
   QuizAnswerItem,
   QuizResultResponse,
@@ -27,6 +27,13 @@ export interface FetchModelsOptions {
 export async function fetchModels(
   options: FetchModelsOptions = {}
 ): Promise<ModelSummary[]> {
+  const data = await fetchModelsPage(options);
+  return data.models;
+}
+
+export async function fetchModelsPage(
+  options: FetchModelsOptions = {}
+): Promise<ModelSliceResponse> {
   const params = new URLSearchParams();
 
   if (options.page !== undefined) {
@@ -48,8 +55,7 @@ export async function fetchModels(
     throw new Error(`Failed to fetch models: ${response.status}`);
   }
 
-  const data: ModelSliceResponse = await response.json();
-  return data.models;
+  return response.json();
 }
 
 export async function fetchViewerData(modelId: string): Promise<ModelData> {

@@ -181,6 +181,7 @@ export function StudyLeftPanel({
             {activeTab === 'robot' && (
               <AIChatPanel
                 modelId={modelId}
+                modelTitle={model.nameKo}
                 systemPrompt={model.systemPrompt}
                 selectedPart={selectedPart}
               />

@@ -1,4 +1,8 @@
 import type {
+  ChatModelInfo,
+  ChatPartInfo,
+  HistoryMessage,
+  MessageResponse,
   ModelData,
   ModelSliceResponse,
   ModelSummary,
@@ -107,31 +111,21 @@ export async function fetchViewerData(modelId: string): Promise<ModelData> {
   return response.json();
 }
 
-export interface HistoryMessage {
-  role: string;
-  content: string;
-}
-
-export interface ChatCitation {
-  tag?: string;
-  documentId?: string;
-  documentTitle?: string;
-  pages?: string;
-  chunkId?: string;
-  distance?: number;
-}
-
-export interface ChatResponse {
-  answer: string;
-  citations?: ChatCitation[];
+export interface SendChatMessageOptions {
+  modelId: string;
+  message: string;
+  history?: HistoryMessage[];
+  model?: ChatModelInfo;
+  parts?: ChatPartInfo[];
+  documentIds?: string[];
+  imageUrls?: string[];
 }
 
 export async function sendChatMessage(
-  modelId: string,
-  message: string,
-  history: HistoryMessage[]
-): Promise<string> {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+  options: SendChatMessageOptions
+): Promise<MessageResponse> {
+  const { modelId, message, history, model, parts, documentIds, imageUrls } =
+    options;
 
   const response = await fetch(`${API_BASE_URL}/v1/chat/messages`, {
     method: 'POST',
@@ -139,6 +133,10 @@ export async function sendChatMessage(
     body: JSON.stringify({
       message,
       history,
+      model,
+      parts,
+      documentIds,
+      imageUrls,
       extraMetadata: { modelId },
     }),
   });
@@ -147,8 +145,8 @@ export async function sendChatMessage(
     throw new Error(`Chat API error: ${response.status}`);
   }
 
-  const data: ChatResponse = await response.json();
-  return data.answer;
+  const data: MessageResponse = await response.json();
+  return data;
 }
 
 export async function saveNodes(

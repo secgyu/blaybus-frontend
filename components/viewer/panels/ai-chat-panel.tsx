@@ -11,11 +11,16 @@ import type { ModelPart } from '@/types/viewer';
 
 interface AIChatPanelProps {
   modelId: string;
+  modelTitle: string;
   systemPrompt: string;
   selectedPart: ModelPart | null;
 }
 
-export function AIChatPanel({ modelId, selectedPart }: AIChatPanelProps) {
+export function AIChatPanel({
+  modelId,
+  modelTitle,
+  selectedPart,
+}: AIChatPanelProps) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -42,8 +47,14 @@ export function AIChatPanel({ modelId, selectedPart }: AIChatPanelProps) {
 
       setIsLoading(true);
       try {
-        const response = await sendChatMessage(modelId, message, history);
-        addChatMessage({ role: 'assistant', content: response });
+        const response = await sendChatMessage({
+          modelId,
+          message,
+          history,
+          model: { modelId, title: modelTitle },
+          parts: selectedPart ? [{ partId: selectedPart.id }] : [],
+        });
+        addChatMessage({ role: 'assistant', content: response.answer });
       } catch {
         addChatMessage({
           role: 'assistant',
@@ -54,7 +65,7 @@ export function AIChatPanel({ modelId, selectedPart }: AIChatPanelProps) {
         setIsLoading(false);
       }
     },
-    [modelId, isLoading, aiHistory, addChatMessage]
+    [modelId, modelTitle, selectedPart, isLoading, aiHistory, addChatMessage]
   );
 
   const handleSubmit = (e?: React.FormEvent) => {

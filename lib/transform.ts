@@ -1,23 +1,6 @@
 import type { ModelData, Node, Part } from '@/types/api';
 import type { ModelPart, PartInstance, ViewerModel } from '@/types/viewer';
 
-function normalizeGlbPath(glbUrl: string, modelId: string): string {
-  let path = glbUrl;
-
-  if (path.startsWith('/glb/')) {
-    const fileName = path.slice('/glb/'.length);
-    const folderName = modelId
-      .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('_');
-    path = `/models/${folderName}/${fileName}`;
-  }
-
-  path = path.replace(/%20/g, '_').replace(/ /g, '_');
-
-  return path;
-}
-
 export function toViewerModel(
   data: ModelData,
   systemPrompt: string = ''
@@ -56,7 +39,7 @@ export function toViewerModel(
       nameKo: part.displayNameKo,
       role: part.summary,
       material: '기본 재질', // API에서 제공하지 않으므로 기본값
-      glbPath: normalizeGlbPath(part.glbUrl, data.model.modelId),
+      glbPath: `/glb/${part.partId}.glb`,
       materialType: part.materialType, // Material Preset 적용
       instances: instances.length > 0 ? instances : undefined,
       basePosition: instances[0]?.position,

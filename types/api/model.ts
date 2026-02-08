@@ -10,7 +10,8 @@ export type MaterialType =
   | 'METAL_ALUMINUM_MACHINED'
   | 'METAL_OILY'
   | 'PLASTIC_MATTE'
-  | 'PLASTIC_SATIN'
+  | 'PLASTIC_SATIN_1'
+  | 'PLASTIC_SATIN_2'
   | 'PLASTIC_GLOSS';
 
 /** 모델 요약 정보 (목록 조회용) */

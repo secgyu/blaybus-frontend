@@ -39,7 +39,7 @@ export function toViewerModel(
       nameKo: part.displayNameKo,
       role: part.summary,
       material: '기본 재질', // API에서 제공하지 않으므로 기본값
-      glbPath: `/glb/${data.model.modelId}/${part.partId}.glb`,
+      glbPath: `/glb/${data.model.modelId}/${part.partId.replace(/ /g, '_')}.glb`,
       materialType: part.materialType, // Material Preset 적용
       instances: instances.length > 0 ? instances : undefined,
       basePosition: instances[0]?.position,

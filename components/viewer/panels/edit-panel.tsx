@@ -21,7 +21,7 @@ export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
       </div>
 
       <div className="mt-3 shrink-0">
-        <button className="w-full h-[68px] rounded-xl bg-[#1E40AF] hover:bg-[#1E3A8A] active:bg-[#1e3580] text-white font-medium transition-colors flex items-center justify-center">
+        <button className="w-full h-[48px] rounded-xl bg-[#1E40AF] hover:bg-[#1E3A8A] active:bg-[#1e3580] text-white text-sm font-medium transition-colors flex items-center justify-center">
           학습 메모 저장하기
         </button>
       </div>

@@ -94,7 +94,7 @@ export function StudyRightPanel({
 
   return (
     <aside
-      className="h-full flex flex-col p-5 gap-4"
+      className="h-full flex flex-col p-4 gap-3"
       style={{
         background:
           'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
@@ -105,7 +105,7 @@ export function StudyRightPanel({
       }}
     >
       <div className="shrink-0 py-2">
-        <h1 className="text-[28px] font-bold text-[#FAFAFA] leading-tight tracking-wide">
+        <h1 className="text-[22px] font-bold text-[#FAFAFA] leading-tight tracking-wide">
           {model.name}
         </h1>
       </div>
@@ -202,7 +202,7 @@ export function StudyRightPanel({
                 >
                   <div
                     className={cn(
-                      'w-[82px] h-[82px] rounded-xl overflow-hidden transition-all duration-200',
+                      'w-[72px] h-[72px] rounded-xl overflow-hidden transition-all duration-200',
                       isSelected
                         ? 'border border-[#60A5FA] bg-[rgba(20,21,23,0.08)]'
                         : 'bg-[rgba(20,21,23,0.08)]'
@@ -214,7 +214,7 @@ export function StudyRightPanel({
                       onClick={() => onPartSelect(isSelected ? null : part.id)}
                     />
                   </div>
-                  <div className="flex justify-center items-center w-[83px] px-1 py-0.5">
+                  <div className="flex justify-center items-center w-[72px] px-1 py-0.5">
                     <span
                       className={cn(
                         'text-[13px] text-center leading-[140%] line-clamp-1',

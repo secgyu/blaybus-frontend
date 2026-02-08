@@ -195,7 +195,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
       </div>
 
       <div
-        className={`absolute top-[112px] left-3 bottom-3 z-10 transition-[opacity,transform] duration-500 ease-in-out ${
+        className={`absolute top-[76px] left-3 bottom-3 z-10 transition-[opacity,transform] duration-500 ease-in-out ${
           isFullscreen
             ? 'opacity-0 pointer-events-none -translate-x-10'
             : 'opacity-100 translate-x-0'
@@ -217,7 +217,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
       </div>
 
       <div
-        className={`absolute top-[112px] right-3 bottom-3 w-[394px] z-10 transition-[opacity,transform] duration-500 ease-in-out ${
+        className={`absolute top-[76px] right-3 bottom-3 w-[320px] z-10 transition-[opacity,transform] duration-500 ease-in-out ${
           isFullscreen
             ? 'opacity-0 pointer-events-none translate-x-10'
             : 'opacity-100 translate-x-0'

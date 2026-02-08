@@ -129,11 +129,11 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
 }
 
 // 보이는 영역 기준 중앙 정렬을 위한 패널 폭 상수
-// 좌측: sidebar(168px) + margin(12px) = 180px, 콘텐츠 열림 시 + gap(8px) + panel(394px) = 582px
-// 우측: panel(394px) + margin(12px) = 406px
-const LEFT_SIDEBAR_WIDTH = 180;
-const LEFT_PANEL_EXPANDED_WIDTH = 582;
-const RIGHT_PANEL_WIDTH = 406;
+// 좌측: sidebar(72px) + margin(12px) = 84px, 콘텐츠 열림 시 + gap(8px) + panel(320px) = 412px
+// 우측: panel(320px) + margin(12px) = 332px
+const LEFT_SIDEBAR_WIDTH = 84;
+const LEFT_PANEL_EXPANDED_WIDTH = 412;
+const RIGHT_PANEL_WIDTH = 332;
 
 interface BottomSlidersProps {
   explodeValue: number;

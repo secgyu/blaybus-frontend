@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 export function SimvexLogo() {
   return (
     <svg
-      width="38"
-      height="50"
+      width="28"
+      height="38"
       viewBox="49 26 38 50"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -150,23 +150,23 @@ export function StudyHeader({ category = '기계공학' }: StudyHeaderProps) {
   const router = useRouter();
 
   return (
-    <header className="h-[100px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-10 pb-5">
-      <div className="flex items-end gap-[42px]">
+    <header className="h-[64px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-6 pb-3">
+      <div className="flex items-end gap-8">
         <button
           onClick={() => router.push('/')}
-          className="cursor-pointer mb-[-6px]"
+          className="cursor-pointer mb-[-4px]"
         >
           <SimvexLogo />
         </button>
 
         <div className="flex flex-col">
-          <span className="text-[22px] font-semibold text-[#FAFAFA] tracking-wide pb-2">
+          <span className="text-[18px] font-semibold text-[#FAFAFA] tracking-wide pb-1.5">
             Study
           </span>
           <div className="h-[2px] bg-[#2563EB] rounded-full" />
         </div>
 
-        <button className="flex items-center gap-2 h-[32px] px-5 rounded-full border border-[#595959] text-[#FAFAFA] text-sm mb-1 ml-[-30px]">
+        <button className="flex items-center gap-2 h-[28px] px-4 rounded-full border border-[#595959] text-[#FAFAFA] text-xs mb-0.5 ml-[-20px]">
           {category}
           <ChevronDownIcon />
         </button>

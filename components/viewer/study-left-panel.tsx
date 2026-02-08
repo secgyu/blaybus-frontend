@@ -75,21 +75,22 @@ export function StudyLeftPanel({
   return (
     <aside className="h-full relative flex shrink-0">
       <div
-        className="w-[168px] h-full shrink-0 flex flex-col justify-between rounded-[20px] z-20"
+        className="w-[72px] h-full shrink-0 flex flex-col justify-between rounded-[16px] z-20"
         style={{
-          background: 'rgba(8, 13, 26, 0.25)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+          background: 'rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(1px)',
+          WebkitBackdropFilter: 'blur(1px)',
         }}
       >
-        <div className="flex flex-col items-center gap-[24px] pt-6">
+        <div className="flex flex-col items-center gap-[12px] pt-3">
           {sidebarTopItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleTabClick(item.id)}
-                className="w-[88px] h-[88px] flex flex-col items-center justify-center gap-2 transition-all duration-200 relative group"
+                className="w-[52px] h-[52px] flex flex-col items-center justify-center gap-1 transition-all duration-200 relative group"
               >
                 <div
                   className={cn(
@@ -102,13 +103,13 @@ export function StudyLeftPanel({
 
                 <div
                   className={cn(
-                    'relative z-10 w-6 h-6 flex items-center justify-center transition-colors duration-200',
+                    'relative z-10 w-4 h-4 flex items-center justify-center transition-colors duration-200',
                     isActive
                       ? 'text-[#FAFAFA]'
                       : 'text-white/60 group-hover:text-white/90'
                   )}
                 >
-                  <item.icon className="w-6 h-6" />
+                  <item.icon className="w-4 h-4" />
                 </div>
 
                 <div
@@ -119,11 +120,11 @@ export function StudyLeftPanel({
                       : 'text-white/60 group-hover:text-white/90'
                   )}
                 >
-                  <span className="text-[12px] font-medium leading-tight">
+                  <span className="text-[10px] font-medium leading-tight">
                     {item.label}
                   </span>
                   {item.sublabel && (
-                    <span className="text-[12px] font-medium leading-tight">
+                    <span className="text-[10px] font-medium leading-tight">
                       {item.sublabel}
                     </span>
                   )}
@@ -133,16 +134,16 @@ export function StudyLeftPanel({
           })}
         </div>
 
-        <div className="flex flex-col items-center pb-[40px]">
-          <button className="w-6 h-6 flex items-center justify-center transition-colors">
-            <SettingsIcon className="w-6 h-6 text-[#717271] hover:text-[#999]" />
+        <div className="flex flex-col items-center pb-[16px]">
+          <button className="w-4 h-4 flex items-center justify-center transition-colors">
+            <SettingsIcon className="w-4 h-4 text-[#717271] hover:text-[#999]" />
           </button>
         </div>
       </div>
 
       <div
         className={cn(
-          'absolute left-[176px] top-0 bottom-0 w-[394px] flex flex-col overflow-hidden z-10',
+          'absolute left-[80px] top-0 bottom-0 w-[320px] flex flex-col overflow-hidden z-10',
           'transition-[transform,opacity] duration-300 ease-in-out',
           activeTab !== null
             ? 'translate-x-0 opacity-100 rounded-[20px]'
@@ -150,12 +151,13 @@ export function StudyLeftPanel({
         )}
         style={{
           background:
-            'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
+            'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(1px)',
+          WebkitBackdropFilter: 'blur(1px)',
         }}
       >
-        <div className="w-[394px] h-full flex flex-col">
+        <div className="w-[320px] h-full flex flex-col">
           {activeTab && (
             <div className="px-5 pt-6 pb-4 shrink-0 flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#FAFAFA]">

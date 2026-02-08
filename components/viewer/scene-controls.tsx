@@ -29,7 +29,13 @@ export function RotationControls({
   onToggleFullscreen,
 }: RotationControlsProps) {
   return (
-    <div className="absolute top-[120px] right-[418px] flex items-center z-10">
+    <div
+      className="absolute flex items-center z-10"
+      style={{
+        top: isFullscreen ? '20px' : '120px',
+        right: isFullscreen ? '20px' : '418px',
+      }}
+    >
       <button
         className={`w-12 h-12 rounded-xl bg-[#595959] flex items-center justify-center text-[#FAFAFA] hover:bg-[#6b6b6b] transition-colors ${
           isRotatingLeft ? 'bg-[#6b6b6b]' : ''

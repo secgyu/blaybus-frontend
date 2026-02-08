@@ -10,6 +10,7 @@ import {
   QuizQIcon,
   RobotIcon,
   SettingsIcon,
+  WrenchIcon,
 } from '@/components/icons/sidebar-icons';
 import { cn } from '@/lib/utils';
 import type { ModelPart, ViewerModel } from '@/types/viewer';
@@ -238,17 +239,91 @@ function SearchPanel({ model }: { model: ViewerModel }) {
   );
 }
 
+interface PDFDownloadItem {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}
+
+const pdfDownloadItems: PDFDownloadItem[] = [
+  { id: '3d', icon: WrenchIcon, label: '3D 오브젝트 이미지 및 설명' },
+  { id: 'memo', icon: EditIcon, label: '메모' },
+  { id: 'ai', icon: RobotIcon, label: 'AI 어시스턴트' },
+  { id: 'quiz', icon: QuizQIcon, label: '퀴즈' },
+];
+
 function PDFViewerPanel() {
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(
+    new Set(['3d'])
+  );
+
+  const toggleItem = (id: string) => {
+    setSelectedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full p-5">
-      <div className="w-16 h-16 mb-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-        <PDFIcon className="w-8 h-8 text-white/40" />
-      </div>
-      <h2 className="text-base font-semibold text-white mb-2">PDF 뷰어</h2>
-      <p className="text-sm text-white/40 text-center">
-        PDF 파일 뷰어 기능이
-        <br />곧 추가될 예정입니다.
+    <div className="flex flex-col h-full px-5 pb-5">
+      <p className="text-sm text-[#B8B8B8] mb-5">
+        PDF로 다운로드 할 항목을 선택해주세요.
       </p>
+
+      <div className="rounded-xl overflow-hidden" style={{ background: 'rgba(184, 184, 184, 0.1)' }}>
+        {pdfDownloadItems.map((item, index) => {
+          const isSelected = selectedItems.has(item.id);
+          return (
+            <button
+              key={item.id}
+              onClick={() => toggleItem(item.id)}
+              className={cn(
+                'w-full flex items-center gap-3 px-5 py-3 transition-colors hover:bg-white/5',
+                index < pdfDownloadItems.length - 1 && 'border-b border-dashed border-[#FAFAFA]/20'
+              )}
+            >
+              <div className="w-10 h-10 rounded-[10px] bg-[#595959] flex items-center justify-center shrink-0">
+                <item.icon className="w-5 h-5 text-[#FAFAFA]" />
+              </div>
+
+              <span className="flex-1 text-sm text-[#FAFAFA] text-left">
+                {item.label}
+              </span>
+
+              <div
+                className={cn(
+                  'w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center shrink-0 transition-colors',
+                  isSelected ? 'border-[#3B82F6]' : 'border-[#D6D3D1]'
+                )}
+              >
+                {isSelected && (
+                  <div className="w-3 h-3 rounded-full bg-[#3B82F6]" />
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-auto pt-5">
+        <button
+          className="w-full h-12 rounded-xl text-[#FAFAFA] font-bold text-sm transition-opacity hover:opacity-90"
+          style={{
+            background: 'linear-gradient(135deg, #2563EB, #3B82F6)',
+          }}
+          disabled={selectedItems.size === 0}
+          onClick={() => {
+            // TODO: PDF 다운로드 로직
+          }}
+        >
+          학습 내용 PDF 다운받기
+        </button>
+      </div>
     </div>
   );
 }

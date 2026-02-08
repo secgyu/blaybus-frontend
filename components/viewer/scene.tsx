@@ -138,11 +138,19 @@ export function Scene({
     controlsRef.current?.stopRotate();
   };
 
+  // 좌측 패널: left-3(12px) + sidebar(168px) = 180px
+  // 우측 패널: right-3(12px) + panel(394px) = 406px
+  const canvasStyle = isFullscreen
+    ? { left: 0, right: 0, top: 0, bottom: 0 }
+    : { left: 180, right: 406, top: 0, bottom: 0 };
+
   return (
     <div className="w-full h-full relative">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+      {/* 격자 배경은 전체 뷰포트 */}
+      <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
+      {/* 3D Canvas는 패널 제외 영역에 배치 */}
+      <div className="absolute" style={canvasStyle}>
         {contextLost ? (
           <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
             <div className="flex flex-col items-center gap-3">
@@ -181,6 +189,13 @@ export function Scene({
             />
           </Canvas>
         )}
+
+        <BottomSliders
+          explodeValue={explodeValue}
+          zoomValue={zoomValue}
+          onExplodeChange={onExplodeChange}
+          onZoomChange={handleZoomSliderChange}
+        />
       </div>
 
       <RotationControls
@@ -194,12 +209,6 @@ export function Scene({
         onToggleFullscreen={onToggleFullscreen}
       />
 
-      <BottomSliders
-        explodeValue={explodeValue}
-        zoomValue={zoomValue}
-        onExplodeChange={onExplodeChange}
-        onZoomChange={handleZoomSliderChange}
-      />
     </div>
   );
 }

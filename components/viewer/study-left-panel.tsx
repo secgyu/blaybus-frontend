@@ -308,45 +308,71 @@ function PDFViewerPanel({ modelId, captureCanvas }: PDFViewerPanelProps) {
     });
   };
 
+  const buildPdfRequestBody = (): PdfRequestDto => {
+    const body: PdfRequestDto = {};
+
+    if (selectedItems.has('3d') && captureCanvas) {
+      const dataUrl = captureCanvas();
+      if (dataUrl) {
+        body.modelImage = dataUrl;
+      }
+    }
+
+    if (selectedItems.has('memo')) {
+      body.memo = notes;
+    }
+
+    if (selectedItems.has('ai') && aiHistory.length > 0) {
+      body.chatLogs = [];
+      for (let i = 0; i < aiHistory.length; i += 2) {
+        const userMsg = aiHistory[i];
+        const assistantMsg = aiHistory[i + 1];
+        if (userMsg) {
+          body.chatLogs.push({
+            question: userMsg.content,
+            answer: assistantMsg?.content ?? '',
+          });
+        }
+      }
+    }
+
+    if (selectedItems.has('quiz') && quizResults) {
+      body.quizs = quizResults.results.map((r) => ({
+        quizQuestion: `문제 ${r.questionId}`,
+        quizAnswer: r.correctAnswer,
+      }));
+    }
+
+    return body;
+  };
+
+  const handlePreview = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const body = buildPdfRequestBody();
+      const blob = await generatePdf({
+        modelId,
+        type: 'preview',
+        body,
+      });
+
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch {
+      setError('미리보기에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleDownload = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const body: PdfRequestDto = {};
-
-      if (selectedItems.has('3d') && captureCanvas) {
-        const dataUrl = captureCanvas();
-        if (dataUrl) {
-          body.modelImage = dataUrl;
-        }
-      }
-
-      if (selectedItems.has('memo')) {
-        body.memo = notes;
-      }
-
-      if (selectedItems.has('ai') && aiHistory.length > 0) {
-        body.chatLogs = [];
-        for (let i = 0; i < aiHistory.length; i += 2) {
-          const userMsg = aiHistory[i];
-          const assistantMsg = aiHistory[i + 1];
-          if (userMsg) {
-            body.chatLogs.push({
-              question: userMsg.content,
-              answer: assistantMsg?.content ?? '',
-            });
-          }
-        }
-      }
-
-      if (selectedItems.has('quiz') && quizResults) {
-        body.quizs = quizResults.results.map((r) => ({
-          quizQuestion: `문제 ${r.questionId}`,
-          quizAnswer: r.correctAnswer,
-        }));
-      }
-
+      const body = buildPdfRequestBody();
       const blob = await generatePdf({
         modelId,
         type: 'download',
@@ -418,7 +444,14 @@ function PDFViewerPanel({ modelId, captureCanvas }: PDFViewerPanelProps) {
         <p className="text-xs text-red-400 mt-3 text-center">{error}</p>
       )}
 
-      <div className="mt-auto pt-5">
+      <div className="mt-auto pt-5 flex flex-col gap-2">
+        <button
+          className="w-full h-12 rounded-xl border border-[#3B82F6] text-[#3B82F6] font-bold text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
+          disabled={selectedItems.size === 0 || isLoading}
+          onClick={handlePreview}
+        >
+          {isLoading ? 'PDF 생성 중...' : 'PDF 미리보기'}
+        </button>
         <button
           className="w-full h-12 rounded-xl text-[#FAFAFA] font-bold text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
           style={{

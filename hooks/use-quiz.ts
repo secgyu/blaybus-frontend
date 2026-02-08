@@ -10,7 +10,11 @@ export type QuizState =
   | 'submitting'
   | 'results';
 
-export function useQuiz(modelId: string) {
+export interface UseQuizOptions {
+  onResults?: (results: QuizResultResponse) => void;
+}
+
+export function useQuiz(modelId: string, options: UseQuizOptions = {}) {
   const [state, setState] = useState<QuizState>('idle');
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,6 +63,7 @@ export function useQuiz(modelId: string) {
       const answerList = Array.from(answers.values());
       const result = await submitQuizAnswers(modelId, answerList);
       setResults(result);
+      options.onResults?.(result);
       setState('results');
     } catch {
       setError('답안 제출에 실패했습니다. 다시 시도해주세요.');

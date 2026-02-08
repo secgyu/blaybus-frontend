@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import type { QuizResultResponse } from '@/types/api';
 import type { CameraState, ChatMessage } from '@/types/viewer';
 
 export type { CameraState };
@@ -14,6 +15,7 @@ export interface ViewerStoreState {
   cameraState: CameraState | null;
   notes: string;
   aiHistory: ChatMessage[];
+  quizResults: QuizResultResponse | null;
   isHydrated: boolean;
 
   setModelId: (modelId: string) => void;
@@ -23,6 +25,7 @@ export interface ViewerStoreState {
   setNotes: (notes: string) => void;
   addChatMessage: (message: Omit<ChatMessage, 'timestamp'>) => void;
   clearChatHistory: () => void;
+  setQuizResults: (results: QuizResultResponse | null) => void;
   resetState: () => void;
   setHydrated: (hydrated: boolean) => void;
 }
@@ -34,6 +37,7 @@ const getDefaultState = () => ({
   cameraState: null as CameraState | null,
   notes: '',
   aiHistory: [] as ChatMessage[],
+  quizResults: null as QuizResultResponse | null,
   isHydrated: false,
 });
 
@@ -66,6 +70,8 @@ function createViewerStore(modelId: string) {
 
         clearChatHistory: () => set({ aiHistory: [] }),
 
+        setQuizResults: (results) => set({ quizResults: results }),
+
         resetState: () =>
           set({
             ...getDefaultState(),
@@ -82,6 +88,7 @@ function createViewerStore(modelId: string) {
           cameraState: state.cameraState,
           notes: state.notes,
           aiHistory: state.aiHistory,
+          quizResults: state.quizResults,
         }),
         onRehydrateStorage: () => (state, error) => {
           if (error) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
@@ -98,6 +98,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
   const [isQuizActive, setIsQuizActive] = useState(false);
+  const captureRef = useRef<(() => string | null) | null>(null);
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen((prev) => !prev);
@@ -175,6 +176,9 @@ function ViewerPage({ modelId }: { modelId: string }) {
             isFullscreen={isFullscreen}
             isLeftPanelOpen={isLeftPanelOpen}
             onToggleFullscreen={toggleFullscreen}
+            onCaptureReady={(fn) => {
+              captureRef.current = fn;
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -208,6 +212,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
           onNotesChange={setNotes}
           onPanelToggle={setIsLeftPanelOpen}
           onQuizActiveChange={setIsQuizActive}
+          captureCanvas={() => captureRef.current?.() ?? null}
           selectedPart={
             selectedPartId
               ? (model.parts.find((p) => p.id === selectedPartId) ?? null)

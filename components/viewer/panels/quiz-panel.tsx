@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Loader2, RotateCcw } from 'lucide-react';
 
 import { useQuiz } from '@/hooks/use-quiz';
 import { cn } from '@/lib/utils';
+import { useViewerStore } from '@/store/viewer-store';
 
 import { QuizResultCard, QuizSmallIcon } from './quiz-result-card';
 
@@ -15,6 +16,9 @@ interface QuizPanelProps {
 }
 
 export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
+  const store = useViewerStore(modelId);
+  const setQuizResults = store((s) => s.setQuizResults);
+
   const {
     state,
     quizzes,
@@ -29,7 +33,7 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     handleSubmit,
     goToPrev,
     goToNext,
-  } = useQuiz(modelId);
+  } = useQuiz(modelId, { onResults: setQuizResults });
 
   useEffect(() => {
     onQuizActiveChange?.(state !== 'idle');

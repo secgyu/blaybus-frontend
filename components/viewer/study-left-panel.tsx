@@ -12,7 +12,10 @@ import {
   SettingsIcon,
   WrenchIcon,
 } from '@/components/icons/sidebar-icons';
+import { generatePdf } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { useViewerStore } from '@/store/viewer-store';
+import type { PdfRequestDto } from '@/types/api';
 import type { ModelPart, ViewerModel } from '@/types/viewer';
 
 import { AIChatPanel } from './panels/ai-chat-panel';
@@ -50,6 +53,7 @@ interface StudyLeftPanelProps {
   selectedPart: ModelPart | null;
   onPanelToggle?: (isOpen: boolean) => void;
   onQuizActiveChange?: (isActive: boolean) => void;
+  captureCanvas?: () => string | null;
 }
 
 export function StudyLeftPanel({
@@ -60,6 +64,7 @@ export function StudyLeftPanel({
   selectedPart,
   onPanelToggle,
   onQuizActiveChange,
+  captureCanvas,
 }: StudyLeftPanelProps) {
   const [activeTab, setActiveTab] = useState<SidebarTab | null>('edit');
 
@@ -194,7 +199,12 @@ export function StudyLeftPanel({
                 onQuizActiveChange={onQuizActiveChange}
               />
             )}
-            {activeTab === 'pdf' && <PDFViewerPanel />}
+            {activeTab === 'pdf' && (
+              <PDFViewerPanel
+                modelId={modelId}
+                captureCanvas={captureCanvas}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -269,10 +279,22 @@ const pdfDownloadItems: PDFDownloadItem[] = [
   { id: 'quiz', icon: QuizQIcon, label: '퀴즈' },
 ];
 
-function PDFViewerPanel() {
+interface PDFViewerPanelProps {
+  modelId: string;
+  captureCanvas?: () => string | null;
+}
+
+function PDFViewerPanel({ modelId, captureCanvas }: PDFViewerPanelProps) {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(
     new Set(['3d'])
   );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const store = useViewerStore(modelId);
+  const notes = store((s) => s.notes);
+  const aiHistory = store((s) => s.aiHistory);
+  const quizResults = store((s) => s.quizResults);
 
   const toggleItem = (id: string) => {
     setSelectedItems((prev) => {
@@ -284,6 +306,66 @@ function PDFViewerPanel() {
       }
       return next;
     });
+  };
+
+  const handleDownload = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const body: PdfRequestDto = {};
+
+      if (selectedItems.has('3d') && captureCanvas) {
+        const dataUrl = captureCanvas();
+        if (dataUrl) {
+          body.modelImage = dataUrl;
+        }
+      }
+
+      if (selectedItems.has('memo')) {
+        body.memo = notes;
+      }
+
+      if (selectedItems.has('ai') && aiHistory.length > 0) {
+        body.chatLogs = [];
+        for (let i = 0; i < aiHistory.length; i += 2) {
+          const userMsg = aiHistory[i];
+          const assistantMsg = aiHistory[i + 1];
+          if (userMsg) {
+            body.chatLogs.push({
+              question: userMsg.content,
+              answer: assistantMsg?.content ?? '',
+            });
+          }
+        }
+      }
+
+      if (selectedItems.has('quiz') && quizResults) {
+        body.quizs = quizResults.results.map((r) => ({
+          quizQuestion: `문제 ${r.questionId}`,
+          quizAnswer: r.correctAnswer,
+        }));
+      }
+
+      const blob = await generatePdf({
+        modelId,
+        type: 'download',
+        body,
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${modelId}_report.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      setError('PDF 생성에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -302,6 +384,7 @@ function PDFViewerPanel() {
             <button
               key={item.id}
               onClick={() => toggleItem(item.id)}
+              disabled={isLoading}
               className={cn(
                 'w-full flex items-center gap-3 px-5 py-3 transition-colors hover:bg-white/5',
                 index < pdfDownloadItems.length - 1 &&
@@ -331,18 +414,20 @@ function PDFViewerPanel() {
         })}
       </div>
 
+      {error && (
+        <p className="text-xs text-red-400 mt-3 text-center">{error}</p>
+      )}
+
       <div className="mt-auto pt-5">
         <button
-          className="w-full h-12 rounded-xl text-[#FAFAFA] font-bold text-sm transition-opacity hover:opacity-90"
+          className="w-full h-12 rounded-xl text-[#FAFAFA] font-bold text-sm transition-opacity hover:opacity-90 disabled:opacity-50"
           style={{
             background: 'linear-gradient(135deg, #2563EB, #3B82F6)',
           }}
-          disabled={selectedItems.size === 0}
-          onClick={() => {
-            // TODO: PDF 다운로드 로직
-          }}
+          disabled={selectedItems.size === 0 || isLoading}
+          onClick={handleDownload}
         >
-          학습 내용 PDF 다운받기
+          {isLoading ? 'PDF 생성 중...' : '학습 내용 PDF 다운받기'}
         </button>
       </div>
     </div>

@@ -41,6 +41,7 @@ interface SceneProps {
   isFullscreen?: boolean;
   isLeftPanelOpen?: boolean;
   onToggleFullscreen?: () => void;
+  onCaptureReady?: (capture: () => string | null) => void;
 }
 
 export function Scene({
@@ -53,8 +54,10 @@ export function Scene({
   isFullscreen = false,
   isLeftPanelOpen = true,
   onToggleFullscreen,
+  onCaptureReady,
 }: SceneProps) {
   const controlsRef = useRef<ControlsHandle>(null);
+  const rendererRef = useRef<WebGLRenderer | null>(null);
   const [isRotatingLeft, setIsRotatingLeft] = useState(false);
   const [isRotatingRight, setIsRotatingRight] = useState(false);
   const [zoomValue, setZoomValue] = useState(50);
@@ -62,40 +65,52 @@ export function Scene({
   const [contextLost, setContextLost] = useState(false);
   const retryCountRef = useRef(0);
 
-  const handleCreated = useCallback(({ gl }: { gl: WebGLRenderer }) => {
-    const canvas = gl.domElement;
+  const handleCreated = useCallback(
+    ({ gl }: { gl: WebGLRenderer }) => {
+      rendererRef.current = gl;
+      onCaptureReady?.(() => {
+        if (!rendererRef.current) return null;
+        return rendererRef.current.domElement.toDataURL('image/png');
+      });
 
-    const handleContextLost = (event: Event) => {
-      event.preventDefault();
-      console.warn('WebGL context lost');
-      setContextLost(true);
+      const canvas = gl.domElement;
 
-      if (retryCountRef.current < 3) {
-        retryCountRef.current += 1;
-        setTimeout(() => {
-          setCanvasKey(Date.now());
-          setContextLost(false);
-        }, 500);
-      }
-    };
+      const handleContextLost = (event: Event) => {
+        event.preventDefault();
+        console.warn('WebGL context lost');
+        setContextLost(true);
 
-    const handleContextRestored = () => {
-      console.log('WebGL context restored');
+        if (retryCountRef.current < 3) {
+          retryCountRef.current += 1;
+          setTimeout(() => {
+            setCanvasKey(Date.now());
+            setContextLost(false);
+          }, 500);
+        }
+      };
+
+      const handleContextRestored = () => {
+        console.log('WebGL context restored');
+        setContextLost(false);
+        retryCountRef.current = 0;
+      };
+
+      canvas.addEventListener('webglcontextlost', handleContextLost);
+      canvas.addEventListener('webglcontextrestored', handleContextRestored);
+
       setContextLost(false);
       retryCountRef.current = 0;
-    };
 
-    canvas.addEventListener('webglcontextlost', handleContextLost);
-    canvas.addEventListener('webglcontextrestored', handleContextRestored);
-
-    setContextLost(false);
-    retryCountRef.current = 0;
-
-    return () => {
-      canvas.removeEventListener('webglcontextlost', handleContextLost);
-      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
-    };
-  }, []);
+      return () => {
+        canvas.removeEventListener('webglcontextlost', handleContextLost);
+        canvas.removeEventListener(
+          'webglcontextrestored',
+          handleContextRestored
+        );
+      };
+    },
+    [onCaptureReady]
+  );
 
   const store = useViewerStore(model.id);
   const cameraState = store((state) => state.cameraState);

@@ -1,6 +1,11 @@
 import { HttpResponse, delay, http } from 'msw';
 
-import type { MessageRequest, ModelData, Node } from '@/types/api';
+import type {
+  MessageRequest,
+  ModelData,
+  Node,
+  PdfRequestDto,
+} from '@/types/api';
 
 import DroneData from './model/Dron.json';
 import LeafSpringData from './model/Leaf_Spring.json';
@@ -153,6 +158,49 @@ export const handlers = [
     return HttpResponse.json({
       answer: `[Mock AI 응답] 모델: ${modelTitle}, 선택 파트: ${selectedParts}\n"${body.message}"에 대한 응답입니다.`,
       citations: [],
+    });
+  }),
+
+  // POST /api/models/:id/pdf - PDF 생성 (미리보기/다운로드)
+  http.post('/api/models/:id/pdf', async ({ params, request }) => {
+    await delay(500);
+
+    const modelId = params.id as string;
+
+    if (!mockDataMap[modelId]) {
+      return HttpResponse.json({ error: 'Model not found' }, { status: 404 });
+    }
+
+    const url = new URL(request.url);
+    const type = url.searchParams.get('type') || 'download';
+    const body = (await request.json()) as PdfRequestDto;
+
+    console.log(
+      `[MSW] PDF ${type} for model ${modelId}:`,
+      JSON.stringify({
+        hasModelImage: !!body.modelImage,
+        hasMemo: !!body.memo,
+        chatLogCount: body.chatLogs?.length ?? 0,
+        quizCount: body.quizs?.length ?? 0,
+      })
+    );
+
+    // 최소한의 유효한 PDF 바이너리 (빈 1-page PDF)
+    const pdfContent =
+      '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n' +
+      '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n' +
+      '3 0 obj<</Type/Page/MediaBox[0 0 612 792]/Parent 2 0 R>>endobj\n' +
+      'xref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n' +
+      '0000000058 00000 n \n0000000115 00000 n \n' +
+      'trailer<</Size 4/Root 1 0 R>>\nstartxref\n190\n%%EOF';
+
+    const pdfBytes = new TextEncoder().encode(pdfContent);
+
+    return new HttpResponse(pdfBytes, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `${type === 'preview' ? 'inline' : 'attachment'}; filename="${modelId}_report.pdf"`,
+      },
     });
   }),
 

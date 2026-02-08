@@ -6,6 +6,7 @@ import type {
   ModelData,
   ModelSliceResponse,
   ModelSummary,
+  PdfRequestDto,
   Quiz,
   QuizAnswerItem,
   QuizResultResponse,
@@ -214,4 +215,34 @@ export async function submitQuizAnswers(
   }
 
   return response.json();
+}
+
+// ---------------------------------------------------------------------------
+// PDF 생성 (미리보기 / 다운로드)
+// ---------------------------------------------------------------------------
+export interface GeneratePdfOptions {
+  modelId: string;
+  type: 'preview' | 'download';
+  body: PdfRequestDto;
+}
+
+export async function generatePdf(
+  options: GeneratePdfOptions
+): Promise<Blob> {
+  const { modelId, type, body } = options;
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/models/${modelId}/pdf?type=${encodeURIComponent(type)}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to generate PDF: ${response.status}`);
+  }
+
+  return response.blob();
 }

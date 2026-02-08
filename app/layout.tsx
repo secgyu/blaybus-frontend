@@ -7,6 +7,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 
 import { QueryProvider } from '@/components/providers/query-provider';
+import { ViewportScaleProvider } from '@/components/providers/viewport-scale-provider';
 
 import './globals.css';
 import { MSWProvider } from './msw-provider';
@@ -47,7 +48,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <MSWProvider>
           <QueryProvider>
-            {children}
+            <ViewportScaleProvider>{children}</ViewportScaleProvider>
           </QueryProvider>
           <Analytics />
         </MSWProvider>

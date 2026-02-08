@@ -15,8 +15,8 @@ import { StudyRightPanel } from '@/components/viewer/study-right-panel';
 import { fetchViewerData } from '@/lib/api';
 import { getSystemPrompt } from '@/lib/constants/system-prompts';
 import { toViewerModel } from '@/lib/transform';
-import type { ViewerModel } from '@/types/viewer';
 import { useViewerStore } from '@/store/viewer-store';
+import type { ViewerModel } from '@/types/viewer';
 
 const COMING_SOON_IDS: Record<string, string> = {
   bio_dna_helix: '생명공학',
@@ -33,7 +33,7 @@ const Scene = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
+      <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
         <div className="flex items-center gap-3">
           <Loader2 className="w-6 h-6 text-primary animate-spin" />
           <span className="text-primary">3D 뷰어 로딩 중...</span>
@@ -160,62 +160,64 @@ function ViewerPage({ modelId }: { modelId: string }) {
   }
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
-      {!isFullscreen && <StudyHeader />}
-
-      <div className="flex-1 flex overflow-hidden">
-        {!isFullscreen && (
-          <StudyLeftPanel
+    <div className="h-screen relative overflow-hidden bg-[#070b14]">
+      <div className="absolute inset-0 z-0">
+        {isSceneReady ? (
+          <Scene
             model={model}
-            modelId={modelId}
-            notes={notes}
-            onNotesChange={setNotes}
-            selectedPart={
-              selectedPartId
-                ? (model.parts.find((p) => p.id === selectedPartId) ?? null)
-                : null
-            }
+            explodeValue={explodeValue}
+            selectedPartId={selectedPartId}
+            onPartClick={setSelectedPartId}
+            onPartHover={setHoveredPartId}
+            onExplodeChange={setExplodeValue}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
           />
-        )}
-
-        <main className="flex-1 relative min-w-[400px]">
-          {isSceneReady ? (
-            <Scene
-              model={model}
-              explodeValue={explodeValue}
-              selectedPartId={selectedPartId}
-              onPartClick={setSelectedPartId}
-              onPartHover={setHoveredPartId}
-              onExplodeChange={setExplodeValue}
-              isFullscreen={isFullscreen}
-              onToggleFullscreen={toggleFullscreen}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
-              <div className="flex items-center gap-3">
-                <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                <span className="text-primary">3D 뷰어 로딩 중...</span>
-              </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="flex items-center gap-3">
+              <Loader2 className="w-6 h-6 text-primary animate-spin" />
+              <span className="text-primary">3D 뷰어 로딩 중...</span>
             </div>
-          )}
+          </div>
+        )}
+      </div>
 
-          {!isFullscreen && hoveredPartId && !selectedPartId && (
+      {!isFullscreen && (
+        <>
+          <div className="absolute top-0 left-0 right-0 z-20">
+            <StudyHeader />
+          </div>
+
+          <div className="absolute top-[112px] left-3 bottom-3 z-10">
+            <StudyLeftPanel
+              model={model}
+              modelId={modelId}
+              notes={notes}
+              onNotesChange={setNotes}
+              selectedPart={
+                selectedPartId
+                  ? (model.parts.find((p) => p.id === selectedPartId) ?? null)
+                  : null
+              }
+            />
+          </div>
+
+          <div className="absolute top-[112px] right-3 bottom-3 w-[394px] z-10">
+            <StudyRightPanel
+              model={model}
+              selectedPartId={selectedPartId}
+              onPartSelect={setSelectedPartId}
+            />
+          </div>
+
+          {hoveredPartId && !selectedPartId && (
             <PartTooltip
               part={model.parts.find((p) => p.id === hoveredPartId)!}
             />
           )}
-
-          {!isFullscreen && (
-            <div className="absolute top-3 right-3 bottom-3 w-[394px] z-10">
-              <StudyRightPanel
-                model={model}
-                selectedPartId={selectedPartId}
-                onPartSelect={setSelectedPartId}
-              />
-            </div>
-          )}
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }

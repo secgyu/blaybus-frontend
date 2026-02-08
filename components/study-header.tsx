@@ -150,17 +150,25 @@ export function StudyHeader({ category = '기계공학' }: StudyHeaderProps) {
   const router = useRouter();
 
   return (
-    <header className="h-[100px] bg-[#0a0f1a] border-b border-[#595959]/30 flex items-center px-6">
-      <div className="flex items-center gap-6">
-        <button onClick={() => router.push('/')} className="cursor-pointer">
+    <header className="h-[100px] bg-[#0a0f1a]/80 backdrop-blur-md border-b border-[#595959]/30 flex items-end pl-10 pb-5">
+      <div className="flex items-end gap-[42px]">
+        <button
+          onClick={() => router.push('/')}
+          className="cursor-pointer mb-[-6px]"
+        >
           <SimvexLogo />
         </button>
 
-        <button className="px-8 py-2.5 rounded-full border border-[#595959] bg-[#141517]/30 text-white text-base font-medium tracking-wide">
-          Study
-        </button>
+        {/* Study 텍스트 + 파란 밑줄 */}
+        <div className="flex flex-col">
+          <span className="text-[22px] font-semibold text-[#FAFAFA] tracking-wide pb-2">
+            Study
+          </span>
+          <div className="h-[2px] bg-[#2563EB] rounded-full" />
+        </div>
 
-        <button className="flex items-center gap-1 text-white text-sm">
+        {/* 기계공학 드롭다운 */}
+        <button className="flex items-center gap-2 h-[32px] px-5 rounded-full border border-[#595959] text-[#FAFAFA] text-sm mb-1 ml-[-30px]">
           {category}
           <ChevronDownIcon />
         </button>

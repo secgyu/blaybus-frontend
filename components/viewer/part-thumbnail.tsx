@@ -18,9 +18,7 @@ interface ThumbnailModelProps {
 function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
   const { scene } = useGLTF(glbPath);
   const groupRef = useRef<Group>(null);
-  const materialsRef = useRef<Map<Mesh, MeshStandardMaterial>>(
-    new Map()
-  );
+  const materialsRef = useRef<Map<Mesh, MeshStandardMaterial>>(new Map());
   const { camera } = useThree();
 
   const clonedScene = useMemo(() => {
@@ -58,8 +56,8 @@ function ThumbnailModel({ glbPath, isSelected }: ThumbnailModelProps) {
 
   useEffect(() => {
     materialsRef.current.forEach((material) => {
-      material.color.set(isSelected ? '#00d4ff' : '#8892b0');
-      material.emissive.set(isSelected ? '#00d4ff' : '#000000');
+      material.color.set(isSelected ? '#60A5FA' : '#8892b0');
+      material.emissive.set(isSelected ? '#60A5FA' : '#000000');
       material.emissiveIntensity = isSelected ? 0.3 : 0;
       material.needsUpdate = true;
     });
@@ -93,7 +91,7 @@ function FallbackBox({ isSelected }: { isSelected: boolean }) {
     <mesh ref={meshRef}>
       <boxGeometry args={[0.8, 0.8, 0.8]} />
       <meshStandardMaterial
-        color={isSelected ? '#00d4ff' : '#8892b0'}
+        color={isSelected ? '#60A5FA' : '#8892b0'}
         metalness={0.6}
         roughness={0.4}
       />

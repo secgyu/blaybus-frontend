@@ -1,5 +1,5 @@
-import type { ViewerModel, ModelPart, PartInstance } from '@/types/viewer';
 import type { ModelData, Node, Part } from '@/types/api';
+import type { ModelPart, PartInstance, ViewerModel } from '@/types/viewer';
 
 /**
  * API에서 받은 ModelData를 기존 컴포넌트에서 사용하는 ViewerModel 형식으로 변환

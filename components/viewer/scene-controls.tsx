@@ -1,10 +1,16 @@
 'use client';
 
-import { Maximize2, RotateCcw, RotateCw } from 'lucide-react';
+import {
+  FullscreenIcon,
+  MinimizeIcon,
+  RedoIcon,
+  UndoIcon,
+} from '@/components/icons/sidebar-icons';
 
 interface RotationControlsProps {
   isRotatingLeft: boolean;
   isRotatingRight: boolean;
+  isFullscreen?: boolean;
   onRotateLeftStart: () => void;
   onRotateLeftEnd: () => void;
   onRotateRightStart: () => void;
@@ -15,6 +21,7 @@ interface RotationControlsProps {
 export function RotationControls({
   isRotatingLeft,
   isRotatingRight,
+  isFullscreen,
   onRotateLeftStart,
   onRotateLeftEnd,
   onRotateRightStart,
@@ -22,7 +29,7 @@ export function RotationControls({
   onToggleFullscreen,
 }: RotationControlsProps) {
   return (
-    <div className="absolute top-3 right-[418px] flex items-center z-10">
+    <div className="absolute top-[120px] right-[418px] flex items-center z-10">
       <button
         className={`w-12 h-12 rounded-xl bg-[#595959] flex items-center justify-center text-[#FAFAFA] hover:bg-[#6b6b6b] transition-colors ${
           isRotatingLeft ? 'bg-[#6b6b6b]' : ''
@@ -34,9 +41,9 @@ export function RotationControls({
         onTouchEnd={onRotateLeftEnd}
         title="왼쪽으로 회전"
       >
-        <RotateCcw className="w-6 h-6" />
+        <UndoIcon className="w-8 h-8" />
       </button>
-      <div className="w-5" />
+      <div className="w-3" />
       <button
         className={`w-12 h-12 rounded-xl bg-[#595959] flex items-center justify-center text-[#FAFAFA] hover:bg-[#6b6b6b] transition-colors ${
           isRotatingRight ? 'bg-[#6b6b6b]' : ''
@@ -48,16 +55,68 @@ export function RotationControls({
         onTouchEnd={onRotateRightEnd}
         title="오른쪽으로 회전"
       >
-        <RotateCw className="w-6 h-6" />
+        <RedoIcon className="w-8 h-8" />
       </button>
-      <div className="w-[76px]" />
+      <div className="w-8" />
       <button
         className="w-12 h-12 rounded-xl bg-[#595959] flex items-center justify-center text-[#FAFAFA] hover:bg-[#6b6b6b] transition-colors"
         onClick={onToggleFullscreen}
-        title="전체화면"
+        title={isFullscreen ? '전체화면 종료' : '전체화면'}
       >
-        <Maximize2 className="w-6 h-6" />
+        {isFullscreen ? (
+          <MinimizeIcon className="w-8 h-8" />
+        ) : (
+          <FullscreenIcon className="w-8 h-8" />
+        )}
       </button>
+    </div>
+  );
+}
+
+interface SliderCardProps {
+  title: string;
+  value: number;
+  onChange: (value: number) => void;
+}
+
+function SliderCard({ title, value, onChange }: SliderCardProps) {
+  return (
+    <div
+      className="w-[360px] h-[126px] rounded-[20px] border border-[#595959]/50 px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
+      style={{
+        background:
+          'linear-gradient(180deg, rgba(7, 11, 20, 0.2) 0%, rgba(4, 10, 46, 0.16) 100%)',
+        backdropFilter: 'blur(8px)',
+      }}
+    >
+      <div>
+        <p className="text-[15px] font-bold text-[#FAFAFA] leading-tight">
+          {title}
+        </p>
+        <p className="text-[13px] text-[#FAFAFA] mt-1">{value}%</p>
+      </div>
+
+      <div className="relative h-[20px] flex items-center">
+        <div className="w-full h-[5px] bg-[#FAFAFA] rounded-full" />
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+        />
+
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-[#FAFAFA] rounded-full pointer-events-none transition-all duration-150"
+          style={{
+            left: `calc(${value}% - 10px)`,
+            boxShadow:
+              '2px 2px 20px rgba(23, 37, 84, 1), -2px -2px 20px rgba(23, 37, 84, 1)',
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -76,58 +135,17 @@ export function BottomSliders({
   onZoomChange,
 }: BottomSlidersProps) {
   return (
-    <div className="absolute bottom-5 left-[406px] right-[418px] z-10">
-      <div className="flex gap-12">
-        <div className="flex-1 flex flex-col items-start">
-          <span className="text-[13px] font-bold text-[#FAFAFA]">분해도</span>
-          <span className="text-[11px] text-[#FAFAFA]/80 mt-1">
-            {explodeValue}%
-          </span>
-          <div className="w-full relative h-5 flex items-center mt-1.5">
-            <div className="w-full h-[3px] bg-[#FAFAFA]/50 rounded-full" />
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={explodeValue}
-              onChange={(e) => onExplodeChange(Number(e.target.value))}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-            <div
-              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-[#FAFAFA] rounded-full pointer-events-none transition-all duration-150"
-              style={{
-                left: `calc(${explodeValue}% - 8px)`,
-                boxShadow: '2px 2px 20px #172554, -2px -2px 20px #172554',
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 flex flex-col items-start">
-          <span className="text-[13px] font-bold text-[#FAFAFA] uppercase tracking-wider">
-            ZOOM
-          </span>
-          <span className="text-[11px] text-[#FAFAFA]/80 mt-1">IN</span>
-          <div className="w-full relative h-5 flex items-center mt-1.5">
-            <div className="w-full h-[3px] bg-[#FAFAFA]/50 rounded-full" />
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={zoomValue}
-              onChange={(e) => onZoomChange(Number(e.target.value))}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
-            <div
-              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-[#FAFAFA] rounded-full pointer-events-none transition-all duration-150"
-              style={{
-                left: `calc(${zoomValue}% - 8px)`,
-                boxShadow: '2px 2px 20px #172554, -2px -2px 20px #172554',
-              }}
-            />
-          </div>
-        </div>
-      </div>
+    <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex gap-10">
+      <SliderCard
+        title="분해도 조절"
+        value={explodeValue}
+        onChange={onExplodeChange}
+      />
+      <SliderCard
+        title="확대·축소 조절"
+        value={zoomValue}
+        onChange={onZoomChange}
+      />
     </div>
   );
 }

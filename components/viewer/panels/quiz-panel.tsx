@@ -30,14 +30,8 @@ export function QuizPanel({ modelId }: QuizPanelProps) {
 
   if (state === 'idle') {
     return (
-      <div className="flex flex-col h-full">
-        <div className="px-6 pt-5 pb-3 shrink-0">
-          <h2 className="text-lg font-bold text-white">퀴즈</h2>
-          <p className="text-xs text-white/40 mt-1">
-            학습 내용을 퀴즈로 확인해보세요
-          </p>
-        </div>
-        <div className="flex-1 flex flex-col items-center justify-center px-6">
+      <div className="flex flex-col h-full px-5 pb-5">
+        <div className="flex-1 flex flex-col items-center justify-center">
           <div className="w-16 h-16 rounded-full bg-[#60A5FA]/20 flex items-center justify-center mb-4">
             <QuizSmallIcon className="w-8 h-8 text-[#60A5FA]" />
           </div>
@@ -73,11 +67,10 @@ export function QuizPanel({ modelId }: QuizPanelProps) {
     const currentAnswer = answers.get(currentQuiz.questionId);
 
     return (
-      <div className="flex flex-col h-full">
-        <div className="px-6 pt-5 pb-3 shrink-0">
+      <div className="flex flex-col h-full px-5 pb-5">
+        <div className="shrink-0 mb-3">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-bold text-white">퀴즈</h2>
-            <span className="text-xs text-white/40">
+            <span className="text-xs text-[#595959]">
               {currentIndex + 1} / {quizzes.length}
             </span>
           </div>
@@ -202,10 +195,9 @@ export function QuizPanel({ modelId }: QuizPanelProps) {
     const totalCount = results.results.length;
 
     return (
-      <div className="flex flex-col h-full">
-        <div className="px-6 pt-5 pb-3 shrink-0">
-          <h2 className="text-lg font-bold text-white">퀴즈 결과</h2>
-          <div className="mt-3 flex items-center gap-3">
+      <div className="flex flex-col h-full px-5 pb-5">
+        <div className="shrink-0 mb-3">
+          <div className="flex items-center gap-3">
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-extrabold text-[#60A5FA]">
                 {correctCount}

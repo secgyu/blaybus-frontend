@@ -1,11 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
-import type { ViewerModel } from '@/types/viewer';
+import {
+  ChevronDownIcon,
+  LeftArrowIcon,
+  RightArrowIcon,
+} from '@/components/icons/sidebar-icons';
 import { cn } from '@/lib/utils';
+import type { ViewerModel } from '@/types/viewer';
 
 import { PartDescription } from './part-description';
 import { PartThumbnail } from './part-thumbnail';
@@ -24,6 +27,35 @@ export function StudyRightPanel({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const partRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   const selectedPart = model.parts.find((p) => p.id === selectedPartId);
+
+  const [isOverviewOpen, setIsOverviewOpen] = useState(true);
+  const [isPartDescOpen, setIsPartDescOpen] = useState(true);
+
+  const overviewRef = useRef<HTMLDivElement>(null);
+  const [ovScrollRatio, setOvScrollRatio] = useState(0);
+  const [ovThumbRatio, setOvThumbRatio] = useState(1);
+
+  const handleOverviewScroll = useCallback(() => {
+    const el = overviewRef.current;
+    if (!el) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    const maxScroll = scrollHeight - clientHeight;
+    if (maxScroll <= 0) {
+      setOvScrollRatio(0);
+      setOvThumbRatio(1);
+    } else {
+      setOvScrollRatio(scrollTop / maxScroll);
+      setOvThumbRatio(clientHeight / scrollHeight);
+    }
+  }, []);
+
+  useEffect(() => {
+    const el = overviewRef.current;
+    if (!el) return;
+    handleOverviewScroll();
+    el.addEventListener('scroll', handleOverviewScroll);
+    return () => el.removeEventListener('scroll', handleOverviewScroll);
+  }, [handleOverviewScroll]);
 
   useEffect(() => {
     if (selectedPartId && scrollContainerRef.current) {
@@ -58,35 +90,84 @@ export function StudyRightPanel({
 
   return (
     <aside
-      className="h-full flex flex-col p-5 gap-5"
+      className="h-full flex flex-col p-5 gap-4"
       style={{
         background:
-          'linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(4, 10, 46, 0.5) 100%)',
+          'linear-gradient(180deg, rgba(7, 11, 20, 0.2) 0%, rgba(4, 10, 46, 0.16) 100%)',
         border: '0.5px solid #595959',
         borderRadius: '20px',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
       }}
     >
-      <div className="flex flex-col gap-1 shrink-0">
-        <div className="flex items-center py-2 px-1">
-          <h2 className="text-xl font-bold text-[#FAFAFA]">부품 목록</h2>
+      <div className="shrink-0 py-2">
+        <h1 className="text-[28px] font-bold text-[#FAFAFA] leading-tight tracking-wide">
+          {model.name}
+        </h1>
+      </div>
+
+      <div className="flex flex-col gap-2 shrink-0">
+        <button
+          onClick={() => setIsOverviewOpen((prev) => !prev)}
+          className="flex items-center justify-between w-full"
+        >
+          <h2 className="text-base font-bold text-[#FAFAFA]">완제품 설명</h2>
+          <ChevronDownIcon
+            className={cn(
+              'w-6 h-6 text-[#FAFAFA] transition-transform duration-200',
+              !isOverviewOpen && '-rotate-90'
+            )}
+          />
+        </button>
+
+        <div
+          className={cn(
+            'rounded-xl overflow-hidden flex transition-all duration-300 ease-in-out',
+            isOverviewOpen ? 'h-[200px] opacity-100' : 'h-0 opacity-0'
+          )}
+          style={{ border: isOverviewOpen ? '0.5px solid #595959' : 'none' }}
+        >
+          <div
+            ref={overviewRef}
+            className="flex-1 p-4 overflow-y-auto"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <div className="text-sm text-[#FAFAFA]/80 leading-[180%] whitespace-pre-wrap">
+              {model.description}
+            </div>
+          </div>
+
+          {ovThumbRatio < 1 && (
+            <div className="relative w-[3px] shrink-0 mr-2 my-4 rounded-full overflow-hidden bg-[#595959]">
+              <div
+                className="absolute left-0 w-full rounded-full bg-[#D6D3D1] transition-[top] duration-100"
+                style={{
+                  height: `${ovThumbRatio * 100}%`,
+                  top: `${ovScrollRatio * (1 - ovThumbRatio) * 100}%`,
+                }}
+              />
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="flex flex-col gap-2 shrink-0">
+        <h2 className="text-base font-bold text-[#FAFAFA]">부품 목록</h2>
 
         <div
           className="flex items-center rounded-xl"
-          style={{ background: 'rgba(7, 11, 20, 0.85)' }}
+          style={{ background: 'rgba(7, 11, 20, 0.5)' }}
         >
           <button
             onClick={scrollLeft}
-            className="shrink-0 flex items-center justify-center px-3 py-0.5 text-[#FAFAFA] hover:text-[#60A5FA] transition-colors"
+            className="shrink-0 flex items-center justify-center px-2 py-0.5 text-[#FAFAFA] hover:text-[#60A5FA] transition-colors"
           >
-            <ChevronLeft className="w-4 h-5" />
+            <LeftArrowIcon className="w-6 h-4" />
           </button>
 
           <div
             ref={scrollContainerRef}
-            className="flex-1 flex items-center gap-3 overflow-x-auto py-2 px-2"
+            className="flex-1 flex items-center gap-3 overflow-x-auto py-2 px-1"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {model.parts.map((part) => {
@@ -131,21 +212,33 @@ export function StudyRightPanel({
 
           <button
             onClick={scrollRight}
-            className="shrink-0 flex items-center justify-center px-3 py-0.5 text-[#FAFAFA] hover:text-[#60A5FA] transition-colors"
+            className="shrink-0 flex items-center justify-center px-2 py-0.5 text-[#FAFAFA] hover:text-[#60A5FA] transition-colors"
           >
-            <ChevronRight className="w-4 h-5" />
+            <RightArrowIcon className="w-6 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-1 flex-1 min-h-0">
-        <div className="flex items-center py-2 px-1 w-full">
-          <h2 className="text-xl font-bold text-[#FAFAFA]">부품 설명</h2>
-        </div>
+      <div className="flex flex-col gap-2 flex-1 min-h-0">
+        <button
+          onClick={() => setIsPartDescOpen((prev) => !prev)}
+          className="flex items-center justify-between w-full shrink-0"
+        >
+          <h2 className="text-base font-bold text-[#FAFAFA]">부품 설명</h2>
+          <ChevronDownIcon
+            className={cn(
+              'w-6 h-6 text-[#FAFAFA] transition-transform duration-200',
+              !isPartDescOpen && '-rotate-90'
+            )}
+          />
+        </button>
 
         <div
-          className="flex-1 min-h-0 w-full rounded-xl p-5 overflow-hidden"
-          style={{ border: '0.5px solid #595959' }}
+          className={cn(
+            'rounded-xl p-5 overflow-hidden transition-all duration-300 ease-in-out',
+            isPartDescOpen ? 'flex-1 min-h-0 opacity-100' : 'h-0 p-0 opacity-0'
+          )}
+          style={{ border: isPartDescOpen ? '0.5px solid #595959' : 'none' }}
         >
           {selectedPart ? (
             <PartDescription part={selectedPart} />

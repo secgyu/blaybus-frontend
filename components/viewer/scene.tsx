@@ -7,8 +7,8 @@ import { Canvas } from '@react-three/fiber';
 import { ACESFilmicToneMapping } from 'three';
 import type { WebGLRenderer } from 'three';
 
-import type { CameraState, ViewerModel } from '@/types/viewer';
 import { useViewerStore } from '@/store/viewer-store';
+import type { CameraState, ViewerModel } from '@/types/viewer';
 
 import { CanvasContent } from './canvas-content';
 import type { ControlsHandle } from './manual-controls';
@@ -124,10 +124,10 @@ export function Scene({
   return (
     <div className="w-full h-full relative">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
         {contextLost ? (
-          <div className="w-full h-full flex items-center justify-center bg-[#070b14] pl-[394px] pr-[406px]">
+          <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
             <div className="flex flex-col items-center gap-3">
               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               <span className="text-primary">3D 뷰어 복구 중...</span>
@@ -165,26 +165,23 @@ export function Scene({
         )}
       </div>
 
-      {!isFullscreen && (
-        <RotationControls
-          isRotatingLeft={isRotatingLeft}
-          isRotatingRight={isRotatingRight}
-          onRotateLeftStart={handleRotateLeftStart}
-          onRotateLeftEnd={handleRotateLeftEnd}
-          onRotateRightStart={handleRotateRightStart}
-          onRotateRightEnd={handleRotateRightEnd}
-          onToggleFullscreen={onToggleFullscreen}
-        />
-      )}
+      <RotationControls
+        isRotatingLeft={isRotatingLeft}
+        isRotatingRight={isRotatingRight}
+        isFullscreen={isFullscreen}
+        onRotateLeftStart={handleRotateLeftStart}
+        onRotateLeftEnd={handleRotateLeftEnd}
+        onRotateRightStart={handleRotateRightStart}
+        onRotateRightEnd={handleRotateRightEnd}
+        onToggleFullscreen={onToggleFullscreen}
+      />
 
-      {!isFullscreen && (
-        <BottomSliders
-          explodeValue={explodeValue}
-          zoomValue={zoomValue}
-          onExplodeChange={onExplodeChange}
-          onZoomChange={handleZoomSliderChange}
-        />
-      )}
+      <BottomSliders
+        explodeValue={explodeValue}
+        zoomValue={zoomValue}
+        onExplodeChange={onExplodeChange}
+        onZoomChange={handleZoomSliderChange}
+      />
     </div>
   );
 }

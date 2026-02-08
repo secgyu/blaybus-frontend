@@ -14,15 +14,6 @@ import type {
 
 export type { ModelSummary };
 
-export interface SaveNodesRequest {
-  nodes: ModelData['nodes'];
-}
-
-export interface SaveNodesResponse {
-  success: boolean;
-  message: string;
-}
-
 export interface FetchModelsOptions {
   page?: number;
   size?: number;
@@ -128,7 +119,7 @@ export async function sendChatMessage(
   const { modelId, message, history, model, parts, documentIds, imageUrls } =
     options;
 
-  const response = await fetch(`${API_BASE_URL}/v1/chat/messages`, {
+  const response = await fetch('/api/chat/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -148,23 +139,6 @@ export async function sendChatMessage(
 
   const data: MessageResponse = await response.json();
   return data;
-}
-
-export async function saveNodes(
-  modelId: string,
-  nodes: ModelData['nodes']
-): Promise<SaveNodesResponse> {
-  const response = await fetch(`/admin/models/${modelId}/nodes`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nodes }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to save nodes: ${response.status}`);
-  }
-
-  return response.json();
 }
 
 export interface FetchQuizOptions {
@@ -232,7 +206,7 @@ export async function generatePdf(
   const { modelId, type, body } = options;
 
   const response = await fetch(
-    `${API_BASE_URL}/api/models/${modelId}/pdf?type=${encodeURIComponent(type)}`,
+    `/api/models/${modelId}/pdf?type=${encodeURIComponent(type)}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

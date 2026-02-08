@@ -15,14 +15,14 @@
       "materialType": "METAL_CAST_ROUGH"
     },
     {
-      "partId": "Part2_Feste Backe",
+      "partId": "Part2_Feste_Backe",
       "glbUrl": "/glb/Part2_Feste_Backe.glb",
       "displayNameKo": "고정 조",
       "summary": "고정 죠(페스테 바케)로, 베이스에 고정되어 기준 면을 제공하고 이동 죠와 함께 공작물을 클램핑합니다.",
       "materialType": "METAL_CAST_ROUGH"
     },
     {
-      "partId": "Part3_lose backe",
+      "partId": "Part3_lose_backe",
       "glbUrl": "/glb/Part3-lose_backe.glb",
       "displayNameKo": "이동 조",
       "summary": "이동 죠(로제 바케)로, 리드 스크류 구동에 따라 전진/후퇴하며 공작물을 눌러 고정합니다.",
@@ -98,8 +98,8 @@
       }
     },
     {
-      "nodeId": "Part3_lose backe_NODE",
-      "partId": "Part3_lose backe",
+      "nodeId": "Part3_lose_backe_NODE",
+      "partId": "Part3_lose_backe",
       "parentNodeId": null,
       "assembled": {
         "pos": [0.05164, 0.03353, 0.00086],
@@ -114,8 +114,8 @@
       }
     },
     {
-      "nodeId": "Part2_Feste Backe_NODE",
-      "partId": "Part2_Feste Backe",
+      "nodeId": "Part2_Feste_Backe_NODE",
+      "partId": "Part2_Feste_Backe",
       "parentNodeId": null,
       "assembled": {
         "pos": [0.1841, 0.0, 0.0],

@@ -41,7 +41,7 @@ export interface Model {
 export interface Part {
   partId: string;
   displayNameKo: string;
-  glbUrl: string;
+  glbUrl?: string;
   summary: string;
   materialType?: MaterialType;
 }

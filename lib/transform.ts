@@ -39,7 +39,7 @@ export function toViewerModel(
       nameKo: part.displayNameKo,
       role: part.summary,
       material: '기본 재질', // API에서 제공하지 않으므로 기본값
-      glbPath: `/glb/${part.partId}.glb`,
+      glbPath: `/glb/${data.model.modelId}/${part.partId}.glb`,
       materialType: part.materialType, // Material Preset 적용
       instances: instances.length > 0 ? instances : undefined,
       basePosition: instances[0]?.position,
@@ -70,7 +70,6 @@ export function toApiModelData(model: ViewerModel): ModelData {
   const parts: Part[] = model.parts.map((part) => ({
     partId: part.id,
     displayNameKo: part.nameKo,
-    glbUrl: part.glbPath,
     summary: part.role,
     materialType: part.materialType,
   }));

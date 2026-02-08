@@ -3,7 +3,6 @@ import { HttpResponse, delay, http } from 'msw';
 import type {
   MessageRequest,
   ModelData,
-  Node,
   PdfRequestDto,
 } from '@/types/api';
 
@@ -146,8 +145,8 @@ export const handlers = [
     return HttpResponse.json({ results });
   }),
 
-  // POST /v1/chat/messages - AI 질의
-  http.post('*/v1/chat/messages', async ({ request }) => {
+  // POST /api/chat/messages - AI 질의
+  http.post('/api/chat/messages', async ({ request }) => {
     await delay(400);
 
     const body = (await request.json()) as MessageRequest;
@@ -204,28 +203,4 @@ export const handlers = [
     });
   }),
 
-  // PUT /admin/models/:id/nodes - 배치(노드) 저장
-  http.put('/admin/models/:id/nodes', async ({ params, request }) => {
-    await delay(100);
-
-    const modelId = params.id as string;
-    const body = (await request.json()) as { nodes: Node[] };
-
-    if (!mockDataMap[modelId]) {
-      return HttpResponse.json({ error: 'Model not found' }, { status: 404 });
-    }
-
-    // In a real implementation, this would save to database
-    // For mock, just return success
-    console.log(
-      `[MSW] Saving nodes for model ${modelId}:`,
-      body.nodes?.length || 0,
-      'nodes'
-    );
-
-    return HttpResponse.json({
-      success: true,
-      message: `${body.nodes?.length || 0} nodes saved successfully`,
-    });
-  }),
 ];

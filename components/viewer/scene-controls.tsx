@@ -91,9 +91,9 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
       className="w-[360px] h-[126px] rounded-[20px] px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
       style={{
         background:
-          'linear-gradient(180deg, rgba(7, 11, 20, 0.35) 0%, rgba(4, 10, 46, 0.3) 100%)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+          'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
     >
       <div>
@@ -128,10 +128,12 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
   );
 }
 
-// 좌측 패널 콘텐츠(394px + 8px gap) 열림 시 Canvas 컨테이너 내 중앙 보정값
-// 실제 보이는 영역 기준으로 중앙 정렬하기 위해 절반만큼 오른쪽으로 오프셋
-const LEFT_PANEL_CONTENT_WIDTH = 402; // 8px gap + 394px panel
-const SLIDER_OFFSET = LEFT_PANEL_CONTENT_WIDTH / 2; // 201px
+// 보이는 영역 기준 중앙 정렬을 위한 패널 폭 상수
+// 좌측: sidebar(168px) + margin(12px) = 180px, 콘텐츠 열림 시 + gap(8px) + panel(394px) = 582px
+// 우측: panel(394px) + margin(12px) = 406px
+const LEFT_SIDEBAR_WIDTH = 180;
+const LEFT_PANEL_EXPANDED_WIDTH = 582;
+const RIGHT_PANEL_WIDTH = 406;
 
 interface BottomSlidersProps {
   explodeValue: number;
@@ -150,8 +152,11 @@ export function BottomSliders({
   isFullscreen = false,
   isLeftPanelOpen = true,
 }: BottomSlidersProps) {
-  // 풀스크린이면 오프셋 없이 순수 중앙, 아니면 좌측 패널 상태에 따라 보정
-  const offsetPx = isFullscreen ? 0 : isLeftPanelOpen ? SLIDER_OFFSET : 0;
+  // 뷰포트 중앙 대비 보이는 영역 중앙의 오프셋: (leftWidth - rightWidth) / 2
+  const leftWidth = isLeftPanelOpen
+    ? LEFT_PANEL_EXPANDED_WIDTH
+    : LEFT_SIDEBAR_WIDTH;
+  const offsetPx = isFullscreen ? 0 : (leftWidth - RIGHT_PANEL_WIDTH) / 2;
 
   return (
     <div

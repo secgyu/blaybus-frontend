@@ -49,6 +49,7 @@ interface StudyLeftPanelProps {
   onNotesChange: (notes: string) => void;
   selectedPart: ModelPart | null;
   onPanelToggle?: (isOpen: boolean) => void;
+  onQuizActiveChange?: (isActive: boolean) => void;
 }
 
 export function StudyLeftPanel({
@@ -58,15 +59,17 @@ export function StudyLeftPanel({
   onNotesChange,
   selectedPart,
   onPanelToggle,
+  onQuizActiveChange,
 }: StudyLeftPanelProps) {
   const [activeTab, setActiveTab] = useState<SidebarTab | null>('edit');
 
   const handleTabClick = (tabId: SidebarTab) => {
-    setActiveTab((prev) => {
-      const next = prev === tabId ? null : tabId;
-      onPanelToggle?.(next !== null);
-      return next;
-    });
+    const next = activeTab === tabId ? null : tabId;
+    setActiveTab(next);
+    onPanelToggle?.(next !== null);
+    if (next !== 'quiz') {
+      onQuizActiveChange?.(false);
+    }
   };
 
   return (
@@ -74,9 +77,9 @@ export function StudyLeftPanel({
       <div
         className="w-[168px] h-full shrink-0 flex flex-col justify-between rounded-[20px] z-20"
         style={{
-          background: 'rgba(8, 13, 26, 0.35)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+          background: 'rgba(8, 13, 26, 0.25)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
         }}
       >
         <div className="flex flex-col items-center gap-[24px] pt-6">
@@ -147,9 +150,9 @@ export function StudyLeftPanel({
         )}
         style={{
           background:
-            'linear-gradient(180deg, rgba(7, 11, 20, 0.35) 0%, rgba(4, 10, 46, 0.3) 100%)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
+            'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
         }}
       >
         <div className="w-[394px] h-full flex flex-col">
@@ -182,7 +185,12 @@ export function StudyLeftPanel({
                 selectedPart={selectedPart}
               />
             )}
-            {activeTab === 'quiz' && <QuizPanel modelId={modelId} />}
+            {activeTab === 'quiz' && (
+              <QuizPanel
+                modelId={modelId}
+                onQuizActiveChange={onQuizActiveChange}
+              />
+            )}
             {activeTab === 'pdf' && <PDFViewerPanel />}
           </div>
         </div>

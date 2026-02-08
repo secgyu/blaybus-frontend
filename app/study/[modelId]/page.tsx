@@ -97,6 +97,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
   const [isSceneReady, setIsSceneReady] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
+  const [isQuizActive, setIsQuizActive] = useState(false);
 
   const toggleFullscreen = useCallback(() => {
     setIsFullscreen((prev) => !prev);
@@ -206,6 +207,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
           notes={notes}
           onNotesChange={setNotes}
           onPanelToggle={setIsLeftPanelOpen}
+          onQuizActiveChange={setIsQuizActive}
           selectedPart={
             selectedPartId
               ? (model.parts.find((p) => p.id === selectedPartId) ?? null)
@@ -225,6 +227,7 @@ function ViewerPage({ modelId }: { modelId: string }) {
           model={model}
           selectedPartId={selectedPartId}
           onPartSelect={setSelectedPartId}
+          isQuizActive={isQuizActive}
         />
       </div>
 

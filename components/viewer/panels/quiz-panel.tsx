@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { ChevronLeft, ChevronRight, Loader2, RotateCcw } from 'lucide-react';
 
 import { useQuiz } from '@/hooks/use-quiz';
@@ -9,9 +11,10 @@ import { QuizResultCard, QuizSmallIcon } from './quiz-result-card';
 
 interface QuizPanelProps {
   modelId: string;
+  onQuizActiveChange?: (isActive: boolean) => void;
 }
 
-export function QuizPanel({ modelId }: QuizPanelProps) {
+export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
   const {
     state,
     quizzes,
@@ -27,6 +30,10 @@ export function QuizPanel({ modelId }: QuizPanelProps) {
     goToPrev,
     goToNext,
   } = useQuiz(modelId);
+
+  useEffect(() => {
+    onQuizActiveChange?.(state !== 'idle');
+  }, [state, onQuizActiveChange]);
 
   if (state === 'idle') {
     return (

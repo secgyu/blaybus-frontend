@@ -15,11 +15,6 @@ import { CanvasContent } from './canvas-content';
 import type { ControlsHandle } from './manual-controls';
 import { BottomSliders, RotationControls } from './scene-controls';
 
-// 좌측 패널: left-3(12px) + sidebar(168px) = 180px
-// 우측 패널: right-3(12px) + panel(394px) = 406px
-const LEFT_PANEL_WIDTH = 180;
-const RIGHT_PANEL_WIDTH = 406;
-
 function createZoomSafeEvents(
   store: Parameters<typeof createPointerEvents>[0]
 ) {
@@ -150,15 +145,8 @@ export function Scene({
       {/* 격자 배경 — 항상 전체 뷰포트 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
-      {/* 3D Canvas — 비풀스크린 시 패널 사이 영역에 배치하여 자동 중앙 정렬 */}
-      <div
-        className="absolute top-0 bottom-0 transition-[left,right] duration-500 ease-in-out"
-        style={
-          isFullscreen
-            ? { left: 0, right: 0 }
-            : { left: LEFT_PANEL_WIDTH, right: RIGHT_PANEL_WIDTH }
-        }
-      >
+      {/* 3D Canvas — 전체 화면 렌더링, 패널 뒤에서도 격자/3D가 보이도록 */}
+      <div className="absolute inset-0">
         {contextLost ? (
           <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
             <div className="flex flex-col items-center gap-3">

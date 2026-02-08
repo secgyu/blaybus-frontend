@@ -19,12 +19,14 @@ interface StudyRightPanelProps {
   model: ViewerModel;
   selectedPartId: string | null;
   onPartSelect: (partId: string | null) => void;
+  isQuizActive?: boolean;
 }
 
 export function StudyRightPanel({
   model,
   selectedPartId,
   onPartSelect,
+  isQuizActive = false,
 }: StudyRightPanelProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const partRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -95,10 +97,10 @@ export function StudyRightPanel({
       className="h-full flex flex-col p-5 gap-4"
       style={{
         background:
-          'linear-gradient(180deg, rgba(7, 11, 20, 0.35) 0%, rgba(4, 10, 46, 0.3) 100%)',
+          'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
         borderRadius: '20px',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
     >
       <div className="shrink-0 py-2">
@@ -110,12 +112,15 @@ export function StudyRightPanel({
       <div
         className={cn(
           'flex flex-col gap-2 min-h-0 transition-all duration-300 ease-in-out',
-          isOverviewOpen ? 'flex-2' : 'flex-none'
+          isQuizActive ? 'flex-none' : isOverviewOpen ? 'flex-2' : 'flex-none'
         )}
       >
         <button
-          onClick={() => setIsOverviewOpen((prev) => !prev)}
-          className="flex items-center justify-between w-full shrink-0"
+          onClick={() => !isQuizActive && setIsOverviewOpen((prev) => !prev)}
+          className={cn(
+            'flex items-center justify-between w-full shrink-0 transition-opacity duration-300',
+            isQuizActive && 'opacity-0 pointer-events-none h-0 overflow-hidden'
+          )}
         >
           <h2 className="text-base font-bold text-[#FAFAFA]">완제품 설명</h2>
           <ChevronDownIcon
@@ -129,9 +134,16 @@ export function StudyRightPanel({
         <div
           className={cn(
             'rounded-xl overflow-hidden flex transition-all duration-300 ease-in-out',
-            isOverviewOpen ? 'flex-1 min-h-0 opacity-100' : 'h-0 opacity-0'
+            isQuizActive
+              ? 'h-0 opacity-0'
+              : isOverviewOpen
+                ? 'flex-1 min-h-0 opacity-100'
+                : 'h-0 opacity-0'
           )}
-          style={{ border: isOverviewOpen ? '0.5px solid #595959' : 'none' }}
+          style={{
+            border:
+              !isQuizActive && isOverviewOpen ? '0.5px solid #595959' : 'none',
+          }}
         >
           <div
             ref={overviewRef}
@@ -162,7 +174,7 @@ export function StudyRightPanel({
 
         <div
           className="flex items-center rounded-xl"
-          style={{ background: 'rgba(7, 11, 20, 0.5)' }}
+          style={{ background: 'rgba(7, 11, 20, 0.3)' }}
         >
           <button
             onClick={scrollLeft}
@@ -228,12 +240,15 @@ export function StudyRightPanel({
       <div
         className={cn(
           'flex flex-col gap-2 min-h-0 transition-all duration-300 ease-in-out',
-          isPartDescOpen ? 'flex-3' : 'flex-none'
+          isQuizActive ? 'flex-none' : isPartDescOpen ? 'flex-3' : 'flex-none'
         )}
       >
         <button
-          onClick={() => setIsPartDescOpen((prev) => !prev)}
-          className="flex items-center justify-between w-full shrink-0"
+          onClick={() => !isQuizActive && setIsPartDescOpen((prev) => !prev)}
+          className={cn(
+            'flex items-center justify-between w-full shrink-0 transition-opacity duration-300',
+            isQuizActive && 'opacity-0 pointer-events-none h-0 overflow-hidden'
+          )}
         >
           <h2 className="text-base font-bold text-[#FAFAFA]">부품 설명</h2>
           <ChevronDownIcon
@@ -247,9 +262,16 @@ export function StudyRightPanel({
         <div
           className={cn(
             'rounded-xl p-5 overflow-hidden transition-all duration-300 ease-in-out',
-            isPartDescOpen ? 'flex-1 min-h-0 opacity-100' : 'h-0 p-0 opacity-0'
+            isQuizActive
+              ? 'h-0 p-0 opacity-0'
+              : isPartDescOpen
+                ? 'flex-1 min-h-0 opacity-100'
+                : 'h-0 p-0 opacity-0'
           )}
-          style={{ border: isPartDescOpen ? '0.5px solid #595959' : 'none' }}
+          style={{
+            border:
+              !isQuizActive && isPartDescOpen ? '0.5px solid #595959' : 'none',
+          }}
         >
           {selectedPart ? (
             <PartDescription part={selectedPart} />

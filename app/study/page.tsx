@@ -1,9 +1,11 @@
 'use client';
 
+import { useInView } from 'react-intersection-observer';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { ChevronDown, Loader2 } from 'lucide-react';
-import { useInView } from 'react-intersection-observer';
 
 import { SimvexLogo } from '@/components/study-header';
 import {
@@ -18,41 +20,46 @@ import {
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '#' },
   { label: 'Study', href: '/study' },
-  { label: 'Community', href: '#' },
   { label: 'FAQ', href: '#' },
 ];
 
 function StudyNav() {
-  return (
-    <header className="h-20 border-b border-[#1E3A8A]/20 bg-[#070B14] flex items-center justify-between px-8">
-      <div className="flex items-center gap-10">
-        <Link href="/" className="shrink-0">
-          <SimvexLogo />
-        </Link>
+  const router = useRouter();
 
-        <nav className="flex items-center gap-1">
-          {navItems.map((item) => (
+  return (
+    <header className="h-[100px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-10 pb-0">
+      <div className="flex items-end gap-0">
+        <button
+          onClick={() => router.push('/')}
+          className="cursor-pointer mb-[14px] mr-[42px]"
+        >
+          <SimvexLogo />
+        </button>
+
+        {navItems.map((item) => {
+          const isActive = item.label === 'Study';
+          return (
             <Link
               key={item.label}
               href={item.href}
-              className="flex items-center gap-1 px-4 py-2 text-sm text-[#FAFAFA]/70 hover:text-[#FAFAFA] transition-colors"
+              className="relative flex flex-col items-center px-8"
             >
-              {item.label}
-              <ChevronDown className="w-3 h-3 opacity-50" />
+              <span
+                className={`text-[22px] font-semibold tracking-wide pb-3 transition-colors ${
+                  isActive
+                    ? 'text-[#FAFAFA]'
+                    : 'text-[#FAFAFA]/60 hover:text-[#FAFAFA]/80'
+                }`}
+              >
+                {item.label}
+              </span>
+              {isActive && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#2563EB]" />
+              )}
             </Link>
-          ))}
-        </nav>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <button className="px-4 py-1.5 text-xs font-medium rounded-full bg-[#3B82F6] text-white">
-          KOR
-        </button>
-        <button className="px-4 py-1.5 text-xs font-medium rounded-full border border-[#595959] text-[#FAFAFA]/60 hover:text-[#FAFAFA] transition-colors">
-          ENG
-        </button>
+          );
+        })}
       </div>
     </header>
   );

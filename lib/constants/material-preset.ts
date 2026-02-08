@@ -63,13 +63,19 @@ export const MATERIAL_PRESET: Record<MaterialType, MaterialPresetConfig> = {
     vertexColors: false,
   },
   PLASTIC_SATIN_1: {
-    color: '#707070ff',
+    color: '#8C2626',
     metalness: 0.0,
     roughness: 0.7,
     vertexColors: false,
   },
   PLASTIC_SATIN_2: {
-    color: '#707070ff',
+    color: '#8C92AC',
+    metalness: 0.0,
+    roughness: 0.7,
+    vertexColors: false,
+  },
+  PLASTIC_SATIN: {
+    color: '#202020',
     metalness: 0.0,
     roughness: 0.7,
     vertexColors: false,

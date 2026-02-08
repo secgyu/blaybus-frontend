@@ -97,10 +97,11 @@ export function StudyRightPanel({
       className="h-full flex flex-col p-5 gap-4"
       style={{
         background:
-          'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
+          'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
         borderRadius: '20px',
-        backdropFilter: 'blur(6px)',
-        WebkitBackdropFilter: 'blur(6px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(1px)',
+        WebkitBackdropFilter: 'blur(1px)',
       }}
     >
       <div className="shrink-0 py-2">
@@ -174,7 +175,7 @@ export function StudyRightPanel({
 
         <div
           className="flex items-center rounded-xl"
-          style={{ background: 'rgba(7, 11, 20, 0.3)' }}
+          style={{ background: 'rgba(7, 11, 20, 0.08)' }}
         >
           <button
             onClick={scrollLeft}
@@ -203,8 +204,8 @@ export function StudyRightPanel({
                     className={cn(
                       'w-[82px] h-[82px] rounded-xl overflow-hidden transition-all duration-200',
                       isSelected
-                        ? 'border border-[#60A5FA] bg-[rgba(20,21,23,0.3)]'
-                        : 'bg-[rgba(20,21,23,0.3)]'
+                        ? 'border border-[#60A5FA] bg-[rgba(20,21,23,0.08)]'
+                        : 'bg-[rgba(20,21,23,0.08)]'
                     )}
                   >
                     <PartThumbnail

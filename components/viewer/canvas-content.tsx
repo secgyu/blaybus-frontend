@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 
-import { ContactShadows, Environment } from '@react-three/drei';
+import { Bvh, ContactShadows, Environment } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 
 import type { CameraState, ViewerModel } from '@/types/viewer';
@@ -47,7 +47,7 @@ export function CanvasContent({
     <>
       <Environment
         files="/assets/my_warehouse_256.hdr"
-        blur={1}
+        blur={0.5}
         background={false}
         environmentIntensity={0.6}
       />
@@ -57,7 +57,7 @@ export function CanvasContent({
         position={[-5, 8, 5]}
         intensity={1.2}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0001}
         shadow-normalBias={0.04}
       />
@@ -70,7 +70,7 @@ export function CanvasContent({
       />
 
       <pointLight position={[0, 5, 0]} intensity={0.2} color="#3B82F6" />
-
+    <Bvh firstHitOnly>
       <Suspense fallback={<LoadingFallback />}>
         <ModelViewer
           model={model}
@@ -80,9 +80,13 @@ export function CanvasContent({
           onPartHover={onPartHover}
         />
       </Suspense>
+      </Bvh>
 
       <Suspense fallback={null}>
-        <EffectComposer>
+        
+        <EffectComposer 
+          multisampling={4} 
+        >
           <Bloom
             luminanceThreshold={0.5}
             mipmapBlur
@@ -99,6 +103,8 @@ export function CanvasContent({
         blur={2.5}
         far={2}
         color="#000000"
+        resolution={256}
+        frames={1}
       />
 
       <FloorGrid />

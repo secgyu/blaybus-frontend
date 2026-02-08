@@ -30,7 +30,6 @@ function createZoomSafeEvents(
     },
   };
 }
-
 interface SceneProps {
   model: ViewerModel;
   explodeValue: number;
@@ -64,6 +63,7 @@ export function Scene({
   const [canvasKey, setCanvasKey] = useState(() => Date.now());
   const [contextLost, setContextLost] = useState(false);
   const retryCountRef = useRef(0);
+  const [isInteracting, setIsInteracting] = useState(false);
 
   const handleCreated = useCallback(
     ({ gl }: { gl: WebGLRenderer }) => {
@@ -103,10 +103,7 @@ export function Scene({
 
       return () => {
         canvas.removeEventListener('webglcontextlost', handleContextLost);
-        canvas.removeEventListener(
-          'webglcontextrestored',
-          handleContextRestored
-        );
+        canvas.removeEventListener('webglcontextrestored', handleContextRestored);
       };
     },
     [onCaptureReady]
@@ -135,93 +132,107 @@ export function Scene({
     controlsRef.current?.setZoomLevel(value);
   };
 
+  // 회전 핸들러 수정
   const handleRotateLeftStart = () => {
+    setIsInteracting(true);
     setIsRotatingLeft(true);
     controlsRef.current?.startRotateLeft();
   };
 
   const handleRotateLeftEnd = () => {
+    setIsInteracting(false);
     setIsRotatingLeft(false);
     controlsRef.current?.stopRotate();
   };
 
   const handleRotateRightStart = () => {
+    setIsInteracting(true);
     setIsRotatingRight(true);
     controlsRef.current?.startRotateRight();
   };
 
   const handleRotateRightEnd = () => {
+    setIsInteracting(false); 
     setIsRotatingRight(false);
     controlsRef.current?.stopRotate();
   };
 
   return (
     <div className="w-full h-full relative overflow-hidden">
-      {/* 격자 배경 — 항상 전체 뷰포트 */}
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
-      {/* 3D Canvas — 전체 화면 렌더링, 패널 뒤에서도 격자/3D가 보이도록 */}
       <div className="absolute inset-0">
         {contextLost ? (
-          <div className="w-full h-full flex items-center justify-center bg-[#070b14]">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              <span className="text-primary">3D 뷰어 복구 중...</span>
-            </div>
+          <div className="w-full h-full flex items-center justify-center bg-[#070b14]">        
           </div>
         ) : (
-          <Canvas
-            key={canvasKey}
-            camera={{ position: [1, 0.5, 1], fov: 45 }}
-            events={createZoomSafeEvents}
-            gl={{
-              antialias: true,
-              alpha: true,
-              toneMapping: ACESFilmicToneMapping,
-              toneMappingExposure: 0.7,
-              preserveDrawingBuffer: true,
-              powerPreference: 'high-performance',
-              failIfMajorPerformanceCaveat: false,
-            }}
-            shadows
-            style={{ background: 'transparent' }}
-            onCreated={handleCreated}
+          <div 
+            className="w-full h-full" 
+            style={{ pointerEvents: isInteracting ? 'none' : 'auto' }}
           >
-            <CanvasContent
-              model={model}
-              explodeValue={explodeValue}
-              selectedPartIds={selectedPartIds}
-              onPartClick={onPartClick}
-              onPartHover={onPartHover}
-              controlsRef={controlsRef}
-              initialCameraState={initialCameraState}
-              onCameraChange={handleCameraChange}
-              onZoomChange={handleZoomChange}
-            />
-          </Canvas>
+            <Canvas
+              key={canvasKey}
+              dpr={[1, 2]} 
+              performance={{ min: 0.9 }} 
+              camera={{ position: [1, 0.5, 1], fov: 45 }} 
+              gl={{
+                antialias: true,
+                alpha: true,
+                toneMapping: ACESFilmicToneMapping,
+                toneMappingExposure: 0.7,
+                preserveDrawingBuffer: true,
+                powerPreference: 'high-performance',
+                failIfMajorPerformanceCaveat: false,
+              }}
+              shadows
+              style={{ background: 'transparent' }}
+              onCreated={handleCreated}
+            >
+              <CanvasContent
+                model={model}
+                explodeValue={explodeValue}
+                selectedPartIds={selectedPartIds}
+                onPartClick={onPartClick}
+                onPartHover={onPartHover}
+                controlsRef={controlsRef}
+                initialCameraState={initialCameraState}
+                onCameraChange={handleCameraChange}
+                onZoomChange={handleZoomChange}
+              />
+            </Canvas>
+          </div>
         )}
-
-        {/* 슬라이더 — 실제 보이는 3D 영역 기준 중앙 */}
-        <BottomSliders
-          explodeValue={explodeValue}
-          zoomValue={zoomValue}
-          onExplodeChange={onExplodeChange}
-          onZoomChange={handleZoomSliderChange}
+        <div 
+          className="absolute bottom-0 left-0 w-full"
+          onPointerDown={() => setIsInteracting(true)}
+          onPointerUp={() => setIsInteracting(false)}
+          onPointerLeave={() => setIsInteracting(false)} // 마우스가 밖으로 나갈 때 대비
+        >
+          <BottomSliders
+            explodeValue={explodeValue}
+            zoomValue={zoomValue}
+            onExplodeChange={onExplodeChange}
+            onZoomChange={handleZoomSliderChange}
+            isFullscreen={isFullscreen}
+            isLeftPanelOpen={isLeftPanelOpen}
+          />
+        </div>
+      </div>
+      <div
+         onPointerDown={() => setIsInteracting(true)}
+         onPointerUp={() => setIsInteracting(false)}
+      >
+        <RotationControls
+          isRotatingLeft={isRotatingLeft}
+          isRotatingRight={isRotatingRight}
           isFullscreen={isFullscreen}
-          isLeftPanelOpen={isLeftPanelOpen}
+          onRotateLeftStart={handleRotateLeftStart}
+          onRotateLeftEnd={handleRotateLeftEnd}
+          onRotateRightStart={handleRotateRightStart}
+          onRotateRightEnd={handleRotateRightEnd}
+          onToggleFullscreen={onToggleFullscreen}
         />
       </div>
-
-      <RotationControls
-        isRotatingLeft={isRotatingLeft}
-        isRotatingRight={isRotatingRight}
-        isFullscreen={isFullscreen}
-        onRotateLeftStart={handleRotateLeftStart}
-        onRotateLeftEnd={handleRotateLeftEnd}
-        onRotateRightStart={handleRotateRightStart}
-        onRotateRightEnd={handleRotateRightEnd}
-        onToggleFullscreen={onToggleFullscreen}
-      />
     </div>
   );
 }

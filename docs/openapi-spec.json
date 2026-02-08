@@ -1,1 +1,689 @@
-{"openapi":"3.0.1","info":{"title":"Dosa Backend API","description":"3D Model Assembly API","version":"v1"},"servers":[{"url":"http://ec2-13-125-67-192.ap-northeast-2.compute.amazonaws.com:8080","description":"Generated server url"}],"tags":[{"name":"RAG","description":"Retrieval-Augmented Generation search"},{"name":"Model 정보 제공","description":"Model 정보를 제공해주는 API입니다."},{"name":"Chat","description":"Stateless chat message API"},{"name":"Quiz/Answer 데이터 제공","description":"사용자에게 Quiz를 주고 채점 후 정답/해설을 보여주는 API 입니다."},{"name":"Documents","description":"Document upload and ingestion management"}],"paths":{"/v1/rag/search":{"post":{"tags":["RAG"],"operationId":"search","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/SearchRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SearchResponse"}}}}}}},"/v1/documents":{"post":{"tags":["Documents"],"operationId":"upload","requestBody":{"content":{"multipart/form-data":{"schema":{"required":["file"],"type":"object","properties":{"file":{"type":"string","format":"binary"},"title":{"type":"string"}}}}}},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/DocumentResponse"}}}}}}},"/v1/documents/{id}/ingest":{"post":{"tags":["Documents"],"operationId":"ingest","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/IngestJobResponse"}}}}}}},"/v1/chat/messages":{"post":{"tags":["Chat"],"summary":"Send a chat message","operationId":"message","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/MessageRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/MessageResponse"}}}}}}},"/v1/chat/messages:multipart":{"post":{"tags":["Chat"],"summary":"Send a chat message with uploaded image file(s) and optional metadata/history","operationId":"messageMultipart","requestBody":{"content":{"multipart/form-data":{"schema":{"required":["message"],"type":"object","properties":{"message":{"type":"string","description":"User message text"},"documentIds":{"type":"array","description":"Optional document UUIDs (repeat the field)","items":{"type":"string","format":"uuid"}},"extraMetadata":{"type":"string","description":"Optional metadata as a JSON object string"},"history":{"type":"string","description":"Optional history as JSON array string"},"images":{"type":"array","description":"Uploaded image file(s)","items":{"type":"string","format":"binary"}}}}}}},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/MessageResponse"}}}}}}},"/api/models/{modelId}/quiz/answer":{"post":{"tags":["Quiz/Answer 데이터 제공"],"operationId":"submitQuiz","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/QuizSubmitRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/QuizResultResponse"}}}}}}},"/v1/documents/{id}":{"get":{"tags":["Documents"],"operationId":"get","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/DocumentResponse"}}}}}}},"/v1/documents/ingest-jobs/{jobId}":{"get":{"tags":["Documents"],"operationId":"ingestJob","parameters":[{"name":"jobId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/IngestJobResponse"}}}}}}},"/api/models":{"get":{"tags":["Model 정보 제공"],"operationId":"getModelIds","parameters":[{"name":"pageable","in":"query","required":true,"schema":{"$ref":"#/components/schemas/Pageable"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ModelSliceDto"}}}}}}},"/api/models/{modelId}/quiz/":{"get":{"tags":["Quiz/Answer 데이터 제공"],"operationId":"getRandomQuizzes","parameters":[{"name":"modelId","in":"path","required":true,"schema":{"type":"string"}},{"name":"count","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":3}},{"name":"excludedIds","in":"query","required":false,"schema":{"type":"array","items":{"type":"integer","format":"int64"}}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/QuizResponse"}}}}}}}},"/api/api/models/{id}/viewer":{"get":{"tags":["Model 정보 제공"],"summary":"Model 정보(part, node) 제공","description":"Model에 관한 모든 정보를 제공합니다.","operationId":"getModelInformation","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ModelResponseDto"}}}}}}}},"components":{"schemas":{"SearchRequest":{"required":["query"],"type":"object","properties":{"query":{"type":"string"},"topK":{"type":"integer","format":"int32"},"documentIds":{"type":"array","items":{"type":"string","format":"uuid"}}}},"Citation":{"type":"object","properties":{"tag":{"type":"string"},"documentId":{"type":"string","format":"uuid"},"documentTitle":{"type":"string"},"pages":{"type":"string"},"chunkId":{"type":"string","format":"uuid"},"distance":{"type":"number","format":"double"}}},"SearchResponse":{"type":"object","properties":{"contextText":{"type":"string"},"citations":{"type":"array","items":{"$ref":"#/components/schemas/Citation"}}}},"DocumentResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"title":{"type":"string"},"status":{"type":"string","enum":["UPLOADED","INGESTING","READY","FAILED"]},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}}},"IngestJobResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"documentId":{"type":"string","format":"uuid"},"status":{"type":"string"},"createdAt":{"type":"string","format":"date-time"},"startedAt":{"type":"string","format":"date-time"},"finishedAt":{"type":"string","format":"date-time"},"chunkCount":{"type":"integer","format":"int32"},"embeddingModel":{"type":"string"},"errorMessage":{"type":"string"}}},"HistoryMessage":{"required":["content","role"],"type":"object","properties":{"role":{"type":"string"},"content":{"type":"string"}}},"MessageRequest":{"required":["message"],"type":"object","properties":{"message":{"type":"string"},"documentIds":{"type":"array","items":{"type":"string","format":"uuid"}},"imageUrls":{"type":"array","items":{"type":"string"}},"extraMetadata":{"type":"object","additionalProperties":{"type":"object"}},"history":{"type":"array","items":{"$ref":"#/components/schemas/HistoryMessage"}},"model":{"type":"object","additionalProperties":{"type":"object"}},"parts":{"type":"object"}}},"MessageResponse":{"type":"object","properties":{"answer":{"type":"string"},"citations":{"type":"array","items":{"$ref":"#/components/schemas/Citation"}}}},"AnswerItem":{"type":"object","properties":{"questionId":{"type":"integer","format":"int64"},"type":{"type":"string","enum":["MULTIPLE_CHOICE","SHORT_ANSWER"]},"selectedOptionNo":{"type":"integer","format":"int32"},"subjectiveAnswer":{"type":"string"}}},"QuizSubmitRequest":{"type":"object","properties":{"answers":{"type":"array","items":{"$ref":"#/components/schemas/AnswerItem"}}}},"QuestionResult":{"type":"object","properties":{"questionId":{"type":"integer","format":"int64"},"userSelected":{"type":"object"},"correctAnswer":{"type":"string"},"explanation":{"type":"string"},"correct":{"type":"boolean"}}},"QuizResultResponse":{"type":"object","properties":{"results":{"type":"array","items":{"$ref":"#/components/schemas/QuestionResult"}}}},"Pageable":{"type":"object","properties":{"page":{"minimum":0,"type":"integer","format":"int32"},"size":{"minimum":1,"type":"integer","format":"int32"},"sort":{"type":"array","items":{"type":"string"}}}},"ModelSliceDto":{"type":"object","properties":{"models":{"type":"array","items":{"$ref":"#/components/schemas/ModelSummaryDto"}},"hasNext":{"type":"boolean"},"pageNumber":{"type":"integer","format":"int32"}}},"ModelSummaryDto":{"type":"object","properties":{"modelId":{"type":"string"},"overview":{"type":"string"}}},"OptionDto":{"type":"object","properties":{"no":{"type":"integer","format":"int32"},"content":{"type":"string"}}},"QuizResponse":{"type":"object","properties":{"questionId":{"type":"integer","format":"int64"},"type":{"type":"string","enum":["MULTIPLE_CHOICE","SHORT_ANSWER"]},"question":{"type":"string"},"options":{"type":"array","items":{"$ref":"#/components/schemas/OptionDto"}}}},"CoordinatesDto":{"type":"object","properties":{"pos":{"type":"array","items":{"type":"number","format":"double"}},"quat":{"type":"array","items":{"type":"number","format":"double"}},"scale":{"type":"array","items":{"type":"number","format":"double"}}}},"ExplodeDto":{"type":"object","properties":{"dir":{"type":"array","items":{"type":"number","format":"double"}},"distance":{"type":"number","format":"double"},"start":{"type":"number","format":"double"},"duration":{"type":"number","format":"double"}}},"ModelInfoDto":{"type":"object","properties":{"modelId":{"type":"string"},"title":{"type":"string"},"thumbnailUrl":{"type":"string"},"overview":{"type":"string"},"theory":{"type":"string"}}},"ModelResponseDto":{"type":"object","properties":{"model":{"$ref":"#/components/schemas/ModelInfoDto"},"parts":{"type":"array","items":{"$ref":"#/components/schemas/PartInfoDto"}},"nodes":{"type":"array","items":{"$ref":"#/components/schemas/NodeInfoDto"}}}},"NodeInfoDto":{"type":"object","properties":{"nodeId":{"type":"string"},"partId":{"type":"string"},"parentNodeId":{"type":"string"},"assembled":{"$ref":"#/components/schemas/CoordinatesDto"},"explode":{"$ref":"#/components/schemas/ExplodeDto"}}},"PartInfoDto":{"type":"object","properties":{"partId":{"type":"string"},"displayNameKo":{"type":"string"},"glbUrl":{"type":"string"},"summary":{"type":"string"},"materialType":{"type":"string"}}}}}}
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Dosa Backend API",
+    "description": "3D Model Assembly API",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://ec2-13-125-67-192.ap-northeast-2.compute.amazonaws.com:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    { "name": "RAG", "description": "Retrieval-Augmented Generation search" },
+    {
+      "name": "Model 정보 제공",
+      "description": "Model 정보를 제공해주는 API입니다."
+    },
+    {
+      "name": "PDF 미리보기/다운로드",
+      "description": "PDF 미리보기/다운로드 기능을 제공해주는 API입니다."
+    },
+    { "name": "Chat", "description": "Stateless chat message API" },
+    {
+      "name": "Quiz/Answer 데이터 제공",
+      "description": "사용자에게 Quiz를 주고 채점 후 정답/해설을 보여주는 API 입니다."
+    },
+    {
+      "name": "Documents",
+      "description": "Document upload and ingestion management"
+    }
+  ],
+  "paths": {
+    "/v1/rag/search": {
+      "post": {
+        "tags": ["RAG"],
+        "operationId": "search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SearchRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/SearchResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/documents": {
+      "post": {
+        "tags": ["Documents"],
+        "operationId": "upload",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "title": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/DocumentResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/documents/{id}/ingest": {
+      "post": {
+        "tags": ["Documents"],
+        "operationId": "ingest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/IngestJobResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chat/messages": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Send a chat message",
+        "operationId": "message",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MessageRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chat/messages:multipart": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Send a chat message with uploaded image file(s) and optional metadata/history",
+        "operationId": "messageMultipart",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["message"],
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "User message text"
+                  },
+                  "documentIds": {
+                    "type": "array",
+                    "description": "Optional document UUIDs (repeat the field)",
+                    "items": { "type": "string", "format": "uuid" }
+                  },
+                  "extraMetadata": {
+                    "type": "string",
+                    "description": "Optional metadata as a JSON object string"
+                  },
+                  "history": {
+                    "type": "string",
+                    "description": "Optional history as JSON array string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "description": "Uploaded image file(s)",
+                    "items": { "type": "string", "format": "binary" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/MessageResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{modelId}/quiz/answer": {
+      "post": {
+        "tags": ["Quiz/Answer 데이터 제공"],
+        "operationId": "submitQuiz",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuizSubmitRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/QuizResultResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{id}/pdf": {
+      "post": {
+        "tags": ["PDF 미리보기/다운로드"],
+        "summary": "PDF 저장 전 미리보기 및 저장 기능 제공",
+        "description": "PDF 저장 전 미리보기 기능과 PDF 저장 기능을 제공합니다.",
+        "operationId": "generatePdf",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PdfRequestDto" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
+            }
+          }
+        }
+      }
+    },
+    "/v1/documents/{id}": {
+      "get": {
+        "tags": ["Documents"],
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/DocumentResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/documents/ingest-jobs/{jobId}": {
+      "get": {
+        "tags": ["Documents"],
+        "operationId": "ingestJob",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/IngestJobResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models": {
+      "get": {
+        "tags": ["Model 정보 제공"],
+        "operationId": "getModelIds",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/Pageable" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ModelSliceDto" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{modelId}/quiz/": {
+      "get": {
+        "tags": ["Quiz/Answer 데이터 제공"],
+        "operationId": "getRandomQuizzes",
+        "parameters": [
+          {
+            "name": "modelId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "format": "int32", "default": 3 }
+          },
+          {
+            "name": "excludedIds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": { "type": "integer", "format": "int64" }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/QuizResponse" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api/models/{id}/viewer": {
+      "get": {
+        "tags": ["Model 정보 제공"],
+        "summary": "Model 정보(part, node) 제공",
+        "description": "Model에 관한 모든 정보를 제공합니다.",
+        "operationId": "getModelInformation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ModelResponseDto" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchRequest": {
+        "required": ["query"],
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" },
+          "topK": { "type": "integer", "format": "int32" },
+          "documentIds": {
+            "type": "array",
+            "items": { "type": "string", "format": "uuid" }
+          }
+        }
+      },
+      "Citation": {
+        "type": "object",
+        "properties": {
+          "tag": { "type": "string" },
+          "documentId": { "type": "string", "format": "uuid" },
+          "documentTitle": { "type": "string" },
+          "pages": { "type": "string" },
+          "chunkId": { "type": "string", "format": "uuid" },
+          "distance": { "type": "number", "format": "double" }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "contextText": { "type": "string" },
+          "citations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Citation" }
+          }
+        }
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "title": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["UPLOADED", "INGESTING", "READY", "FAILED"]
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "IngestJobResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "documentId": { "type": "string", "format": "uuid" },
+          "status": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "startedAt": { "type": "string", "format": "date-time" },
+          "finishedAt": { "type": "string", "format": "date-time" },
+          "chunkCount": { "type": "integer", "format": "int32" },
+          "embeddingModel": { "type": "string" },
+          "errorMessage": { "type": "string" }
+        }
+      },
+      "HistoryMessage": {
+        "required": ["content", "role"],
+        "type": "object",
+        "properties": {
+          "role": { "type": "string" },
+          "content": { "type": "string" }
+        }
+      },
+      "MessageRequest": {
+        "required": ["message"],
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" },
+          "documentIds": {
+            "type": "array",
+            "items": { "type": "string", "format": "uuid" }
+          },
+          "imageUrls": { "type": "array", "items": { "type": "string" } },
+          "extraMetadata": {
+            "type": "object",
+            "additionalProperties": { "type": "object" }
+          },
+          "history": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/HistoryMessage" }
+          },
+          "model": {
+            "type": "object",
+            "additionalProperties": { "type": "object" }
+          },
+          "parts": { "type": "object" }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "answer": { "type": "string" },
+          "citations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Citation" }
+          }
+        }
+      },
+      "AnswerItem": {
+        "type": "object",
+        "properties": {
+          "questionId": { "type": "integer", "format": "int64" },
+          "type": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "SHORT_ANSWER"]
+          },
+          "selectedOptionNo": { "type": "integer", "format": "int32" },
+          "subjectiveAnswer": { "type": "string" }
+        }
+      },
+      "QuizSubmitRequest": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AnswerItem" }
+          }
+        }
+      },
+      "QuestionResult": {
+        "type": "object",
+        "properties": {
+          "questionId": { "type": "integer", "format": "int64" },
+          "userSelected": { "type": "object" },
+          "correctAnswer": { "type": "string" },
+          "explanation": { "type": "string" },
+          "correct": { "type": "boolean" }
+        }
+      },
+      "QuizResultResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuestionResult" }
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "answer": { "type": "string" }
+        }
+      },
+      "PdfRequestDto": {
+        "type": "object",
+        "properties": {
+          "modelImage": { "type": "string" },
+          "memo": { "type": "string" },
+          "chatLogs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChatMessage" }
+          },
+          "quizs": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuizSet" }
+          }
+        }
+      },
+      "QuizSet": {
+        "type": "object",
+        "properties": {
+          "quizQuestion": { "type": "string" },
+          "quizAnswer": { "type": "string" }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": { "minimum": 0, "type": "integer", "format": "int32" },
+          "size": { "minimum": 1, "type": "integer", "format": "int32" },
+          "sort": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "ModelSliceDto": {
+        "type": "object",
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ModelSummaryDto" }
+          },
+          "hasNext": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" }
+        }
+      },
+      "ModelSummaryDto": {
+        "type": "object",
+        "properties": {
+          "modelId": { "type": "string" },
+          "overview": { "type": "string" }
+        }
+      },
+      "OptionDto": {
+        "type": "object",
+        "properties": {
+          "no": { "type": "integer", "format": "int32" },
+          "content": { "type": "string" }
+        }
+      },
+      "QuizResponse": {
+        "type": "object",
+        "properties": {
+          "questionId": { "type": "integer", "format": "int64" },
+          "type": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "SHORT_ANSWER"]
+          },
+          "question": { "type": "string" },
+          "options": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OptionDto" }
+          }
+        }
+      },
+      "CoordinatesDto": {
+        "type": "object",
+        "properties": {
+          "pos": {
+            "type": "array",
+            "items": { "type": "number", "format": "double" }
+          },
+          "quat": {
+            "type": "array",
+            "items": { "type": "number", "format": "double" }
+          },
+          "scale": {
+            "type": "array",
+            "items": { "type": "number", "format": "double" }
+          }
+        }
+      },
+      "ExplodeDto": {
+        "type": "object",
+        "properties": {
+          "dir": {
+            "type": "array",
+            "items": { "type": "number", "format": "double" }
+          },
+          "distance": { "type": "number", "format": "double" },
+          "start": { "type": "number", "format": "double" },
+          "duration": { "type": "number", "format": "double" }
+        }
+      },
+      "ModelInfoDto": {
+        "type": "object",
+        "properties": {
+          "modelId": { "type": "string" },
+          "title": { "type": "string" },
+          "thumbnailUrl": { "type": "string" },
+          "overview": { "type": "string" },
+          "theory": { "type": "string" }
+        }
+      },
+      "ModelResponseDto": {
+        "type": "object",
+        "properties": {
+          "model": { "$ref": "#/components/schemas/ModelInfoDto" },
+          "parts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PartInfoDto" }
+          },
+          "nodes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/NodeInfoDto" }
+          }
+        }
+      },
+      "NodeInfoDto": {
+        "type": "object",
+        "properties": {
+          "nodeId": { "type": "string" },
+          "partId": { "type": "string" },
+          "parentNodeId": { "type": "string" },
+          "assembled": { "$ref": "#/components/schemas/CoordinatesDto" },
+          "explode": { "$ref": "#/components/schemas/ExplodeDto" }
+        }
+      },
+      "PartInfoDto": {
+        "type": "object",
+        "properties": {
+          "partId": { "type": "string" },
+          "displayNameKo": { "type": "string" },
+          "glbUrl": { "type": "string" },
+          "summary": { "type": "string" },
+          "materialType": { "type": "string" }
+        }
+      }
+    }
+  }
+}

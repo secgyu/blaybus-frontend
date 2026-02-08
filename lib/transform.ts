@@ -77,6 +77,7 @@ export function toViewerModel(
       .replace(/\b\w/g, (c) => c.toUpperCase()),
     nameKo: data.model.title,
     description: data.model.overview,
+    theory: data.model.theory,
     parts,
     systemPrompt,
   };
@@ -119,7 +120,7 @@ export function toApiModelData(model: ViewerModel): ModelData {
       title: model.nameKo,
       thumbnailUrl: `/thumbs/${model.id}.png`,
       overview: model.description,
-      theory: '',
+      theory: model.theory,
     },
     parts,
     nodes,

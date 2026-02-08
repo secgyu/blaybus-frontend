@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import ReactMarkdown from 'react-markdown';
+
 import {
   ChevronDownIcon,
   LeftArrowIcon,
@@ -105,10 +107,15 @@ export function StudyRightPanel({
         </h1>
       </div>
 
-      <div className="flex flex-col gap-2 shrink-0">
+      <div
+        className={cn(
+          'flex flex-col gap-2 min-h-0 transition-all duration-300 ease-in-out',
+          isOverviewOpen ? 'flex-2' : 'flex-none'
+        )}
+      >
         <button
           onClick={() => setIsOverviewOpen((prev) => !prev)}
-          className="flex items-center justify-between w-full"
+          className="flex items-center justify-between w-full shrink-0"
         >
           <h2 className="text-base font-bold text-[#FAFAFA]">완제품 설명</h2>
           <ChevronDownIcon
@@ -122,7 +129,7 @@ export function StudyRightPanel({
         <div
           className={cn(
             'rounded-xl overflow-hidden flex transition-all duration-300 ease-in-out',
-            isOverviewOpen ? 'h-[200px] opacity-100' : 'h-0 opacity-0'
+            isOverviewOpen ? 'flex-1 min-h-0 opacity-100' : 'h-0 opacity-0'
           )}
           style={{ border: isOverviewOpen ? '0.5px solid #595959' : 'none' }}
         >
@@ -131,8 +138,8 @@ export function StudyRightPanel({
             className="flex-1 p-4 overflow-y-auto"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            <div className="text-sm text-[#FAFAFA]/80 leading-[180%] whitespace-pre-wrap">
-              {model.description}
+            <div className="markdown-content text-sm text-[#FAFAFA]/80 leading-[180%]">
+              <ReactMarkdown>{model.theory || model.description}</ReactMarkdown>
             </div>
           </div>
 
@@ -218,7 +225,12 @@ export function StudyRightPanel({
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 flex-1 min-h-0">
+      <div
+        className={cn(
+          'flex flex-col gap-2 min-h-0 transition-all duration-300 ease-in-out',
+          isPartDescOpen ? 'flex-3' : 'flex-none'
+        )}
+      >
         <button
           onClick={() => setIsPartDescOpen((prev) => !prev)}
           className="flex items-center justify-between w-full shrink-0"

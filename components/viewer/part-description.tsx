@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { getMaterialLabel, toTitleCase } from '@/lib/constants/materials';
+import ReactMarkdown from 'react-markdown';
+
+import { toTitleCase } from '@/lib/constants/materials';
 import type { ModelPart } from '@/types/viewer';
 
 interface PartDescriptionProps {
@@ -38,60 +40,24 @@ export function PartDescription({ part }: PartDescriptionProps) {
 
   const displayName = toTitleCase(part.name);
   const roleText = part.role || '해당 부품의 기능 설명이 준비 중입니다.';
-  const materialLabel = part.materialType
-    ? getMaterialLabel(part.materialType)
-    : '해당 부품의 재질 정보가 준비 중입니다.';
 
   return (
     <div className="flex gap-4 h-full">
       <div
         ref={contentRef}
-        className="flex-1 flex flex-col gap-8 overflow-y-auto pr-2"
+        className="flex-1 flex flex-col gap-4 overflow-y-auto pr-2"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        <section className="flex flex-col gap-1">
-          <h4 className="text-base font-bold text-[#FAFAFA] leading-[140%]">
-            부품 명 및 기능
-          </h4>
-          <div className="py-2">
-            <div className="text-sm text-[#FAFAFA] leading-[140%] space-y-1">
-              <p>
-                <span className="font-medium">1. 부품 명 :</span> {part.nameKo}{' '}
-                ({displayName})
-              </p>
-              <p>
-                <span className="font-medium">2. 기능 :</span> {roleText}
-              </p>
-            </div>
-          </div>
-        </section>
+        <div className="text-sm text-[#FAFAFA] leading-[140%]">
+          <p>
+            <span className="font-bold">부품 명 :</span> {part.nameKo} (
+            {displayName})
+          </p>
+        </div>
 
-        <section className="flex flex-col gap-1">
-          <h4 className="text-base font-bold text-[#FAFAFA] leading-[140%]">
-            재질 정보
-          </h4>
-          <div className="py-2">
-            <div className="text-sm text-[#FAFAFA] leading-[140%] space-y-1">
-              <p>
-                <span className="font-medium">1.</span> {materialLabel}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-1">
-          <h4 className="text-base font-bold text-[#FAFAFA] leading-[140%]">
-            기계적 특성
-          </h4>
-          <div className="py-2">
-            <div className="text-sm text-[#FAFAFA] leading-[140%] space-y-1">
-              <p>
-                <span className="font-medium">1.</span> 해당 부품의 기계적 특성
-                정보가 준비 중입니다.
-              </p>
-            </div>
-          </div>
-        </section>
+        <div className="markdown-content text-sm text-[#FAFAFA]/80 leading-[180%]">
+          <ReactMarkdown>{roleText}</ReactMarkdown>
+        </div>
       </div>
 
       {thumbRatio < 1 && (

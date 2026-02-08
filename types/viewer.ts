@@ -35,6 +35,7 @@ export interface ViewerModel {
   name: string;
   nameKo: string;
   description: string;
+  theory: string;
   parts: ModelPart[];
   systemPrompt: string;
 }

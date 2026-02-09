@@ -17,8 +17,8 @@ export function FloorGrid() {
         uSubColor: { value: new Color('#071e35') },
         uFadeRadius: { value: 4.0 },
         uOpacity: { value: 0.7 },
-        uGlowRadius: { value: 1.5 },
-        uGlowIntensity: { value: 0.35 },
+        uGlowRadius: { value: 1.0 },
+        uGlowIntensity: { value: 0.18 },
         uGlowColor: { value: new Color('#0a5cb3') },
       },
       vertexShader: `

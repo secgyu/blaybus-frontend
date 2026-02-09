@@ -131,7 +131,7 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
           isFullscreen ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
-        <StudyHeader />
+        <StudyHeader modelId={modelId} />
       </div>
 
       <div

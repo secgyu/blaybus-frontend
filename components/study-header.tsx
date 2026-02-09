@@ -1,6 +1,14 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
+import { fetchModels } from '@/lib/api';
+
+function formatModelName(modelId: string): string {
+  return modelId.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 export function SimvexLogo() {
   return (
@@ -144,10 +152,46 @@ function ChevronDownIcon() {
 
 interface StudyHeaderProps {
   category?: string;
+  modelId?: string;
 }
 
-export function StudyHeader({ category = '기계공학' }: StudyHeaderProps) {
+export function StudyHeader({
+  category = '기계공학',
+  modelId,
+}: StudyHeaderProps) {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [models, setModels] = useState<{ modelId: string }[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen && !isLoaded) {
+      fetchModels({ size: 50 })
+        .then((data) => {
+          setModels(data);
+          setIsLoaded(true);
+        })
+        .catch(() => setIsLoaded(true));
+    }
+  }, [isOpen, isLoaded]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () =>
+        document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
 
   return (
     <header className="h-[64px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-6 pb-3">
@@ -166,10 +210,45 @@ export function StudyHeader({ category = '기계공학' }: StudyHeaderProps) {
           <div className="h-[2px] bg-[#2563EB] rounded-full" />
         </div>
 
-        <button className="flex items-center gap-2 h-[28px] px-4 rounded-full border border-[#595959] text-[#FAFAFA] text-xs mb-0.5 ml-[-20px]">
-          {category}
-          <ChevronDownIcon />
-        </button>
+        <div className="relative mb-0.5 ml-[-20px]" ref={dropdownRef}>
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="flex items-center gap-2 h-[28px] px-4 rounded-full border border-[#595959] text-[#FAFAFA] text-xs cursor-pointer hover:border-[#888] transition-colors"
+          >
+            {category}
+            <ChevronDownIcon />
+          </button>
+
+          {isOpen && (
+            <div className="absolute top-[calc(100%+8px)] left-0 w-[250px] rounded-xl border border-[#595959]/50 bg-[#0a0f1a]/95 backdrop-blur-md py-3 shadow-xl z-50">
+              {[...models]
+                .sort((a, b) =>
+                  formatModelName(a.modelId).localeCompare(
+                    formatModelName(b.modelId)
+                  )
+                )
+                .map((m) => {
+                  const isSelected = m.modelId === modelId;
+                  return (
+                    <button
+                      key={m.modelId}
+                      onClick={() => {
+                        setIsOpen(false);
+                        router.push(`/study/${m.modelId}`);
+                      }}
+                      className={`w-[calc(100%-16px)] mx-2 text-left px-4 py-2.5 text-sm transition-colors cursor-pointer rounded-md ${
+                        isSelected
+                          ? 'bg-[#E7E5E4] text-[#1A1A1A] font-medium'
+                          : 'text-[#FAFAFA] hover:bg-[#FAFAFA]/10'
+                      }`}
+                    >
+                      {formatModelName(m.modelId)}
+                    </button>
+                  );
+                })}
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

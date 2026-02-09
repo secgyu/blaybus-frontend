@@ -7,7 +7,6 @@ import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
 
 import { StudyHeader } from '@/components/study-header';
-import { PartTooltip } from '@/components/viewer/part-tooltip';
 import { StudyLeftPanel } from '@/components/viewer/study-left-panel';
 import { StudyRightPanel } from '@/components/viewer/study-right-panel';
 import { useViewerStore } from '@/store/viewer-store';
@@ -44,7 +43,6 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
   const setExplodeValue = store((state) => state.setExplodeValue);
   const setNotes = store((state) => state.setNotes);
 
-  const [hoveredPartId, setHoveredPartId] = useState<string | null>(null);
   const [isSceneReady, setIsSceneReady] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(false);
@@ -101,7 +99,7 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
             explodeValue={explodeValue}
             selectedPartIds={selectedPartIds}
             onPartClick={toggleSelectedPartId}
-            onPartHover={setHoveredPartId}
+            onPartHover={() => {}}
             onExplodeChange={setExplodeValue}
             isFullscreen={isFullscreen}
             isLeftPanelOpen={isLeftPanelOpen}
@@ -167,12 +165,6 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
               isQuizActive={isQuizActive}
             />
           </div>
-
-          {hoveredPartId && selectedPartIds.length === 0 && !isFullscreen && (
-            <PartTooltip
-              part={model.parts.find((p) => p.id === hoveredPartId)!}
-            />
-          )}
         </>
       )}
     </div>

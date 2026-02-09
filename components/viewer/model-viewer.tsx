@@ -1,6 +1,6 @@
 'use client';
 
-import { type MutableRefObject, useMemo, useRef } from 'react';
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react';
 
 import { useFrame } from '@react-three/fiber';
 
@@ -74,6 +74,26 @@ export function ModelViewer({
   const groupRef = useRef<Group>(null);
   const itemsRef = useRef<Map<string, Object3D>>(new Map());
   const currentExplodeRef = useRef(0);
+  const initialAlignDone = useRef(false);
+  const initialFrameCount = useRef(0);
+
+  useEffect(() => {
+    initialAlignDone.current = false;
+    initialFrameCount.current = 0;
+    if (groupRef.current) {
+      groupRef.current.position.y = 0;
+    }
+  }, [model.id]);
+
+  const alignToGround = () => {
+    if (!groupRef.current) return;
+    const currentOffset = groupRef.current.position.y;
+    groupRef.current.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(groupRef.current);
+    const localMinY = box.min.y - currentOffset;
+    const neededOffset = localMinY < 0 ? -localMinY : 0;
+    groupRef.current.position.y = neededOffset;
+  };
 
   const staticParts = useMemo(() => {
     const result: StaticPartData[] = [];
@@ -147,6 +167,14 @@ export function ModelViewer({
   const frameSkipRef = useRef(0);
 
   useFrame(() => {
+    if (!initialAlignDone.current && groupRef.current) {
+      initialFrameCount.current += 1;
+      if (initialFrameCount.current >= 5) {
+        alignToGround();
+        initialAlignDone.current = true;
+      }
+    }
+
     frameSkipRef.current = (frameSkipRef.current + 1) % 2;
     if (frameSkipRef.current !== 0) return;
 
@@ -191,6 +219,8 @@ export function ModelViewer({
           data.explodeDir[2] * data.explodeDistance * easedProgress
       );
     });
+
+    alignToGround();
   });
 
   return (

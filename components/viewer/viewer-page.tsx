@@ -152,10 +152,12 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
           </div>
 
           <div
-            className={`absolute top-[76px] right-3 bottom-3 w-[320px] z-10 transition-[opacity,transform] duration-500 ease-in-out ${
-              isFullscreen
-                ? 'opacity-0 pointer-events-none translate-x-10'
-                : 'opacity-100 translate-x-0'
+            className={`absolute top-[76px] right-3 bottom-3 w-[320px] z-10 ${
+              isQuizActive
+                ? 'hidden'
+                : isFullscreen
+                  ? 'opacity-0 pointer-events-none translate-x-10 transition-[opacity,transform] duration-500 ease-in-out'
+                  : 'opacity-100 translate-x-0 transition-[opacity,transform] duration-500 ease-in-out'
             }`}
           >
             <StudyRightPanel

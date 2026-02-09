@@ -5,18 +5,11 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 import { SimvexLogo } from '@/components/study-header';
-import {
-  ComingSoonCard,
-  StudyModelCard,
-} from '@/components/study/study-model-card';
+import { StudyModelCard } from '@/components/study/study-model-card';
 import { useModels } from '@/hooks/use-models';
-import {
-  BIOMEDICAL_MODELS,
-  BIO_ENGINEERING_MODELS,
-} from '@/lib/constants/coming-soon-models';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -67,18 +60,27 @@ function StudyNav() {
 
 function HeroSection() {
   return (
-    <section className="relative px-8 py-12">
-      <div className="max-w-[1200px] mx-auto">
-        <div className="relative h-[200px] rounded-2xl overflow-hidden bg-linear-to-r from-[#1E40AF]/30 to-[#3B82F6]/10 border border-[#1E3A8A]/30 flex items-center justify-center">
-          <div className="absolute inset-0 bg-[url('/assets/grid-pattern.svg')] opacity-10" />
-          <div className="text-center relative z-10">
-            <h1 className="text-3xl font-bold text-[#FAFAFA] mb-2">
-              3D Engineering Models
-            </h1>
-            <p className="text-sm text-[#FAFAFA]/50">
-              학습하고 싶은 모델을 선택하세요
-            </p>
-          </div>
+    <section className="px-6 md:px-12 lg:px-16 xl:px-20 pt-2">
+      <div className="relative w-full mx-auto h-[35vh] min-h-[220px] max-h-[400px] rounded-3xl lg:rounded-[40px] overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/study.png')" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(to left, rgba(7, 11, 20, 0.8), rgba(4, 10, 46, 0.64))',
+          }}
+        />
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#FAFAFA] tracking-tight leading-tight mb-3">
+            3D Engineering Viewer
+          </h1>
+          <p className="text-xs lg:text-sm text-[#B8B8B8] leading-relaxed">
+            정밀하게 구현된 3D 엔지니어링 모델을 통해 구조와 작동 원리를 한눈에
+            학습할 수 있습니다.
+          </p>
         </div>
       </div>
     </section>
@@ -108,9 +110,11 @@ export default function StudyPage() {
       <StudyNav />
       <HeroSection />
 
-      <div className="max-w-[1200px] mx-auto px-8 pb-20 space-y-16">
+      <div className="px-6 md:px-12 lg:px-16 xl:px-20 pb-16 space-y-12">
         <section>
-          <h2 className="text-2xl font-bold text-[#FAFAFA] mb-8">기계공학</h2>
+          <h2 className="text-2xl md:text-3xl lg:text-[2rem] font-bold text-[#FAFAFA] leading-tight mb-6">
+            기계공학
+          </h2>
 
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
@@ -127,7 +131,7 @@ export default function StudyPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-3 gap-4 lg:gap-5">
                 {models?.map((model) => (
                   <StudyModelCard key={model.modelId} model={model} />
                 ))}
@@ -145,24 +149,6 @@ export default function StudyPage() {
               </div>
             </>
           )}
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-[#FAFAFA] mb-8">생명공학</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {BIO_ENGINEERING_MODELS.map((model) => (
-              <ComingSoonCard key={model.id} model={model} />
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-[#FAFAFA] mb-8">의공학</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {BIOMEDICAL_MODELS.map((model) => (
-              <ComingSoonCard key={model.id} model={model} />
-            ))}
-          </div>
         </section>
       </div>
     </div>

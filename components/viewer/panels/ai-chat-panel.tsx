@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { Loader2, Send, Trash2 } from 'lucide-react';
+import { Loader2, Send } from 'lucide-react';
 
 import { sendChatMessage } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -151,37 +151,39 @@ export function AIChatPanel({
             </div>
           )}
         </div>
-
-        {aiHistory.length > 0 && (
-          <div className="px-4 py-2 shrink-0 flex justify-end">
-            <button
-              onClick={clearChatHistory}
-              className="p-1.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-white/5 transition-colors"
-              title="대화 기록 삭제"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
-        )}
       </div>
 
-      <div className="mt-3 shrink-0">
+      <div className="mt-3 shrink-0 flex flex-col gap-2">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="AI 어시스턴트에게 질문해보세요."
+            placeholder="질문을 입력하세요."
             disabled={isLoading}
             className="flex-1 h-[46px] px-4 bg-transparent border border-[#595959]/50 rounded-xl text-sm text-white placeholder:text-[#595959] focus:outline-none focus:border-[#60A5FA]/50 transition-colors disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="w-[46px] h-[46px] shrink-0 rounded-xl bg-[#1E40AF] hover:bg-[#1E3A8A] disabled:opacity-30 disabled:hover:bg-[#1E40AF] text-white flex items-center justify-center transition-colors"
+            className="w-[46px] h-[46px] shrink-0 rounded-xl text-white flex items-center justify-center transition-colors disabled:cursor-not-allowed"
+            style={{
+              background:
+                input.trim() && !isLoading
+                  ? 'linear-gradient(135deg, #2563EB, #3B82F6)'
+                  : '#B8B8B8',
+            }}
           >
             <Send className="w-4 h-4" />
           </button>
         </form>
+
+        <button
+          onClick={clearChatHistory}
+          disabled={isLoading || aiHistory.length === 0}
+          className="relative w-full h-[48px] rounded-xl bg-[#B8B8B8] text-sm text-white font-medium hover:bg-[#a8a8a8] transition-colors disabled:cursor-not-allowed flex items-center justify-center"
+        >
+          새로운 채팅 시작하기
+        </button>
       </div>
     </div>
   );

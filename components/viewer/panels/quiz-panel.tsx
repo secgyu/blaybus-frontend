@@ -45,9 +45,7 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
           className="flex-1 min-h-0 rounded-xl flex items-center justify-center"
           style={{ border: '0.5px solid #595959' }}
         >
-          <p className="text-sm text-[#595959]">
-            퀴즈로 학습을 마무리해보세요
-          </p>
+          <p className="text-sm text-[#595959]">퀴즈로 학습을 마무리해보세요</p>
         </div>
 
         {error && (
@@ -82,9 +80,10 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
   // ── Answering / Submitting ──
   if (state === 'answering' || state === 'submitting') {
     const currentAnswer = answers.get(currentQuiz.questionId);
-    const hasAnswer = currentQuiz.type === 'MULTIPLE_CHOICE'
-      ? currentAnswer?.selectedOptionNo != null
-      : (currentAnswer?.subjectiveAnswer ?? '').trim().length > 0;
+    const hasAnswer =
+      currentQuiz.type === 'MULTIPLE_CHOICE'
+        ? currentAnswer?.selectedOptionNo != null
+        : (currentAnswer?.subjectiveAnswer ?? '').trim().length > 0;
 
     const isLastQuestion = currentIndex === quizzes.length - 1;
     const allAnswered = quizzes.every((q) => answers.has(q.questionId));
@@ -121,8 +120,7 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
           {/* Question header */}
           <div className="text-center mb-4">
             <h3 className="text-lg font-bold text-[#FAFAFA]">
-              Question{' '}
-              <span className="text-[#3B82F6]">{questionNum}</span>
+              Question <span className="text-[#3B82F6]">{questionNum}</span>
             </h3>
           </div>
 
@@ -173,9 +171,7 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
                     <div
                       className={cn(
                         'w-[22px] h-[22px] rounded-full border-2 shrink-0 ml-3 flex items-center justify-center transition-colors',
-                        isSelected
-                          ? 'border-[#3B82F6]'
-                          : 'border-[#595959]'
+                        isSelected ? 'border-[#3B82F6]' : 'border-[#595959]'
                       )}
                     >
                       {isSelected && (

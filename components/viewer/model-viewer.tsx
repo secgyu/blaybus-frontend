@@ -22,16 +22,6 @@ function getNodeExplodeProgress(
   return (sliderValue - start) / duration;
 }
 
-function easeOutCubic(x: number): number {
-  return 1 - Math.pow(1 - x, 3);
-}
-
-function easeOutBack(x: number): number {
-  const c1 = 1.70158;
-  const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-}
-
 function easeInOutCubic(x: number): number {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
@@ -76,16 +66,18 @@ export function ModelViewer({
   const currentExplodeRef = useRef(0);
   const initialAlignDone = useRef(false);
   const initialFrameCount = useRef(0);
+  const partGeometryMinY = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     initialAlignDone.current = false;
     initialFrameCount.current = 0;
+    partGeometryMinY.current.clear();
     if (groupRef.current) {
       groupRef.current.position.y = 0;
     }
   }, [model.id]);
 
-  const alignToGround = () => {
+  const alignToGroundFull = () => {
     if (!groupRef.current) return;
     const currentOffset = groupRef.current.position.y;
     groupRef.current.updateMatrixWorld(true);
@@ -93,6 +85,26 @@ export function ModelViewer({
     const localMinY = box.min.y - currentOffset;
     const neededOffset = localMinY < 0 ? -localMinY : 0;
     groupRef.current.position.y = neededOffset;
+
+    partGeometryMinY.current.clear();
+    itemsRef.current.forEach((obj, key) => {
+      const partBox = new THREE.Box3().setFromObject(obj);
+      const geoBottomRelative = partBox.min.y - obj.position.y - neededOffset;
+      partGeometryMinY.current.set(key, geoBottomRelative);
+    });
+  };
+
+  const alignToGroundFast = () => {
+    if (!groupRef.current || partGeometryMinY.current.size === 0) return;
+
+    let globalMinY = Infinity;
+    itemsRef.current.forEach((obj, key) => {
+      const geoOffset = partGeometryMinY.current.get(key) ?? 0;
+      const worldBottom = obj.position.y + geoOffset;
+      globalMinY = Math.min(globalMinY, worldBottom);
+    });
+
+    groupRef.current.position.y = globalMinY < 0 ? -globalMinY : 0;
   };
 
   const staticParts = useMemo(() => {
@@ -162,6 +174,7 @@ export function ModelViewer({
       {} as Record<string, string>
     );
   }, [model.parts]);
+
   const lastAppliedExplodeRef = useRef<number>(-1);
   const isAnimatingRef = useRef(false);
   const frameSkipRef = useRef(0);
@@ -170,7 +183,7 @@ export function ModelViewer({
     if (!initialAlignDone.current && groupRef.current) {
       initialFrameCount.current += 1;
       if (initialFrameCount.current >= 5) {
-        alignToGround();
+        alignToGroundFull();
         initialAlignDone.current = true;
       }
     }
@@ -220,7 +233,7 @@ export function ModelViewer({
       );
     });
 
-    alignToGround();
+    alignToGroundFast();
   });
 
   return (

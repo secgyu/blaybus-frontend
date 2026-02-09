@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 
 import {
@@ -12,21 +11,18 @@ import {
   LineBasicMaterial,
   LineSegments,
   Mesh,
-  Quaternion as ThreeQuaternion,
 } from 'three';
 import type { Group, Material, MeshStandardMaterial } from 'three';
 
 import { MATERIAL_PRESET } from '@/lib/constants/material-preset';
 import type { MaterialType } from '@/types/api';
-import type { ModelPart, Quaternion, Vector3 } from '@/types/viewer';
+import type { ModelPart, Vector3 } from '@/types/viewer';
 
 const CLICK_THRESHOLD_PX = 5;
 
 interface PartMeshProps {
   part: ModelPart;
   position: Vector3;
-  rotation?: [number, number, number];
-  quaternion?: Quaternion;
   scale?: Vector3;
   color: string;
   materialType?: MaterialType;
@@ -39,8 +35,6 @@ interface PartMeshProps {
 export function PartMesh({
   part,
   position,
-  rotation,
-  quaternion,
   scale,
   color,
   materialType,
@@ -54,6 +48,7 @@ export function PartMesh({
   const { scene } = useGLTF(part.glbPath);
 
   const originalMaterials = useRef<Map<string, Material>>(new Map());
+  const appliedMaterials = useRef<Material[]>([]);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
   const materialConfig = useMemo(() => {
@@ -64,6 +59,9 @@ export function PartMesh({
   }, [materialType, color]);
 
   useEffect(() => {
+    appliedMaterials.current.forEach((mat) => mat.dispose());
+    appliedMaterials.current = [];
+
     if (clonedScene) {
       clonedScene.traverse((child) => {
         if (child instanceof Mesh) {
@@ -76,47 +74,32 @@ export function PartMesh({
             originalMaterials.current.set(mesh.uuid, mat.clone());
           }
 
-          if (isSelected) {
-            const original = originalMaterials.current.get(
-              mesh.uuid
-            ) as MeshStandardMaterial;
-            const newMaterial = original.clone();
+          const original = originalMaterials.current.get(
+            mesh.uuid
+          ) as MeshStandardMaterial;
+          const newMaterial = original.clone();
+          const baseColor = materialType ? materialConfig.color : color;
+          newMaterial.color = new Color(baseColor);
+          newMaterial.metalness = materialConfig.metalness;
+          newMaterial.roughness = materialConfig.roughness;
 
-            const baseColor = materialType ? materialConfig.color : color;
-            newMaterial.color = new Color(baseColor);
-            newMaterial.metalness = materialConfig.metalness;
-            newMaterial.roughness = materialConfig.roughness;
+          if (isSelected) {
             newMaterial.emissive.set('#3B82F6');
             newMaterial.emissiveIntensity = 1.2;
-            newMaterial.toneMapped = true;
-
-            mesh.material = newMaterial;
+          } else if (isHovered) {
+            newMaterial.emissive.set('#2563EB');
+            newMaterial.emissiveIntensity = 0.5;
           } else {
-            const original = originalMaterials.current.get(
-              mesh.uuid
-            ) as MeshStandardMaterial;
-            const restoreMaterial = original.clone();
-            const baseColor = materialType ? materialConfig.color : color;
-            restoreMaterial.color = new Color(baseColor);
-            restoreMaterial.metalness = materialConfig.metalness;
-            restoreMaterial.roughness = materialConfig.roughness;
-
+            newMaterial.emissive.set('#000000');
+            newMaterial.emissiveIntensity = 0;
             if (materialConfig.vertexColors !== undefined) {
-              restoreMaterial.vertexColors = materialConfig.vertexColors;
+              newMaterial.vertexColors = materialConfig.vertexColors;
             }
-
-            if (isHovered) {
-              restoreMaterial.emissive.set('#2563EB');
-              restoreMaterial.emissiveIntensity = 0.5;
-              restoreMaterial.toneMapped = true;
-            } else {
-              restoreMaterial.emissive.set('#000000');
-              restoreMaterial.emissiveIntensity = 0;
-              restoreMaterial.toneMapped = true;
-            }
-
-            mesh.material = restoreMaterial;
           }
+
+          newMaterial.toneMapped = true;
+          mesh.material = newMaterial;
+          appliedMaterials.current.push(newMaterial);
 
           const existingEdges = mesh.children.find(
             (c) => c.userData.isEdgeLine
@@ -138,48 +121,11 @@ export function PartMesh({
     }
   }, [clonedScene, color, materialType, materialConfig, isSelected, isHovered]);
 
-  const targetQuat = useMemo(() => {
-    if (quaternion) {
-      return new ThreeQuaternion(
-        quaternion[0],
-        quaternion[1],
-        quaternion[2],
-        quaternion[3]
-      );
-    }
-    return null;
-  }, [quaternion]);
-
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.position.x +=
-        (position[0] - groupRef.current.position.x) * delta * 5;
-      groupRef.current.position.y +=
-        (position[1] - groupRef.current.position.y) * delta * 5;
-      groupRef.current.position.z +=
-        (position[2] - groupRef.current.position.z) * delta * 5;
-
-      if (targetQuat) {
-        groupRef.current.quaternion.slerp(targetQuat, delta * 5);
-      } else if (rotation) {
-        groupRef.current.rotation.x +=
-          (rotation[0] - groupRef.current.rotation.x) * delta * 5;
-        groupRef.current.rotation.y +=
-          (rotation[1] - groupRef.current.rotation.y) * delta * 5;
-        groupRef.current.rotation.z +=
-          (rotation[2] - groupRef.current.rotation.z) * delta * 5;
-      }
-
-      if (scale) {
-        groupRef.current.scale.x +=
-          (scale[0] - groupRef.current.scale.x) * delta * 5;
-        groupRef.current.scale.y +=
-          (scale[1] - groupRef.current.scale.y) * delta * 5;
-        groupRef.current.scale.z +=
-          (scale[2] - groupRef.current.scale.z) * delta * 5;
-      }
-    }
-  });
+  useEffect(() => {
+    return () => {
+      appliedMaterials.current.forEach((mat) => mat.dispose());
+    };
+  }, []);
 
   const handlePointerOver = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
@@ -215,7 +161,7 @@ export function PartMesh({
   }, []);
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={position} scale={scale || undefined}>
       <primitive
         object={clonedScene}
         onPointerDown={handlePointerDown}

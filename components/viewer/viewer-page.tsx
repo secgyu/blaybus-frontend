@@ -53,6 +53,8 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
     setIsFullscreen((prev) => !prev);
   }, []);
 
+  const noop = useCallback(() => {}, []);
+
   useEffect(() => {
     if (!isFullscreen) return;
 
@@ -99,7 +101,7 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
             explodeValue={explodeValue}
             selectedPartIds={selectedPartIds}
             onPartClick={toggleSelectedPartId}
-            onPartHover={() => {}}
+            onPartHover={noop}
             onExplodeChange={setExplodeValue}
             isFullscreen={isFullscreen}
             isLeftPanelOpen={isLeftPanelOpen}

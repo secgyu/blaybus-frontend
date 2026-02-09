@@ -1,12 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-
 import { Loader2, Send } from 'lucide-react';
 
-import { sendChatMessage } from '@/lib/api';
+import { useChat } from '@/hooks/use-chat';
 import { cn } from '@/lib/utils';
-import { useViewerStore } from '@/store/viewer-store';
 import type { ModelPart } from '@/types/viewer';
 
 interface AIChatPanelProps {
@@ -21,66 +18,16 @@ export function AIChatPanel({
   modelTitle,
   selectedParts,
 }: AIChatPanelProps) {
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [wasCleared, setWasCleared] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const store = useViewerStore(modelId);
-  const aiHistory = store((s) => s.aiHistory);
-  const addChatMessage = store((s) => s.addChatMessage);
-  const clearChatHistory = store((s) => s.clearChatHistory);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [aiHistory, isLoading]);
-
-  const sendMessage = useCallback(
-    async (message: string) => {
-      if (!message.trim() || isLoading) return;
-
-      setWasCleared(false);
-      addChatMessage({ role: 'user', content: message });
-
-      const history = aiHistory.map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      }));
-
-      setIsLoading(true);
-      try {
-        const response = await sendChatMessage({
-          modelId,
-          message,
-          history,
-          model: { modelId, title: modelTitle },
-          parts: selectedParts.map((p) => ({
-            partId: p.id,
-            displayNameKo: p.nameKo,
-            summary: p.role,
-          })),
-        });
-        addChatMessage({ role: 'assistant', content: response.answer });
-      } catch {
-        addChatMessage({
-          role: 'assistant',
-          content:
-            '죄송합니다. 응답을 가져오는 중 오류가 발생했습니다. 다시 시도해주세요.',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [modelId, modelTitle, selectedParts, isLoading, aiHistory, addChatMessage]
-  );
-
-  const handleSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!input.trim()) return;
-    const message = input.trim();
-    setInput('');
-    sendMessage(message);
-  };
+  const {
+    input,
+    setInput,
+    isLoading,
+    aiHistory,
+    messagesEndRef,
+    sendMessage,
+    handleSubmit,
+    handleClear,
+  } = useChat({ modelId, modelTitle, selectedParts });
 
   return (
     <div className="flex flex-col h-full px-5 pb-5">
@@ -177,10 +124,7 @@ export function AIChatPanel({
         </form>
 
         <button
-          onClick={() => {
-            clearChatHistory();
-            setWasCleared(true);
-          }}
+          onClick={handleClear}
           disabled={isLoading || aiHistory.length === 0}
           className={cn(
             'relative w-full h-[48px] rounded-xl text-sm font-medium transition-colors disabled:cursor-not-allowed flex items-center justify-center',

@@ -20,7 +20,6 @@ import { MATERIAL_PRESET } from '@/lib/constants/material-preset';
 import type { MaterialType } from '@/types/api';
 import type { ModelPart, Quaternion, Vector3 } from '@/types/viewer';
 
-/** pointerdown 좌표와 pointerup 좌표의 거리가 이 값 이하이면 클릭으로 판정 */
 const CLICK_THRESHOLD_PX = 5;
 
 interface PartMeshProps {
@@ -54,13 +53,9 @@ export function PartMesh({
   const [isHovered, setIsHovered] = useState(false);
   const { scene } = useGLTF(part.glbPath);
 
-  // 1. 원본 재질을 백업할 Ref 생성
   const originalMaterials = useRef<Map<string, Material>>(new Map());
-
-  // 2. Scene 복제 (메모리 최적화)
   const clonedScene = useMemo(() => scene.clone(), [scene]);
 
-  // Material 설정값 가져오기
   const materialConfig = useMemo(() => {
     if (materialType && MATERIAL_PRESET[materialType]) {
       return MATERIAL_PRESET[materialType];
@@ -92,7 +87,7 @@ export function PartMesh({
             newMaterial.metalness = materialConfig.metalness;
             newMaterial.roughness = materialConfig.roughness;
             newMaterial.emissive.set('#3B82F6');
-            newMaterial.emissiveIntensity = 1.2; // Bloom 강도
+            newMaterial.emissiveIntensity = 1.2;
             newMaterial.toneMapped = true;
 
             mesh.material = newMaterial;
@@ -111,12 +106,10 @@ export function PartMesh({
             }
 
             if (isHovered) {
-              // 호버 효과
               restoreMaterial.emissive.set('#2563EB');
               restoreMaterial.emissiveIntensity = 0.5;
               restoreMaterial.toneMapped = true;
             } else {
-              // 평상시
               restoreMaterial.emissive.set('#000000');
               restoreMaterial.emissiveIntensity = 0;
               restoreMaterial.toneMapped = true;
@@ -202,8 +195,6 @@ export function PartMesh({
     document.body.style.cursor = 'auto';
   };
 
-  // onClick 대신 onPointerDown + DOM pointerup 조합으로 클릭 감지
-  // OrbitControls가 마우스 이벤트를 소비해 R3F의 onClick이 누락되는 문제 우회
   const onClickRef = useRef(onClick);
   onClickRef.current = onClick;
 

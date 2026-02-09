@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Check } from 'lucide-react';
 
+import { useScrollbar } from '@/hooks/use-scrollbar';
 import type { ViewerModel } from '@/types/viewer';
 
 interface EditPanelProps {
@@ -13,36 +14,17 @@ interface EditPanelProps {
 }
 
 export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [scrollRatio, setScrollRatio] = useState(0);
-  const [thumbRatio, setThumbRatio] = useState(1);
+  const {
+    ref: textareaRef,
+    scrollRatio,
+    thumbRatio,
+    updateScrollbar,
+  } = useScrollbar<HTMLTextAreaElement>();
   const [savedNotes, setSavedNotes] = useState('');
   const [justSaved, setJustSaved] = useState(false);
 
   const hasContent = notes.trim().length > 0;
   const hasChanges = notes !== savedNotes;
-
-  const updateScrollbar = useCallback(() => {
-    const el = textareaRef.current;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const maxScroll = scrollHeight - clientHeight;
-    if (maxScroll <= 0) {
-      setScrollRatio(0);
-      setThumbRatio(1);
-    } else {
-      setScrollRatio(scrollTop / maxScroll);
-      setThumbRatio(clientHeight / scrollHeight);
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = textareaRef.current;
-    if (!el) return;
-    updateScrollbar();
-    el.addEventListener('scroll', updateScrollbar);
-    return () => el.removeEventListener('scroll', updateScrollbar);
-  }, [updateScrollbar]);
 
   useEffect(() => {
     updateScrollbar();
@@ -90,7 +72,7 @@ export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
             background: isBlue
               ? 'linear-gradient(135deg, #2563EB, #3B82F6)'
               : '#B8B8B8',
-            color: isBlue ? '#FFFFFF' : '#FFFFFF',
+            color: '#FFFFFF',
           }}
         >
           {justSaved ? (

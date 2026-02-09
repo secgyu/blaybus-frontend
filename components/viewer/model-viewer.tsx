@@ -147,7 +147,7 @@ export function ModelViewer({
   const frameSkipRef = useRef(0);
 
   useFrame(() => {
-    frameSkipRef.current = (frameSkipRef.current + 1) % 2; // 2프레임 중 1번만
+    frameSkipRef.current = (frameSkipRef.current + 1) % 2;
     if (frameSkipRef.current !== 0) return;
 
     const targetValue = explodeRef.current;

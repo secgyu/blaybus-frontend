@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import {
   FullscreenIcon,
   MinimizeIcon,
@@ -86,22 +87,15 @@ interface SliderCardProps {
 }
 
 function SliderCard({ title, value, onChange }: SliderCardProps) {
-  // 1. 내부 상태 생성 (즉각 반응용)
   const [localValue, setLocalValue] = useState(value);
 
-  // 2. 부모의 값이 (초기화 등으로) 바뀌면 내부 값도 맞춰줌
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
 
-  // 3. 내부 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(e.target.value);
-    
-    // ① UI 즉시 업데이트 (여기서 렉이 사라짐!)
     setLocalValue(newValue);
-    
-    // ② 부모(3D 로직)에게 값 전달
     onChange(newValue);
   };
 
@@ -147,15 +141,11 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
   );
 }
 
-// 보이는 영역 기준 중앙 정렬을 위한 패널 폭 상수
-// 좌측: sidebar(72px) + margin(12px) = 84px, 콘텐츠 열림 시 + gap(8px) + panel(320px) = 412px
-// 우측: panel(320px) + margin(12px) = 332px
 const LEFT_SIDEBAR_WIDTH = 84;
 const LEFT_PANEL_EXPANDED_WIDTH = 412;
 const RIGHT_PANEL_WIDTH = 332;
 
 interface BottomSlidersProps {
-  //defaultValue: number;
   explodeValue: number;
   zoomValue: number;
   onExplodeChange: (value: number) => void;
@@ -168,7 +158,6 @@ interface BottomSlidersProps {
 
 export function BottomSliders({
   explodeValue,
-  //defaultValue,
   zoomValue,
   onExplodeChange,
   onZoomChange,
@@ -177,12 +166,10 @@ export function BottomSliders({
   onPointerDown,
   onPointerUp,
 }: BottomSlidersProps) {
-  // 뷰포트 중앙 대비 보이는 영역 중앙의 오프셋: (leftWidth - rightWidth) / 2
   const leftWidth = isLeftPanelOpen
     ? LEFT_PANEL_EXPANDED_WIDTH
     : LEFT_SIDEBAR_WIDTH;
   const offsetPx = isFullscreen ? 0 : (leftWidth - RIGHT_PANEL_WIDTH) / 2;
-
 
   return (
     <div

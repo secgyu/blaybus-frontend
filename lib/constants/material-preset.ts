@@ -1,6 +1,5 @@
 import type { MaterialType } from '@/types/api/model';
 
-/** Material Preset 설정 */
 export interface MaterialPresetConfig {
   color: string;
   metalness: number;
@@ -9,9 +8,7 @@ export interface MaterialPresetConfig {
   disableBaseColorMap?: boolean;
 }
 
-/** Material Preset 상수 */
 export const MATERIAL_PRESET: Record<MaterialType, MaterialPresetConfig> = {
-  // METAL
   METAL_STEEL_POLISHED: {
     color: '#D0D6DB',
     metalness: 1.0,
@@ -55,7 +52,6 @@ export const MATERIAL_PRESET: Record<MaterialType, MaterialPresetConfig> = {
     vertexColors: false,
   },
 
-  // PLASTIC
   PLASTIC_MATTE: {
     color: '#1B1B1B',
     metalness: 0.0,

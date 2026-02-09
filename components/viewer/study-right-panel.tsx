@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
@@ -11,6 +11,7 @@ import {
   LeftArrowIcon,
   RightArrowIcon,
 } from '@/components/icons/sidebar-icons';
+import { useScrollbar } from '@/hooks/use-scrollbar';
 import { cn, fixMarkdownBold } from '@/lib/utils';
 import type { ViewerModel } from '@/types/viewer';
 
@@ -43,31 +44,11 @@ export function StudyRightPanel({
   const [isOverviewOpen, setIsOverviewOpen] = useState(true);
   const [isPartDescOpen, setIsPartDescOpen] = useState(true);
 
-  const overviewRef = useRef<HTMLDivElement>(null);
-  const [ovScrollRatio, setOvScrollRatio] = useState(0);
-  const [ovThumbRatio, setOvThumbRatio] = useState(1);
-
-  const handleOverviewScroll = useCallback(() => {
-    const el = overviewRef.current;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const maxScroll = scrollHeight - clientHeight;
-    if (maxScroll <= 0) {
-      setOvScrollRatio(0);
-      setOvThumbRatio(1);
-    } else {
-      setOvScrollRatio(scrollTop / maxScroll);
-      setOvThumbRatio(clientHeight / scrollHeight);
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = overviewRef.current;
-    if (!el) return;
-    handleOverviewScroll();
-    el.addEventListener('scroll', handleOverviewScroll);
-    return () => el.removeEventListener('scroll', handleOverviewScroll);
-  }, [handleOverviewScroll]);
+  const {
+    ref: overviewRef,
+    scrollRatio: ovScrollRatio,
+    thumbRatio: ovThumbRatio,
+  } = useScrollbar<HTMLDivElement>();
 
   useEffect(() => {
     if (lastSelectedPartId && scrollContainerRef.current) {

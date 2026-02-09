@@ -50,9 +50,6 @@ export async function fetchModelsServer(
   return data.models;
 }
 
-// ---------------------------------------------------------------------------
-// 클라이언트 사이드: Next.js API 라우트를 경유 (클라이언트 컴포넌트에서 사용)
-// ---------------------------------------------------------------------------
 export async function fetchModels(
   options: FetchModelsOptions = {}
 ): Promise<ModelSummary[]> {
@@ -206,9 +203,6 @@ export async function submitQuizAnswers(
   return response.json();
 }
 
-// ---------------------------------------------------------------------------
-// PDF 생성 (미리보기 / 다운로드)
-// ---------------------------------------------------------------------------
 export interface GeneratePdfOptions {
   modelId: string;
   type: 'preview' | 'download';

@@ -1,11 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-
 import ReactMarkdown from 'react-markdown';
 
 import rehypeRaw from 'rehype-raw';
 
+import { useScrollbar } from '@/hooks/use-scrollbar';
 import { toTitleCase } from '@/lib/constants/materials';
 import { fixMarkdownBold } from '@/lib/utils';
 import type { ModelPart } from '@/types/viewer';
@@ -15,31 +14,11 @@ interface PartDescriptionProps {
 }
 
 export function PartDescription({ part }: PartDescriptionProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [scrollRatio, setScrollRatio] = useState(0);
-  const [thumbRatio, setThumbRatio] = useState(1);
-
-  const handleScroll = useCallback(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const { scrollTop, scrollHeight, clientHeight } = el;
-    const maxScroll = scrollHeight - clientHeight;
-    if (maxScroll <= 0) {
-      setScrollRatio(0);
-      setThumbRatio(1);
-    } else {
-      setScrollRatio(scrollTop / maxScroll);
-      setThumbRatio(clientHeight / scrollHeight);
-    }
-  }, []);
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    handleScroll();
-    el.addEventListener('scroll', handleScroll);
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, [handleScroll, part]);
+  const {
+    ref: contentRef,
+    scrollRatio,
+    thumbRatio,
+  } = useScrollbar<HTMLDivElement>([part]);
 
   const displayName = toTitleCase(part.name);
   const roleText = part.role || '해당 부품의 기능 설명이 준비 중입니다.';

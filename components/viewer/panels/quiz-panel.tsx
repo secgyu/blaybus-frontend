@@ -37,7 +37,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     onQuizActiveChange?.(state !== 'idle');
   }, [state, onQuizActiveChange]);
 
-  // ── Idle ──
   if (state === 'idle') {
     return (
       <div className="flex flex-col h-full px-5 pb-5">
@@ -67,7 +66,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     );
   }
 
-  // ── Loading ──
   if (state === 'loading') {
     return (
       <div className="flex flex-col h-full items-center justify-center">
@@ -77,7 +75,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     );
   }
 
-  // ── Answering / Submitting ──
   if (state === 'answering' || state === 'submitting') {
     const currentAnswer = answers.get(currentQuiz.questionId);
     const hasAnswer =
@@ -98,12 +95,10 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
 
     const buttonLabel = hasAnswer ? '정답 확인' : '다음';
 
-    // Question number formatted as 2 digits
     const questionNum = String(currentIndex + 1).padStart(2, '0');
 
     return (
       <div className="flex flex-col h-full px-5 pb-5">
-        {/* Progress bar */}
         <div className="shrink-0 mb-5">
           <div className="w-full h-[3px] bg-[#595959]/30 rounded-full overflow-hidden">
             <div
@@ -115,16 +110,13 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
           </div>
         </div>
 
-        {/* Scrollable content */}
         <div className="flex-1 min-h-0 overflow-y-auto">
-          {/* Question header */}
           <div className="text-center mb-4">
             <h3 className="text-lg font-bold text-[#FAFAFA]">
               Question <span className="text-[#3B82F6]">{questionNum}</span>
             </h3>
           </div>
 
-          {/* Question card */}
           <div
             className="rounded-xl p-5 mb-5"
             style={{ background: 'rgba(255, 255, 255, 0.06)' }}
@@ -134,7 +126,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
             </p>
           </div>
 
-          {/* Options or Input */}
           {currentQuiz.type === 'MULTIPLE_CHOICE' ? (
             <div className="flex flex-col gap-2">
               {currentQuiz.options.map((option) => {
@@ -167,7 +158,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
                       {option.no}. {option.content}
                     </span>
 
-                    {/* Radio circle */}
                     <div
                       className={cn(
                         'w-[22px] h-[22px] rounded-full border-2 shrink-0 ml-3 flex items-center justify-center transition-colors',
@@ -202,14 +192,12 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
           )}
         </div>
 
-        {/* Error */}
         {error && (
           <div className="mb-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 shrink-0">
             <p className="text-xs text-red-400">{error}</p>
           </div>
         )}
 
-        {/* Bottom button */}
         <div className="pt-3 shrink-0">
           <button
             onClick={handleBottomButton}
@@ -240,7 +228,6 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     );
   }
 
-  // ── Results ──
   if (state === 'results' && results) {
     const correctCount = results.results.filter((r) => r.correct).length;
     const totalCount = results.results.length;

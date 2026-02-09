@@ -41,25 +41,20 @@ export function FloorGrid() {
         void main() {
           vec2 worldXZ = vWorldPos.xz;
 
-          // 메인 그리드 라인
           vec2 grid = abs(fract(worldXZ / uGridSize - 0.5) - 0.5) / fwidth(worldXZ / uGridSize);
           float mainLine = min(grid.x, grid.y);
           float mainGrid = 1.0 - min(mainLine, 1.0);
 
-          // 서브 그리드 (5배 큰 간격)
           float subGridSize = uGridSize * 5.0;
           vec2 subGrid = abs(fract(worldXZ / subGridSize - 0.5) - 0.5) / fwidth(worldXZ / subGridSize);
           float subLine = min(subGrid.x, subGrid.y);
           float subGridVal = 1.0 - min(subLine, 1.0);
 
-          // 컬러 혼합 (서브 그리드는 더 밝게)
           vec3 color = mix(uSubColor, uMainColor, mainGrid * 0.6 + subGridVal * 1.0);
 
-          // 중앙에서 바깥으로 원형 페이드
           float dist = length(worldXZ);
           float fade = 1.0 - smoothstep(uFadeRadius * 0.3, uFadeRadius, dist);
 
-          // 그리드 라인이 없는 부분은 완전 투명
           float lineAlpha = max(mainGrid * 0.4, subGridVal * 0.8);
           float alpha = lineAlpha * fade * uOpacity;
 

@@ -28,11 +28,11 @@ function StudyNav() {
   const router = useRouter();
 
   return (
-    <header className="h-[100px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-10 pb-0">
+    <header className="h-[64px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-6 pb-3">
       <div className="flex items-end gap-0">
         <button
           onClick={() => router.push('/')}
-          className="cursor-pointer mb-[14px] mr-[42px]"
+          className="cursor-pointer mb-[-4px] mr-[42px]"
         >
           <SimvexLogo />
         </button>
@@ -46,7 +46,7 @@ function StudyNav() {
               className="relative flex flex-col items-center px-8"
             >
               <span
-                className={`text-[22px] font-semibold tracking-wide pb-3 transition-colors ${
+                className={`text-[18px] font-semibold tracking-wide pb-1.5 transition-colors ${
                   isActive
                     ? 'text-[#FAFAFA]'
                     : 'text-[#FAFAFA]/60 hover:text-[#FAFAFA]/80'
@@ -55,7 +55,7 @@ function StudyNav() {
                 {item.label}
               </span>
               {isActive && (
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#2563EB]" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-[2px] bg-[#2563EB] rounded-full" />
               )}
             </Link>
           );

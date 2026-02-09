@@ -4,7 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
+import rehypeRaw from 'rehype-raw';
+
 import { toTitleCase } from '@/lib/constants/materials';
+import { fixMarkdownBold } from '@/lib/utils';
 import type { ModelPart } from '@/types/viewer';
 
 interface PartDescriptionProps {
@@ -56,7 +59,9 @@ export function PartDescription({ part }: PartDescriptionProps) {
         </div>
 
         <div className="markdown-content text-sm text-[#FAFAFA]/80 leading-[180%]">
-          <ReactMarkdown>{roleText}</ReactMarkdown>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+            {fixMarkdownBold(roleText)}
+          </ReactMarkdown>
         </div>
       </div>
 

@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Check } from 'lucide-react';
+
 import type { ViewerModel } from '@/types/viewer';
 
 interface EditPanelProps {
@@ -14,6 +16,11 @@ export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [scrollRatio, setScrollRatio] = useState(0);
   const [thumbRatio, setThumbRatio] = useState(1);
+  const [savedNotes, setSavedNotes] = useState('');
+  const [justSaved, setJustSaved] = useState(false);
+
+  const hasContent = notes.trim().length > 0;
+  const hasChanges = notes !== savedNotes;
 
   const updateScrollbar = useCallback(() => {
     const el = textareaRef.current;
@@ -40,6 +47,14 @@ export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
   useEffect(() => {
     updateScrollbar();
   }, [notes, updateScrollbar]);
+
+  const handleSave = () => {
+    setSavedNotes(notes);
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 2000);
+  };
+
+  const isBlue = hasContent && hasChanges && !justSaved;
 
   return (
     <div className="flex flex-col h-full px-5 pb-5">
@@ -68,15 +83,24 @@ export function EditPanel({ notes, onNotesChange }: EditPanelProps) {
 
       <div className="mt-3 shrink-0">
         <button
-          disabled={!notes.trim()}
-          className="w-full h-[48px] rounded-xl text-white text-sm font-medium transition-colors flex items-center justify-center disabled:cursor-not-allowed"
+          onClick={handleSave}
+          disabled={!hasContent || !hasChanges || justSaved}
+          className="w-full h-[48px] rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
           style={{
-            background: notes.trim()
+            background: isBlue
               ? 'linear-gradient(135deg, #2563EB, #3B82F6)'
               : '#B8B8B8',
+            color: isBlue ? '#FFFFFF' : '#FFFFFF',
           }}
         >
-          학습 메모 저장하기
+          {justSaved ? (
+            <>
+              <Check className="w-4 h-4" />
+              저장되었습니다
+            </>
+          ) : (
+            '학습 메모 저장하기'
+          )}
         </button>
       </div>
     </div>

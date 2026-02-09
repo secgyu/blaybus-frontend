@@ -4,12 +4,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ReactMarkdown from 'react-markdown';
 
+import rehypeRaw from 'rehype-raw';
+
 import {
   ChevronDownIcon,
   LeftArrowIcon,
   RightArrowIcon,
 } from '@/components/icons/sidebar-icons';
-import { cn } from '@/lib/utils';
+import { cn, fixMarkdownBold } from '@/lib/utils';
 import type { ViewerModel } from '@/types/viewer';
 
 import { PartDescription } from './part-description';
@@ -146,7 +148,7 @@ export function StudyRightPanel({
           )}
           style={{
             border:
-              (isQuizActive || isOverviewOpen) ? '0.5px solid #595959' : 'none',
+              isQuizActive || isOverviewOpen ? '0.5px solid #595959' : 'none',
           }}
         >
           {!isQuizActive && (
@@ -157,7 +159,9 @@ export function StudyRightPanel({
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 <div className="markdown-content text-sm text-[#FAFAFA]/80 leading-[180%]">
-                  <ReactMarkdown>{model.theory || model.description}</ReactMarkdown>
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                    {fixMarkdownBold(model.theory || model.description)}
+                  </ReactMarkdown>
                 </div>
               </div>
 
@@ -275,7 +279,7 @@ export function StudyRightPanel({
           )}
           style={{
             border:
-              (isQuizActive || isPartDescOpen) ? '0.5px solid #595959' : 'none',
+              isQuizActive || isPartDescOpen ? '0.5px solid #595959' : 'none',
           }}
         >
           {!isQuizActive && (

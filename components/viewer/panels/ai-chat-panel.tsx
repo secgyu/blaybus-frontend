@@ -23,6 +23,7 @@ export function AIChatPanel({
 }: AIChatPanelProps) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [wasCleared, setWasCleared] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const store = useViewerStore(modelId);
@@ -38,6 +39,7 @@ export function AIChatPanel({
     async (message: string) => {
       if (!message.trim() || isLoading) return;
 
+      setWasCleared(false);
       addChatMessage({ role: 'user', content: message });
 
       const history = aiHistory.map((msg) => ({
@@ -178,9 +180,24 @@ export function AIChatPanel({
         </form>
 
         <button
-          onClick={clearChatHistory}
+          onClick={() => {
+            clearChatHistory();
+            setWasCleared(true);
+          }}
           disabled={isLoading || aiHistory.length === 0}
-          className="relative w-full h-[48px] rounded-xl bg-[#B8B8B8] text-sm text-white font-medium hover:bg-[#a8a8a8] transition-colors disabled:cursor-not-allowed flex items-center justify-center"
+          className={cn(
+            'relative w-full h-[48px] rounded-xl text-sm font-medium transition-colors disabled:cursor-not-allowed flex items-center justify-center',
+            aiHistory.length === 0 && wasCleared
+              ? 'bg-white text-[#1A1A1A]'
+              : aiHistory.length > 0
+                ? 'text-white hover:opacity-90'
+                : 'bg-[#B8B8B8] text-white'
+          )}
+          style={
+            aiHistory.length > 0
+              ? { background: 'linear-gradient(135deg, #2563EB, #3B82F6)' }
+              : undefined
+          }
         >
           새로운 채팅 시작하기
         </button>

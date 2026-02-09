@@ -11,6 +11,7 @@ export type QuizState =
   | 'results';
 
 export interface UseQuizOptions {
+  onQuizLoaded?: (quizzes: Quiz[]) => void;
   onResults?: (results: QuizResultResponse) => void;
 }
 
@@ -38,6 +39,7 @@ export function useQuiz(modelId: string, options: UseQuizOptions = {}) {
         return;
       }
       setQuizzes(data);
+      options.onQuizLoaded?.(data);
       setCurrentIndex(0);
       setAnswers(new Map());
       setResults(null);

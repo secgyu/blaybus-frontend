@@ -17,6 +17,7 @@ interface QuizPanelProps {
 
 export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
   const store = useViewerStore(modelId);
+  const setQuizQuestions = store((s) => s.setQuizQuestions);
   const setQuizResults = store((s) => s.setQuizResults);
 
   const {
@@ -31,7 +32,10 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     setAnswer,
     handleSubmit,
     goToNext,
-  } = useQuiz(modelId, { onResults: setQuizResults });
+  } = useQuiz(modelId, {
+    onQuizLoaded: setQuizQuestions,
+    onResults: setQuizResults,
+  });
 
   useEffect(() => {
     onQuizActiveChange?.(state !== 'idle');

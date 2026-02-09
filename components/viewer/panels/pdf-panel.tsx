@@ -44,6 +44,7 @@ export function PDFViewerPanel({
   const store = useViewerStore(modelId);
   const notes = store((s) => s.notes);
   const aiHistory = store((s) => s.aiHistory);
+  const quizQuestions = store((s) => s.quizQuestions);
   const quizResults = store((s) => s.quizResults);
 
   const toggleItem = (id: string) => {
@@ -87,10 +88,24 @@ export function PDFViewerPanel({
     }
 
     if (selectedItems.has('quiz') && quizResults) {
-      body.quizs = quizResults.results.map((r) => ({
-        quizQuestion: `문제 ${r.questionId}`,
-        quizAnswer: r.correctAnswer,
-      }));
+      body.quizs = quizResults.results.map((r) => {
+        const quiz = quizQuestions.find((q) => q.questionId === r.questionId);
+
+        let userAnswerStr = String(r.userSelected ?? '');
+        if (quiz?.type === 'MULTIPLE_CHOICE' && r.userSelected != null) {
+          const selectedOption = quiz.options.find(
+            (o) => o.no === Number(r.userSelected)
+          );
+          if (selectedOption) {
+            userAnswerStr = `${selectedOption.no}. ${selectedOption.content}`;
+          }
+        }
+
+        return {
+          quizQuestion: quiz?.question ?? `문제 ${r.questionId}`,
+          quizAnswer: `선택: ${userAnswerStr} / 정답: ${r.correctAnswer}`,
+        };
+      });
     }
 
     return body;

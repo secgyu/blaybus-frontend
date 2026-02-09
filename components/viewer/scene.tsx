@@ -42,9 +42,11 @@ export function Scene({
   
   // 🔥 최적화 핵심 1: 3D 애니메이션용 Ref (리렌더링 안 일으킴)
   const explodeRef = useRef(initialExplodeValue);
+  const lastUpdateRef = useRef(0);
+  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null);
   
   // UI 표시용 State (슬라이더 UI만 업데이트)
-  const [uiExplodeValue, setUiExplodeValue] = useState(initialExplodeValue);
+  //const [uiExplodeValue, setUiExplodeValue] = useState(initialExplodeValue);
 
   // UI 인터랙션 상태 (true면 3D 마우스 감지 끔)
   const [isInteracting, setIsInteracting] = useState(false);
@@ -58,8 +60,25 @@ export function Scene({
   // 🔥 최적화 핵심 2: 슬라이더 변경 핸들러 분리
   const handleExplodeChangeWrapper = (value: number) => {
     explodeRef.current = value; // 3D 쪽으로 값 직송 (렌더링 X)
-    setUiExplodeValue(value);   // UI 업데이트 (렌더링 O -> 하지만 CanvasContent는 memo로 방어)
-    onExplodeChange(value);     // 상위 컴포넌트 알림
+    const now = Date.now();
+    if (now - lastUpdateRef.current < 30) {
+      // 마지막 값은 놓치면 안 되므로, 타이머로 예약해둠 (Trailing)
+      if (pendingUpdateRef.current) clearTimeout(pendingUpdateRef.current);
+      
+      pendingUpdateRef.current = setTimeout(() => {
+        onExplodeChange(value);
+        lastUpdateRef.current = Date.now();
+      }, 30);
+      
+      return; // 여기서 함수 종료 (부모 리렌더링 방지)
+    }
+    onExplodeChange(value);
+    lastUpdateRef.current = now;
+    
+    if (pendingUpdateRef.current) {
+      clearTimeout(pendingUpdateRef.current);
+      pendingUpdateRef.current = null;
+    }
   };
 
   const handleCreated = useCallback(
@@ -165,12 +184,14 @@ export function Scene({
           onPointerLeave={() => setIsInteracting(false)}
         >
           <BottomSliders
-            explodeValue={uiExplodeValue} // 🔥 UI용 State 사용
+            explodeValue={initialExplodeValue} // 🔥 UI용 State 사용
             zoomValue={zoomValue}
             onExplodeChange={handleExplodeChangeWrapper} // 🔥 Wrapper 핸들러 사용
             onZoomChange={handleZoomSliderChange}
             isFullscreen={isFullscreen}
             isLeftPanelOpen={isLeftPanelOpen}
+            onPointerDown={() => setIsInteracting(true)}
+            onPointerUp={() => setIsInteracting(false)}
           />
         </div>
       </div>

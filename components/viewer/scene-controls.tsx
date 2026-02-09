@@ -1,5 +1,5 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import {
   FullscreenIcon,
   MinimizeIcon,
@@ -86,6 +86,25 @@ interface SliderCardProps {
 }
 
 function SliderCard({ title, value, onChange }: SliderCardProps) {
+  // 1. 내부 상태 생성 (즉각 반응용)
+  const [localValue, setLocalValue] = useState(value);
+
+  // 2. 부모의 값이 (초기화 등으로) 바뀌면 내부 값도 맞춰줌
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // 3. 내부 핸들러
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = Number(e.target.value);
+    
+    // ① UI 즉시 업데이트 (여기서 렉이 사라짐!)
+    setLocalValue(newValue);
+    
+    // ② 부모(3D 로직)에게 값 전달
+    onChange(newValue);
+  };
+
   return (
     <div
       className="w-[360px] h-[126px] rounded-[20px] px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
@@ -100,7 +119,7 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
         <p className="text-[15px] font-bold text-[#FAFAFA] leading-tight">
           {title}
         </p>
-        <p className="text-[13px] text-[#FAFAFA] mt-1">{value}%</p>
+        <p className="text-[13px] text-[#FAFAFA] mt-1">{localValue}%</p>
       </div>
 
       <div className="relative h-[20px] flex items-center">
@@ -110,15 +129,15 @@ function SliderCard({ title, value, onChange }: SliderCardProps) {
           type="range"
           min="0"
           max="100"
-          value={value}
+          value={localValue}
           onChange={(e) => onChange(Number(e.target.value))}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
 
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-[#FAFAFA] rounded-full pointer-events-none transition-all duration-150"
+          className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-[#FAFAFA] rounded-full pointer-events-none"
           style={{
-            left: `calc(${value}% - 10px)`,
+            left: `calc(${localValue}% - 10px)`,
             boxShadow:
               '2px 2px 20px rgba(23, 37, 84, 1), -2px -2px 20px rgba(23, 37, 84, 1)',
           }}
@@ -136,27 +155,34 @@ const LEFT_PANEL_EXPANDED_WIDTH = 412;
 const RIGHT_PANEL_WIDTH = 332;
 
 interface BottomSlidersProps {
+  //defaultValue: number;
   explodeValue: number;
   zoomValue: number;
   onExplodeChange: (value: number) => void;
   onZoomChange: (value: number) => void;
   isFullscreen?: boolean;
   isLeftPanelOpen?: boolean;
+  onPointerDown?: () => void;
+  onPointerUp?: () => void;
 }
 
 export function BottomSliders({
   explodeValue,
+  //defaultValue,
   zoomValue,
   onExplodeChange,
   onZoomChange,
   isFullscreen = false,
   isLeftPanelOpen = true,
+  onPointerDown,
+  onPointerUp,
 }: BottomSlidersProps) {
   // 뷰포트 중앙 대비 보이는 영역 중앙의 오프셋: (leftWidth - rightWidth) / 2
   const leftWidth = isLeftPanelOpen
     ? LEFT_PANEL_EXPANDED_WIDTH
     : LEFT_SIDEBAR_WIDTH;
   const offsetPx = isFullscreen ? 0 : (leftWidth - RIGHT_PANEL_WIDTH) / 2;
+
 
   return (
     <div
@@ -165,6 +191,8 @@ export function BottomSliders({
         left: `calc(50% + ${offsetPx}px)`,
         transform: 'translateX(-50%)',
       }}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
     >
       <SliderCard
         title="분해도 조절"

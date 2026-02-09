@@ -1,11 +1,14 @@
 'use client';
 
-import { useMemo, useRef, type MutableRefObject } from 'react';
-import { useFrame } from '@react-three/fiber';
-import type { Group, Object3D } from 'three';
-import * as THREE from 'three'; 
+import { type MutableRefObject, useMemo, useRef } from 'react';
 
-import type { ViewerModel, Vector3 as TypeVector3 } from '@/types/viewer';
+import { useFrame } from '@react-three/fiber';
+
+import type { Group, Object3D } from 'three';
+import * as THREE from 'three';
+
+import type { Vector3 as TypeVector3, ViewerModel } from '@/types/viewer';
+
 import { PartMesh } from './part-mesh';
 
 function getNodeExplodeProgress(
@@ -18,6 +21,7 @@ function getNodeExplodeProgress(
   if (sliderValue >= start + duration) return 1;
   return (sliderValue - start) / duration;
 }
+
 function easeOutCubic(x: number): number {
   return 1 - Math.pow(1 - x, 3);
 }
@@ -29,20 +33,20 @@ function easeOutBack(x: number): number {
 }
 
 function easeInOutCubic(x: number): number {
-  return x < 0.5 
-    ? 4 * x * x * x 
-    : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
-type RotationData = [number, number, number] | [number, number, number, number] | undefined;
+type RotationData =
+  | [number, number, number]
+  | [number, number, number, number]
+  | undefined;
 
 interface StaticPartData {
   key: string;
   partId: string;
   glbPath: string;
-  basePosition: [number, number, number]; 
-  // 🔥 수정 2: 원본 데이터 형태(쿼터니언 or 오일러)를 그대로 저장
-  rotationData: RotationData; 
+  basePosition: [number, number, number];
+  rotationData: RotationData;
   scale?: TypeVector3;
   animData: {
     explodeDir: [number, number, number];
@@ -81,7 +85,7 @@ export function ModelViewer({
             partId: part.id,
             glbPath: part.glbPath,
             basePosition: inst.position,
-            rotationData: inst.rotation, 
+            rotationData: inst.rotation,
             scale: inst.scale,
             animData: {
               explodeDir: inst.explodeDir || [0, 0, 0],
@@ -94,17 +98,18 @@ export function ModelViewer({
       } else {
         const basePos = part.basePosition || [0, 0, 0];
         const explodeOff = part.explodeOffset || [0, 0, 0];
-        
+
         const offsetVec = new THREE.Vector3(...explodeOff);
         const distance = offsetVec.length();
-        const direction = distance > 0 ? offsetVec.normalize().toArray() : [0, 0, 0];
+        const direction =
+          distance > 0 ? offsetVec.normalize().toArray() : [0, 0, 0];
 
         result.push({
           key: part.id,
           partId: part.id,
           glbPath: part.glbPath,
           basePosition: basePos,
-          rotationData: part.baseRotation, 
+          rotationData: part.baseRotation,
           animData: {
             explodeDir: direction as [number, number, number],
             explodeDistance: distance,
@@ -119,28 +124,46 @@ export function ModelViewer({
 
   const partColors = useMemo(() => {
     const colors = [
-      '#0ea5e9', '#06b6d4', '#14b8a6', '#22c55e', 
-      '#84cc16', '#eab308', '#f97316', '#ef4444',
+      '#0ea5e9',
+      '#06b6d4',
+      '#14b8a6',
+      '#22c55e',
+      '#84cc16',
+      '#eab308',
+      '#f97316',
+      '#ef4444',
     ];
-    return model.parts.reduce((acc, part, index) => {
-      acc[part.id] = colors[index % colors.length];
-      return acc;
-    }, {} as Record<string, string>);
+    return model.parts.reduce(
+      (acc, part, index) => {
+        acc[part.id] = colors[index % colors.length];
+        return acc;
+      },
+      {} as Record<string, string>
+    );
   }, [model.parts]);
 
   useFrame(() => {
     const currentProgress = explodeRef.current / 100;
 
     itemsRef.current.forEach((obj) => {
-      const data = obj.userData as StaticPartData['animData'] & { basePosition: number[] };
+      const data = obj.userData as StaticPartData['animData'] & {
+        basePosition: number[];
+      };
       if (!data) return;
 
-      const rawProgress = getNodeExplodeProgress(currentProgress, data.start, data.duration);
+      const rawProgress = getNodeExplodeProgress(
+        currentProgress,
+        data.start,
+        data.duration
+      );
       const easedProgress = easeInOutCubic(rawProgress);
       obj.position.set(
-        data.basePosition[0] + data.explodeDir[0] * data.explodeDistance * easedProgress,
-        data.basePosition[1] + data.explodeDir[1] * data.explodeDistance * easedProgress,
-        data.basePosition[2] + data.explodeDir[2] * data.explodeDistance * easedProgress
+        data.basePosition[0] +
+          data.explodeDir[0] * data.explodeDistance * easedProgress,
+        data.basePosition[1] +
+          data.explodeDir[1] * data.explodeDistance * easedProgress,
+        data.basePosition[2] +
+          data.explodeDir[2] * data.explodeDistance * easedProgress
       );
     });
   });
@@ -151,27 +174,23 @@ export function ModelViewer({
         const part = model.parts.find((p) => p.id === inst.partId)!;
         const isSelected = selectedPartIds.includes(inst.partId);
 
-        // 🔥 수정 5: 회전값의 개수에 따라 적절한 Prop 설정
-        // 배열 길이가 4면 Quaternion, 3이면 Euler
         const groupProps: any = {
-          key: inst.key,
           position: inst.basePosition,
-          userData: { basePosition: inst.basePosition, ...inst.animData }
+          userData: { basePosition: inst.basePosition, ...inst.animData },
         };
 
         if (inst.rotationData) {
           if (inst.rotationData.length === 4) {
-             // 쿼터니언 (4개)
-             groupProps.quaternion = inst.rotationData;
+            groupProps.quaternion = inst.rotationData;
           } else {
-             // 오일러 (3개)
-             groupProps.rotation = inst.rotationData;
+            groupProps.rotation = inst.rotationData;
           }
         }
 
         return (
           <group
-            {...groupProps} // 위에서 만든 props 적용
+            key={inst.key}
+            {...groupProps}
             ref={(el) => {
               if (el) itemsRef.current.set(inst.key, el);
               else itemsRef.current.delete(inst.key);
@@ -179,7 +198,7 @@ export function ModelViewer({
           >
             <PartMesh
               part={part}
-              position={[0, 0, 0]} 
+              position={[0, 0, 0]}
               scale={inst.scale}
               color={partColors[inst.partId]}
               materialType={part.materialType}

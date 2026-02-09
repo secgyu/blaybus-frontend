@@ -17,6 +17,9 @@ export function FloorGrid() {
         uSubColor: { value: new Color('#071e35') },
         uFadeRadius: { value: 4.0 },
         uOpacity: { value: 0.7 },
+        uGlowRadius: { value: 1.5 },
+        uGlowIntensity: { value: 0.35 },
+        uGlowColor: { value: new Color('#0a5cb3') },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -35,6 +38,9 @@ export function FloorGrid() {
         uniform vec3 uSubColor;
         uniform float uFadeRadius;
         uniform float uOpacity;
+        uniform float uGlowRadius;
+        uniform float uGlowIntensity;
+        uniform vec3 uGlowColor;
         varying vec2 vUv;
         varying vec3 vWorldPos;
 
@@ -59,11 +65,17 @@ export function FloorGrid() {
           float dist = length(worldXZ);
           float fade = 1.0 - smoothstep(uFadeRadius * 0.3, uFadeRadius, dist);
 
-          // 그리드 라인이 없는 부분은 완전 투명
-          float lineAlpha = max(mainGrid * 0.4, subGridVal * 0.8);
-          float alpha = lineAlpha * fade * uOpacity;
+          // 바닥 글로우 (중앙 원형 조명 효과)
+          float glow = uGlowIntensity * exp(-dist * dist / (uGlowRadius * uGlowRadius));
 
-          gl_FragColor = vec4(color, alpha);
+          // 그리드 라인 알파
+          float lineAlpha = max(mainGrid * 0.4, subGridVal * 0.8);
+          float gridAlpha = lineAlpha * fade * uOpacity;
+
+          // 글로우와 그리드 합성
+          vec3 finalColor = mix(uGlowColor, color, step(0.01, lineAlpha));
+          float finalAlpha = max(gridAlpha, glow * fade);
+          gl_FragColor = vec4(finalColor, finalAlpha);
         }
       `,
     });

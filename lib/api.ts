@@ -20,9 +20,6 @@ export interface FetchModelsOptions {
   sort?: string[];
 }
 
-// ---------------------------------------------------------------------------
-// 서버 사이드 전용: 백엔드 API를 직접 호출 (서버 컴포넌트에서 사용)
-// ---------------------------------------------------------------------------
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 export async function fetchModelsServer(
@@ -92,6 +89,24 @@ export async function fetchModelsPage(
 
 export async function fetchViewerData(modelId: string): Promise<ModelData> {
   const response = await fetch(`/api/models/${modelId}/viewer`);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(`Model not found: ${modelId}`);
+    }
+    throw new Error(`Failed to fetch viewer data: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function fetchViewerDataServer(
+  modelId: string
+): Promise<ModelData> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/api/models/${modelId}/viewer`,
+    { next: { revalidate: 60 } }
+  );
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -200,9 +215,7 @@ export interface GeneratePdfOptions {
   body: PdfRequestDto;
 }
 
-export async function generatePdf(
-  options: GeneratePdfOptions
-): Promise<Blob> {
+export async function generatePdf(options: GeneratePdfOptions): Promise<Blob> {
   const { modelId, type, body } = options;
 
   const response = await fetch(

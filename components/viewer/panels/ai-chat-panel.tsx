@@ -52,7 +52,11 @@ export function AIChatPanel({
           message,
           history,
           model: { modelId, title: modelTitle },
-          parts: selectedParts.map((p) => ({ partId: p.id })),
+          parts: selectedParts.map((p) => ({
+            partId: p.id,
+            displayNameKo: p.nameKo,
+            summary: p.role,
+          })),
         });
         addChatMessage({ role: 'assistant', content: response.answer });
       } catch {

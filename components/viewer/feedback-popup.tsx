@@ -87,9 +87,9 @@ function FeedbackPopup({
       <div
         className="relative flex flex-col items-start rounded-[20px]"
         style={{
-          width: '330px',
-          padding: '20px 16px',
-          gap: '25px',
+          width: '255px',
+          padding: '20px 12px',
+          gap: '24px',
           background: 'rgba(26, 26, 26, 0.5)',
           backdropFilter: 'blur(2px)',
           WebkitBackdropFilter: 'blur(2px)',
@@ -111,8 +111,8 @@ function FeedbackPopup({
         </div>
 
         <div className="text-center w-full px-2">
-          <h3 className="text-[16px] font-bold text-[#FAFAFA] mb-3">{title}</h3>
-          <p className="text-[14px] text-[#B8B8B8] leading-relaxed whitespace-pre-line mb-2">
+          <h3 className="text-[14px] font-bold text-[#FAFAFA] mb-3">{title}</h3>
+          <p className="text-[12px] text-[#B8B8B8] leading-relaxed whitespace-pre-line mb-2">
             {description}
           </p>
           <p className="text-[28px] mb-5">😊</p>

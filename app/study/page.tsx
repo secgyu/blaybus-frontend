@@ -15,7 +15,6 @@ import { useModels } from '@/hooks/use-models';
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Study', href: '/study' },
-  { label: 'FAQ', href: '#' },
 ];
 
 function StudyNav() {

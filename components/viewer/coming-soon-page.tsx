@@ -26,7 +26,7 @@ export function ComingSoonPage({
         </div>
 
         <div className="flex h-[calc(100%-56px)]">
-          <div className="w-[340px] bg-[#0B1120]/90 border-r border-[#1E3A8A]/15 p-6 shrink-0">
+          <div className="w-[260px] xl:w-[300px] 2xl:w-[340px] bg-[#0B1120]/90 border-r border-[#1E3A8A]/15 p-4 xl:p-6 shrink-0">
             <div className="space-y-4">
               <div className="w-32 h-5 rounded bg-[#1E3A8A]/20" />
               <div className="w-full h-3 rounded bg-[#1E3A8A]/10" />
@@ -59,7 +59,7 @@ export function ComingSoonPage({
             <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-linear-to-t from-[#1E3A8A]/5 to-transparent" />
           </div>
 
-          <div className="w-[394px] bg-[#0B1120]/90 border-l border-[#1E3A8A]/15 p-4 shrink-0">
+          <div className="w-[300px] xl:w-[350px] 2xl:w-[394px] bg-[#0B1120]/90 border-l border-[#1E3A8A]/15 p-4 shrink-0">
             <div className="space-y-3">
               <div className="flex gap-2">
                 <div className="flex-1 h-9 rounded-lg bg-[#1E3A8A]/15" />

@@ -126,36 +126,40 @@ function YoutubeIcon() {
 export function Footer() {
   return (
     <footer className="bg-[#040A2E] text-[#FAFAFA]">
-      <div className="h-[200px] bg-gradient-to-b from-[#070B14] to-[#040A2E]" />
+      <div className="h-[100px] md:h-[200px] bg-gradient-to-b from-[#070B14] to-[#040A2E]" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 xl:px-20 py-16">
-        <div className="flex flex-col md:flex-row items-start">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 xl:px-20 py-12 md:py-16">
+        <div className="flex flex-col md:flex-row items-start gap-10 md:gap-0">
           <div className="shrink-0">
             <SimvexFooterLogoNew />
             <div className="flex flex-col gap-[20px] mt-6">
-              <p className="text-[16px] text-[#FAFAFA]/70 leading-relaxed">
+              <p className="text-sm md:text-[16px] text-[#FAFAFA]/70 leading-relaxed">
                 서울특별시 테헤란로 152,
                 <br />
                 이노베이션 센터 9층 SIMVEX
                 <br />
                 (역삼동, 강남구)
               </p>
-              <p className="text-[16px] text-[#FAFAFA]/70">SIMVEX@gmail.com</p>
-              <p className="text-[16px] text-[#FAFAFA]/70">+91 80005 54442</p>
+              <p className="text-sm md:text-[16px] text-[#FAFAFA]/70">
+                SIMVEX@gmail.com
+              </p>
+              <p className="text-sm md:text-[16px] text-[#FAFAFA]/70">
+                +91 80005 54442
+              </p>
             </div>
           </div>
 
-          <div className="ml-[320px]">
-            <h4 className="text-[24px] font-semibold">Home</h4>
+          <div className="md:ml-auto lg:ml-[320px]">
+            <h4 className="text-xl md:text-[24px] font-semibold">Home</h4>
           </div>
 
-          <div className="ml-[288px]">
-            <h4 className="text-[24px] font-semibold mb-4">Study</h4>
+          <div className="md:ml-16 lg:ml-[288px]">
+            <h4 className="text-xl md:text-[24px] font-semibold mb-4">Study</h4>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/study"
-                  className="text-[16px] text-[#FAFAFA]/70 hover:text-[#FAFAFA] transition-colors"
+                  className="text-sm md:text-[16px] text-[#FAFAFA]/70 hover:text-[#FAFAFA] transition-colors"
                 >
                   기계공학
                 </Link>
@@ -165,7 +169,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="h-[200px]" />
+      <div className="h-[100px] md:h-[200px]" />
 
       <div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 xl:px-20 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
@@ -187,14 +191,14 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="relative overflow-hidden flex items-end justify-center h-[212px] pointer-events-none select-none">
+      <div className="relative overflow-hidden flex items-end justify-center h-[120px] md:h-[212px] pointer-events-none select-none">
         <svg
           width="1641"
           height="212"
           viewBox="0 0 1641 212"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute bottom-[-5px]"
+          className="absolute bottom-[-5px] w-full max-w-[1641px]"
         >
           <path
             d="M1435.17 4.70703L1499.03 111.995H1501.19L1565.49 4.70703H1638.84L1543.48 160.685L1641 316.662H1565.92L1501.19 209.374H1499.03L1434.31 316.662H1359.65L1457.61 160.685L1361.38 4.70703H1435.17Z"

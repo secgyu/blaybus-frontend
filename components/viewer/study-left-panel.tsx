@@ -145,7 +145,7 @@ export function StudyLeftPanel({
 
       <div
         className={cn(
-          'absolute left-[80px] top-0 bottom-0 w-[320px] flex flex-col overflow-hidden z-10',
+          'absolute left-[80px] top-0 bottom-0 w-[280px] 2xl:w-[320px] flex flex-col overflow-hidden z-10',
           'transition-[transform,opacity] duration-300 ease-in-out',
           activeTab !== null
             ? 'translate-x-0 opacity-100 rounded-[20px]'
@@ -159,7 +159,7 @@ export function StudyLeftPanel({
           WebkitBackdropFilter: 'blur(1px)',
         }}
       >
-        <div className="w-[320px] h-full flex flex-col">
+        <div className="w-full h-full flex flex-col">
           {activeTab && (
             <div className="px-5 pt-6 pb-4 shrink-0 flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#FAFAFA]">

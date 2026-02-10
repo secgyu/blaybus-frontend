@@ -204,13 +204,16 @@ export function StudyHeader({
         </button>
 
         <div className="flex flex-col">
-          <span className="text-[18px] font-semibold text-[#FAFAFA] tracking-wide pb-1.5">
+          <span className="text-base xl:text-[18px] font-semibold text-[#FAFAFA] tracking-wide pb-1.5">
             Study
           </span>
           <div className="h-[2px] bg-[#2563EB] rounded-full" />
         </div>
 
-        <div className="relative mb-0.5 ml-[-20px]" ref={dropdownRef}>
+        <div
+          className="relative mb-0.5 ml-[-10px] xl:ml-[-20px]"
+          ref={dropdownRef}
+        >
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className="flex items-center gap-2 h-[28px] px-4 rounded-full border border-[#595959] text-[#FAFAFA] text-xs cursor-pointer hover:border-[#888] transition-colors"
@@ -220,7 +223,7 @@ export function StudyHeader({
           </button>
 
           {isOpen && (
-            <div className="absolute top-[calc(100%+8px)] left-0 w-[250px] rounded-xl border border-[#595959]/50 bg-[#0a0f1a]/95 backdrop-blur-md py-3 shadow-xl z-50">
+            <div className="absolute top-[calc(100%+8px)] left-0 w-[220px] xl:w-[250px] rounded-xl border border-[#595959]/50 bg-[#0a0f1a]/95 backdrop-blur-md py-3 shadow-xl z-50">
               {[...models]
                 .sort((a, b) =>
                   formatModelName(a.modelId).localeCompare(

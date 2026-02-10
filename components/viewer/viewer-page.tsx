@@ -152,7 +152,7 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
           </div>
 
           <div
-            className={`absolute top-[76px] right-3 bottom-3 w-[320px] z-10 ${
+            className={`absolute top-[76px] right-3 bottom-3 w-[280px] 2xl:w-[320px] z-10 ${
               isQuizActive
                 ? 'hidden'
                 : isFullscreen

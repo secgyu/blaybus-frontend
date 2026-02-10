@@ -8,6 +8,21 @@ import {
   UndoIcon,
 } from '@/components/icons/sidebar-icons';
 
+const BP_2XL = 1536;
+
+function useIs2xl() {
+  const [is2xl, setIs2xl] = useState(true);
+
+  useEffect(() => {
+    const check = () => setIs2xl(window.innerWidth >= BP_2XL);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  return is2xl;
+}
+
 interface RotationControlsProps {
   isRotatingLeft: boolean;
   isRotatingRight: boolean;
@@ -28,14 +43,17 @@ export function RotationControls({
   onRotateRightStart,
   onRotateRightEnd,
   onToggleFullscreen,
-  
 }: RotationControlsProps) {
+  const is2xl = useIs2xl();
+  const panelWidth = is2xl ? 320 : 280;
+  const rightNormal = panelWidth + 12 + 86; // panel + right margin + gap
+
   return (
     <div
       className="absolute flex items-center z-10 transition-[top,right] duration-500 ease-in-out"
       style={{
         top: isFullscreen ? '20px' : '120px',
-        right: isFullscreen ? '20px' : '418px',
+        right: isFullscreen ? '20px' : `${rightNormal}px`,
       }}
     >
       <button
@@ -108,7 +126,7 @@ function SliderCard({ title, value, onChange, onCommit }: SliderCardProps) {
 
   return (
     <div
-      className="w-[360px] h-[126px] rounded-[20px] px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
+      className="w-[280px] 2xl:w-[360px] h-[126px] rounded-[20px] px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
       style={{
         background:
           'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
@@ -132,7 +150,7 @@ function SliderCard({ title, value, onChange, onCommit }: SliderCardProps) {
           max="100"
           value={localValue}
           onChange={handleChange}
-          onPointerUp={handleCommit} // 🔥 [추가] PC 마우스 뗌
+          onPointerUp={handleCommit}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
 
@@ -150,8 +168,6 @@ function SliderCard({ title, value, onChange, onCommit }: SliderCardProps) {
 }
 
 const LEFT_SIDEBAR_WIDTH = 84;
-const LEFT_PANEL_EXPANDED_WIDTH = 412;
-const RIGHT_PANEL_WIDTH = 332;
 
 interface BottomSlidersProps {
   explodeValue: number;
@@ -176,14 +192,19 @@ export function BottomSliders({
   onPointerUp,
   onExplodeCommit,
 }: BottomSlidersProps) {
+  const is2xl = useIs2xl();
+  const panelWidth = is2xl ? 320 : 280;
+  const leftPanelExpandedWidth = LEFT_SIDEBAR_WIDTH + panelWidth + 8;
+  const rightPanelWidth = panelWidth + 12;
+
   const leftWidth = isLeftPanelOpen
-    ? LEFT_PANEL_EXPANDED_WIDTH
+    ? leftPanelExpandedWidth
     : LEFT_SIDEBAR_WIDTH;
-  const offsetPx = isFullscreen ? 0 : (leftWidth - RIGHT_PANEL_WIDTH) / 2;
+  const offsetPx = isFullscreen ? 0 : (leftWidth - rightPanelWidth) / 2;
 
   return (
     <div
-      className="absolute bottom-5 z-10 flex gap-10 transition-[left] duration-300 ease-in-out"
+      className="absolute bottom-5 z-10 flex gap-6 2xl:gap-10 transition-[left] duration-300 ease-in-out"
       style={{
         left: `calc(50% + ${offsetPx}px)`,
         transform: 'translateX(-50%)',

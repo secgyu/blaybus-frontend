@@ -24,7 +24,7 @@ function StudyNav() {
       <div className="flex items-end gap-0">
         <button
           onClick={() => router.push('/')}
-          className="cursor-pointer mb-[-4px] mr-[42px]"
+          className="cursor-pointer mb-[-4px] mr-6 xl:mr-[42px]"
         >
           <SimvexLogo />
         </button>
@@ -35,10 +35,10 @@ function StudyNav() {
             <Link
               key={item.label}
               href={item.href}
-              className="relative flex flex-col items-center px-8"
+              className="relative flex flex-col items-center px-4 lg:px-6 xl:px-8"
             >
               <span
-                className={`text-[18px] font-semibold tracking-wide pb-1.5 transition-colors ${
+                className={`text-base xl:text-[18px] font-semibold tracking-wide pb-1.5 transition-colors ${
                   isActive
                     ? 'text-[#FAFAFA]'
                     : 'text-[#FAFAFA]/60 hover:text-[#FAFAFA]/80'
@@ -130,7 +130,7 @@ export default function StudyPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-4 lg:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5">
                 {models?.map((model) => (
                   <StudyModelCard key={model.modelId} model={model} />
                 ))}

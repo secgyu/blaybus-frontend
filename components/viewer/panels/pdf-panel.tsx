@@ -171,8 +171,11 @@ export function PDFViewerPanel({
 
   return (
     <div className="flex flex-col h-full px-5 pb-5">
-      <p className="text-sm text-[#B8B8B8] mb-5">
+      <p className="text-sm text-[#B8B8B8] mb-1">
         PDF로 다운로드 할 항목을 선택해주세요.
+      </p>
+      <p className="text-[12px] text-[#2563EB] mb-5">
+        3D 오브젝트 이미지 추가 시, 로딩이 지연될 수 있어요.
       </p>
 
       <div

@@ -127,13 +127,13 @@ export function FeaturesSection() {
   return (
     <section
       id="features"
-      className="relative w-full min-h-screen bg-[#070B14] flex items-center justify-center overflow-hidden px-6"
+      className="relative w-full min-h-screen bg-[#070B14] flex items-center justify-center overflow-hidden px-4 sm:px-6 py-20"
     >
       <div
-        className="absolute w-[977px] h-[977px] rounded-full pointer-events-none"
+        className="absolute w-[500px] h-[500px] lg:w-[977px] lg:h-[977px] rounded-full pointer-events-none"
         style={{
-          left: 'calc(50% - 977px/2 - 341.5px)',
-          top: 'calc(50% - 977px/2)',
+          left: 'calc(50% - 50%)',
+          top: 'calc(50% - 50%)',
           background:
             'radial-gradient(50% 50% at 50% 50%, rgba(96, 165, 250, 0.1) 0%, rgba(59, 130, 246, 0.1) 25.41%, rgba(37, 99, 235, 0.1) 49.61%, rgba(29, 78, 216, 0.1) 71.61%, rgba(30, 64, 175, 0.1) 85.8%, rgba(4, 10, 46, 0.1) 100%)',
           filter: 'blur(50px)',
@@ -141,7 +141,7 @@ export function FeaturesSection() {
       />
 
       <div
-        className="absolute rounded-full border border-[#1E40AF]/30 pointer-events-none"
+        className="absolute rounded-full border border-[#1E40AF]/30 pointer-events-none hidden lg:block"
         style={{
           width: '1622px',
           height: '1622px',
@@ -150,33 +150,34 @@ export function FeaturesSection() {
         }}
       />
 
-      <div className="relative z-10 flex items-center">
+      <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 xl:gap-24">
         <div className="flex flex-col items-center shrink-0">
-          <div className="mb-8">
+          <div className="mb-6 lg:mb-8">
             <FeaturesLogo />
           </div>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#FAFAFA] whitespace-nowrap">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#FAFAFA] text-center lg:whitespace-nowrap">
             우리가 제공하는{' '}
             <span className="text-[#2563EB]">3가지 핵심 가치</span>
           </h2>
         </div>
 
-        <div className="flex flex-col gap-20 ml-72 lg:ml-96 xl:ml-[480px]">
+        <div className="flex flex-col gap-10 lg:gap-20 lg:ml-20 xl:ml-40 2xl:ml-72">
           {features.map((feature, index) => (
             <div
               key={feature.number}
-              className="flex flex-col justify-center items-start w-[440px] rounded-[20px] px-10 py-8"
+              className="flex flex-col justify-center items-start w-[300px] sm:w-[360px] lg:w-[440px] rounded-[20px] px-6 sm:px-10 py-6 sm:py-8"
               style={{
                 background: 'rgba(250, 250, 250, 0.1)',
                 backdropFilter: 'blur(5px)',
-                marginLeft:
-                  index === 0 ? '60px' : index === 1 ? '160px' : '60px',
+                marginLeft: index === 0 ? '0px' : index === 1 ? '40px' : '0px',
               }}
             >
-              <h3 className="text-lg md:text-xl font-bold text-[#FAFAFA] mb-2">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-[#FAFAFA] mb-2">
                 {feature.number}. {feature.title}
               </h3>
-              <p className="text-sm text-[#B8B8B8]">{feature.description}</p>
+              <p className="text-xs sm:text-sm text-[#B8B8B8]">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>

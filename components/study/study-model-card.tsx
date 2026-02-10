@@ -11,6 +11,7 @@ const MODEL_IMAGE_MAP: Record<string, string> = {
   suspension: 'suspension',
   robot_arm: 'robotarm',
   robot_gripper: 'robotgripper',
+  drone: 'drone',
 };
 
 function ChevronRight() {

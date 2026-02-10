@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { ArrowRight } from 'lucide-react';
 
+import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { FeaturesSection } from '@/components/home/features-section';
 import { StepsSection } from '@/components/home/steps-section';
@@ -130,26 +131,5 @@ function ModelsSection({
         </div>
       </div>
     </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-border py-8 px-6 bg-card">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-primary glow-cyan" />
-            <span className="font-semibold text-foreground">SIMVEX</span>
-            <span className="text-muted-foreground text-sm">
-              공학 교육을 위한 3D 시각화 플랫폼
-            </span>
-          </div>
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span className="font-mono">v1.0.0</span>
-          </div>
-        </div>
-      </div>
-    </footer>
   );
 }

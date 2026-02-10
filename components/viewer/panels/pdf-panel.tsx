@@ -8,6 +8,7 @@ import {
   RobotIcon,
   WrenchIcon,
 } from '@/components/icons/sidebar-icons';
+import { usePdfFeedback } from '@/components/viewer/feedback-popup';
 import { generatePdf } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useViewerStore } from '@/store/viewer-store';
@@ -40,6 +41,8 @@ export function PDFViewerPanel({
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { triggerFeedback: triggerPdfFeedback, popup: pdfFeedbackPopup } =
+    usePdfFeedback();
 
   const store = useViewerStore(modelId);
   const notes = store((s) => s.notes);
@@ -155,6 +158,8 @@ export function PDFViewerPanel({
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      triggerPdfFeedback();
     } catch {
       setError('PDF 생성에 실패했습니다. 다시 시도해주세요.');
     } finally {
@@ -231,6 +236,8 @@ export function PDFViewerPanel({
           {isLoading ? 'PDF 생성 중...' : '학습 내용 PDF 다운받기'}
         </button>
       </div>
+
+      {pdfFeedbackPopup}
     </div>
   );
 }

@@ -1,9 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Loader2, RotateCcw } from 'lucide-react';
 
+import {
+  useQuizFeedback,
+  useScrollBottomDetect,
+} from '@/components/viewer/feedback-popup';
 import { useQuiz } from '@/hooks/use-quiz';
 import { cn } from '@/lib/utils';
 import { useViewerStore } from '@/store/viewer-store';
@@ -36,6 +40,15 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
     onQuizLoaded: setQuizQuestions,
     onResults: setQuizResults,
   });
+
+  const resultsScrollRef = useRef<HTMLDivElement>(null);
+  const { triggerFeedback: triggerQuizFeedback, popup: quizFeedbackPopup } =
+    useQuizFeedback();
+  useScrollBottomDetect(
+    resultsScrollRef,
+    triggerQuizFeedback,
+    state === 'results'
+  );
 
   useEffect(() => {
     onQuizActiveChange?.(state !== 'idle');
@@ -97,7 +110,8 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
       }
     };
 
-    const buttonLabel = hasAnswer ? '정답 확인' : '다음';
+    const buttonLabel =
+      isLastQuestion && hasAnswer && allAnswered ? '정답 확인하기' : '다음';
 
     const questionNum = String(currentIndex + 1).padStart(2, '0');
 
@@ -250,7 +264,7 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div ref={resultsScrollRef} className="flex-1 min-h-0 overflow-y-auto">
           <div className="flex flex-col gap-4 py-3">
             {results.results.map((result, idx) => {
               const quiz = quizzes.find(
@@ -280,6 +294,8 @@ export function QuizPanel({ modelId, onQuizActiveChange }: QuizPanelProps) {
             다시 풀기
           </button>
         </div>
+
+        {quizFeedbackPopup}
       </div>
     );
   }

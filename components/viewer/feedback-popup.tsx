@@ -173,7 +173,7 @@ export function usePdfFeedback() {
       open={showPopup}
       onClose={() => setShowPopup(false)}
       formUrl={PDF_FORM_URL}
-      title="이 학습이 이해해 도움이 되셨나요?"
+      title="이 학습이 이해에 도움이 되셨나요?"
       description={
         '30초만 투자해 주시면\n다음 버전을 개선하는데 큰 도움이 됩니다.'
       }

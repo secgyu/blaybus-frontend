@@ -2,8 +2,6 @@ import React from 'react';
 
 import type { Metadata } from 'next';
 
-import { Geist, Geist_Mono } from 'next/font/google';
-
 import { Analytics } from '@vercel/analytics/next';
 
 import { QueryProvider } from '@/components/providers/query-provider';
@@ -11,9 +9,6 @@ import { ViewportScaleProvider } from '@/components/providers/viewport-scale-pro
 
 import './globals.css';
 import { MSWProvider } from './msw-provider';
-
-const _geist = Geist({ subsets: ['latin'] });
-const _geistMono = Geist_Mono({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'SIMVEX - 3D Engineering Learning Platform',
@@ -45,6 +40,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body className={`font-sans antialiased`}>
         <MSWProvider>
           <QueryProvider>

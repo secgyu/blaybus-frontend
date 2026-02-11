@@ -1,9 +1,13 @@
 'use client';
 
+import React from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
 import type { ComingSoonItem } from '@/lib/constants/coming-soon-models';
+import { CARD_BG_GRADIENT } from '@/lib/constants/styles';
+import { formatModelName } from '@/lib/utils';
 import type { ModelSummary } from '@/types/api';
 
 const MODEL_IMAGE_MAP: Record<string, string> = {
@@ -62,36 +66,36 @@ function BoxIcon({ className }: { className?: string }) {
   );
 }
 
-function formatModelName(modelId: string): string {
-  return modelId.replace(/[_-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-export function StudyModelCard({ model }: { model: ModelSummary }) {
+export const StudyModelCard = React.memo(function StudyModelCard({
+  model,
+}: {
+  model: ModelSummary;
+}) {
   const imageSlug = MODEL_IMAGE_MAP[model.modelId];
 
   return (
-    <Link href={`/study/${model.modelId}`} className="group block w-full">
+    <Link
+      href={`/study/${model.modelId}`}
+      aria-label={`${formatModelName(model.modelId)} 모델 학습하기`}
+      className="group block w-full"
+    >
       <div
-        className="box-border flex flex-col p-4 lg:p-5 gap-3 w-full aspect-52/65 border-2 border-transparent hover:border-[#1E40AF] rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+        className="box-border flex flex-col p-5 lg:p-6 gap-2 w-full aspect-[472/655] border-2 border-transparent hover:border-[#1E40AF] rounded-2xl lg:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(7, 11, 20, 0.8) 0%, rgba(4, 10, 46, 0.64) 100%)',
+          background: CARD_BG_GRADIENT,
         }}
       >
-        {/* 모델명 */}
-        <h3 className="text-lg lg:text-xl font-bold text-white leading-snug">
+        <h3 className="text-xl lg:text-[24px] font-bold text-white leading-snug">
           {formatModelName(model.modelId)}
         </h3>
 
-        {/* 설명 + chevron */}
         <div className="flex items-start justify-between gap-2">
-          <p className="text-xs lg:text-sm text-[#B8B8B8]/60 line-clamp-2 leading-relaxed">
+          <p className="text-[13px] lg:text-[14px] text-[#B8B8B8]/60 line-clamp-2 leading-relaxed">
             {model.overview}
           </p>
           <ChevronRight />
         </div>
 
-        {/* 모델 이미지 */}
         <div className="flex-1 w-full flex items-center justify-center min-h-0">
           {imageSlug ? (
             <div className="relative w-full h-full">
@@ -122,32 +126,32 @@ export function StudyModelCard({ model }: { model: ModelSummary }) {
       </div>
     </Link>
   );
-}
+});
 
-export function ComingSoonCard({ model }: { model: ComingSoonItem }) {
+export const ComingSoonCard = React.memo(function ComingSoonCard({
+  model,
+}: {
+  model: ComingSoonItem;
+}) {
   return (
     <Link href={`/study/${model.id}`} className="group block w-full">
       <div
-        className="box-border flex flex-col p-4 lg:p-5 gap-3 w-full aspect-52/65 border-2 border-transparent hover:border-[#1E40AF] rounded-2xl lg:rounded-3xl overflow-hidden opacity-70 hover:opacity-85 transition-all duration-300"
+        className="box-border flex flex-col p-5 lg:p-6 gap-2 w-full aspect-[472/655] border-2 border-transparent hover:border-[#1E40AF] rounded-2xl lg:rounded-3xl overflow-hidden opacity-70 hover:opacity-85 transition-all duration-300"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(7, 11, 20, 0.8) 0%, rgba(4, 10, 46, 0.64) 100%)',
+          background: CARD_BG_GRADIENT,
         }}
       >
-        {/* 모델명 */}
-        <h3 className="text-lg lg:text-xl font-bold text-white/80 leading-snug">
+        <h3 className="text-xl lg:text-[24px] font-bold text-white/80 leading-snug">
           {model.title}
         </h3>
 
-        {/* 설명 + chevron */}
         <div className="flex items-start justify-between gap-2">
-          <p className="text-xs lg:text-sm text-[#B8B8B8]/40 line-clamp-2 leading-relaxed">
+          <p className="text-[13px] lg:text-[14px] text-[#B8B8B8]/40 line-clamp-2 leading-relaxed">
             {model.description}
           </p>
           <ChevronRight />
         </div>
 
-        {/* 플레이스홀더 */}
         <div className="flex-1 w-full flex items-center justify-center min-h-0">
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-2 rounded-xl bg-[#1E3A8A]/10 flex items-center justify-center">
@@ -159,4 +163,4 @@ export function ComingSoonCard({ model }: { model: ComingSoonItem }) {
       </div>
     </Link>
   );
-}
+});

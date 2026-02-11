@@ -10,6 +10,7 @@ import {
   QuizQIcon,
   RobotIcon,
 } from '@/components/icons/sidebar-icons';
+import { SUBTLE_BG_GRADIENT } from '@/lib/constants/styles';
 import { cn } from '@/lib/utils';
 import type { ModelPart, ViewerModel } from '@/types/viewer';
 
@@ -145,8 +146,7 @@ export function StudyLeftPanel({
             : '-translate-x-full opacity-0 pointer-events-none'
         )}
         style={{
-          background:
-            'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
+          background: SUBTLE_BG_GRADIENT,
           border: '1px solid rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(1px)',
           WebkitBackdropFilter: 'blur(1px)',

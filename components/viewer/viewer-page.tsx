@@ -5,11 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { Loader2 } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 
 import { StudyHeader } from '@/components/study-header';
 import { StudyLeftPanel } from '@/components/viewer/study-left-panel';
 import { StudyRightPanel } from '@/components/viewer/study-right-panel';
-import { useViewerStore } from '@/store/viewer-store';
+import { removeViewerStoreCache, useViewerStore } from '@/store/viewer-store';
 import type { ViewerModel } from '@/types/viewer';
 
 const Scene = dynamic(
@@ -35,13 +36,25 @@ interface ViewerPageProps {
 
 export function ViewerPage({ model, modelId }: ViewerPageProps) {
   const store = useViewerStore(modelId);
-  const selectedPartIds = store((state) => state.selectedPartIds);
-  const explodeValue = store((state) => state.explodeValue);
-  const notes = store((state) => state.notes);
-  const isHydrated = store((state) => state.isHydrated);
-  const toggleSelectedPartId = store((state) => state.toggleSelectedPartId);
-  const setExplodeValue = store((state) => state.setExplodeValue);
-  const setNotes = store((state) => state.setNotes);
+  const {
+    selectedPartIds,
+    explodeValue,
+    notes,
+    isHydrated,
+    toggleSelectedPartId,
+    setExplodeValue,
+    setNotes,
+  } = store(
+    useShallow((state) => ({
+      selectedPartIds: state.selectedPartIds,
+      explodeValue: state.explodeValue,
+      notes: state.notes,
+      isHydrated: state.isHydrated,
+      toggleSelectedPartId: state.toggleSelectedPartId,
+      setExplodeValue: state.setExplodeValue,
+      setNotes: state.setNotes,
+    }))
+  );
 
   const [isSceneReady, setIsSceneReady] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -80,6 +93,12 @@ export function ViewerPage({ model, modelId }: ViewerPageProps) {
 
     return () => clearTimeout(timeout);
   }, [store, isHydrated]);
+
+  useEffect(() => {
+    return () => {
+      removeViewerStoreCache(modelId);
+    };
+  }, [modelId]);
 
   useEffect(() => {
     if (isHydrated && !isSceneReady) {

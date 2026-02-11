@@ -2,60 +2,12 @@
 
 import { useInView } from 'react-intersection-observer';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
 import { Loader2 } from 'lucide-react';
 
-import { SimvexLogo } from '@/components/study-header';
+import { Footer } from '@/components/footer';
+import { Header } from '@/components/header';
 import { StudyModelCard } from '@/components/study/study-model-card';
 import { useModels } from '@/hooks/use-models';
-
-const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Study', href: '/study' },
-];
-
-function StudyNav() {
-  const router = useRouter();
-
-  return (
-    <header className="h-[64px] bg-[#0a0f1a]/50 backdrop-blur-sm border-b border-[#595959]/30 flex items-end pl-6 pb-3">
-      <div className="flex items-end gap-0">
-        <button
-          onClick={() => router.push('/')}
-          className="cursor-pointer mb-[-4px] mr-6 xl:mr-[42px]"
-        >
-          <SimvexLogo />
-        </button>
-
-        {navItems.map((item) => {
-          const isActive = item.label === 'Study';
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="relative flex flex-col items-center px-4 lg:px-6 xl:px-8"
-            >
-              <span
-                className={`text-base xl:text-[18px] font-semibold tracking-wide pb-1.5 transition-colors ${
-                  isActive
-                    ? 'text-[#FAFAFA]'
-                    : 'text-[#FAFAFA]/60 hover:text-[#FAFAFA]/80'
-                }`}
-              >
-                {item.label}
-              </span>
-              {isActive && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[60%] h-[2px] bg-[#2563EB] rounded-full" />
-              )}
-            </Link>
-          );
-        })}
-      </div>
-    </header>
-  );
-}
 
 function HeroSection() {
   return (
@@ -106,7 +58,7 @@ export default function StudyPage() {
 
   return (
     <div className="min-h-screen bg-[#070B14]">
-      <StudyNav />
+      <Header />
       <HeroSection />
 
       <div className="px-6 md:px-12 lg:px-16 xl:px-20 pb-16 pt-20 space-y-12">
@@ -150,6 +102,8 @@ export default function StudyPage() {
           )}
         </section>
       </div>
+
+      <Footer spacerHeight={600} />
     </div>
   );
 }

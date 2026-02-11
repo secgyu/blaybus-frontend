@@ -242,7 +242,7 @@ export function ModelViewer({
         const part = model.parts.find((p) => p.id === inst.partId)!;
         const isSelected = selectedPartIds.includes(inst.partId);
 
-        const groupProps: any = {
+        const groupProps: Record<string, unknown> = {
           position: inst.basePosition,
           userData: { basePosition: inst.basePosition, ...inst.animData },
         };

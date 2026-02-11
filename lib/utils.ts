@@ -5,10 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * CommonMark에서 **bold(괄호)**한글 패턴이 right-flanking delimiter로
- * 인식되지 않는 edge case를 HTML <strong> 태그로 변환하여 해결합니다.
- */
 export function fixMarkdownBold(text: string): string {
   return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+export function formatModelName(modelId: string): string {
+  return modelId.replace(/[_-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }

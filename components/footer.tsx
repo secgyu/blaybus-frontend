@@ -123,10 +123,16 @@ function YoutubeIcon() {
   );
 }
 
-export function Footer() {
+interface FooterProps {
+  spacerHeight?: number;
+}
+
+export function Footer({ spacerHeight = 200 }: FooterProps) {
   return (
     <footer className="bg-[#040A2E] text-[#FAFAFA]">
-      <div className="h-[100px] md:h-[200px] bg-gradient-to-b from-[#070B14] to-[#040A2E]" />
+      <div className="bg-[#070B14]" style={{ height: spacerHeight }} />
+
+      <div className="border-t border-[#595959]/30" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 xl:px-20 py-12 md:py-16">
         <div className="flex flex-col md:flex-row items-start gap-10 md:gap-0">
@@ -191,14 +197,14 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="relative overflow-hidden flex items-end justify-center h-[120px] md:h-[212px] pointer-events-none select-none">
+      <div className="relative overflow-hidden flex items-start justify-center h-[160px] md:h-[250px] pointer-events-none select-none">
         <svg
           width="1641"
-          height="212"
-          viewBox="0 0 1641 212"
+          height="317"
+          viewBox="0 0 1641 317"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute bottom-[-5px] w-full max-w-[1641px]"
+          className="w-full max-w-[1641px] shrink-0"
         >
           <path
             d="M1435.17 4.70703L1499.03 111.995H1501.19L1565.49 4.70703H1638.84L1543.48 160.685L1641 316.662H1565.92L1501.19 209.374H1499.03L1434.31 316.662H1359.65L1457.61 160.685L1361.38 4.70703H1435.17Z"

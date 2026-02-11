@@ -12,6 +12,7 @@ import {
   RightArrowIcon,
 } from '@/components/icons/sidebar-icons';
 import { useScrollbar } from '@/hooks/use-scrollbar';
+import { SUBTLE_BG_GRADIENT } from '@/lib/constants/styles';
 import { cn, fixMarkdownBold } from '@/lib/utils';
 import type { ViewerModel } from '@/types/viewer';
 
@@ -85,8 +86,7 @@ export function StudyRightPanel({
     <aside
       className="h-full flex flex-col p-4 gap-3"
       style={{
-        background:
-          'linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%)',
+        background: SUBTLE_BG_GRADIENT,
         borderRadius: '20px',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(1px)',

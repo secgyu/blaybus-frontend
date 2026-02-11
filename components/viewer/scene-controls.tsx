@@ -7,6 +7,7 @@ import {
   RedoIcon,
   UndoIcon,
 } from '@/components/icons/sidebar-icons';
+import { PANEL_BG_GRADIENT, PANEL_WIDTH } from '@/lib/constants/styles';
 
 const BP_2XL = 1536;
 
@@ -45,7 +46,7 @@ export function RotationControls({
   onToggleFullscreen,
 }: RotationControlsProps) {
   const is2xl = useIs2xl();
-  const panelWidth = is2xl ? 320 : 280;
+  const panelWidth = is2xl ? PANEL_WIDTH['2xl'] : PANEL_WIDTH.default;
   const rightNormal = panelWidth + 12 + 86; // panel + right margin + gap
 
   return (
@@ -128,8 +129,7 @@ function SliderCard({ title, value, onChange, onCommit }: SliderCardProps) {
     <div
       className="w-[280px] 2xl:w-[360px] h-[126px] rounded-[20px] px-[22px] pt-[18px] pb-[20px] flex flex-col justify-between"
       style={{
-        background:
-          'linear-gradient(180deg, rgba(7, 11, 20, 0.25) 0%, rgba(4, 10, 46, 0.2) 100%)',
+        background: PANEL_BG_GRADIENT,
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
       }}
@@ -193,7 +193,7 @@ export function BottomSliders({
   onExplodeCommit,
 }: BottomSlidersProps) {
   const is2xl = useIs2xl();
-  const panelWidth = is2xl ? 320 : 280;
+  const panelWidth = is2xl ? PANEL_WIDTH['2xl'] : PANEL_WIDTH.default;
   const leftPanelExpandedWidth = LEFT_SIDEBAR_WIDTH + panelWidth + 8;
   const rightPanelWidth = panelWidth + 12;
 

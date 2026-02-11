@@ -5,10 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { fetchModels } from '@/lib/api';
-
-function formatModelName(modelId: string): string {
-  return modelId.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
+import { formatModelName } from '@/lib/utils';
 
 export function SimvexLogo() {
   return (

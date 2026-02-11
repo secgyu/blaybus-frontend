@@ -130,6 +130,10 @@ export function getViewerStore(modelId: string) {
   return storeCache.get(modelId)!;
 }
 
+export function removeViewerStoreCache(modelId: string) {
+  storeCache.delete(modelId);
+}
+
 export function clearViewerStoreCache() {
   storeCache.clear();
 }
